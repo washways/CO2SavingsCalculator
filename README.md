@@ -1,6 +1,6 @@
 # CO2 Savings Calculator
 
-A pure HTML/JavaScript tool that allows users to enter data to calculate CO₂ savings for UNICEF-style WASH and Energy projects in Least Developed Countries (LDCs). The calculations are based on Gold Standard and CDM methodologies.
+A pure HTML/JavaScript tool that allows users to enter data to calculate CO₂ savings for WASH and Energy projects in Least Developed Countries (LDCs). The calculations are based on Gold Standard and CDM methodologies.
 
 ## Purpose
 
