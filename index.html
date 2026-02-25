@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CO₂ Savings Calculator | Gold Standard</title>
+  <meta name="description"
+    content="CO₂ savings calculator for UNICEF WASH/energy projects in Least Developed Countries using Gold Standard methodology">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --accent: #00bfa5;
+      --accent2: #1cabe2;
+      --warn: #f59e0b;
+      --text: #0f172a;
+      --muted: #475569;
+      --tag: #f1f5f9;
+      --red: #ef4444;
+      --green: #10b981;
+      --radius: 12px;
+      --trans: 0.2s ease;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5
+    }
+
+    a {
+      color: var(--accent2);
+      text-decoration: none
+    }
+
+    select,
+    input {
+      font-family: 'Inter', sans-serif
+    }
+
+    /* Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px
+    }
+
+    .logo-text h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px
+    }
+
+    .logo-text p {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .badge {
+      background: var(--tag);
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px
+    }
+
+    /* Layout */
+    .app {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 0;
+      min-height: calc(100vh - 64px);
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 24px 48px
+    }
+
+    .main-col {
+      min-width: 0;
+      padding-right: 24px
+    }
+
+    .side-col {
+      position: sticky;
+      top: 88px;
+      height: fit-content
+    }
+
+    /* Section titles */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin: 0 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      transition: var(--trans);
+      box-shadow: var(--shadow);
+    }
+
+    .card:hover {
+      border-color: var(--border)
+    }
+
+    /* Global params */
+    .global-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px
+    }
+
+    .param-badge {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px
+    }
+
+    .param-badge label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px
+    }
+
+    .param-badge .val {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent)
+    }
+
+    .param-badge .sub {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    /* Project type tabs */
+    .ptype-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px
+    }
+
+    .ptype-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: var(--trans);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px
+    }
+
+    .ptype-btn .icon {
+      font-size: 20px
+    }
+
+    .ptype-btn.active {
+      border-color: var(--accent2);
+      background: rgba(28, 171, 226, 0.10);
+      color: var(--accent2)
+    }
+
+    .ptype-btn:hover:not(.active) {
+      border-color: var(--muted);
+      color: var(--text)
+    }
+
+    /* Project params */
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px
+    }
+
+    /* Form elements */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px
+    }
+
+    .field label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px
+    }
+
+    .field input,
+    .field select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 13px;
+      transition: var(--trans);
+      width: 100%
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px rgba(28, 171, 226, 0.12)
+    }
+
+    .field select option {
+      background: var(--card)
+    }
+
+    .field-hint {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    /* Module cards */
+    .module-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      transition: var(--trans)
+    }
+
+    .module-card.active {
+      border-color: rgba(0, 191, 165, 0.4)
+    }
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none
+    }
+
+    .module-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0
+    }
+
+    .mod-A .module-icon {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b
+    }
+
+    .mod-B .module-icon {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444
+    }
+
+    .mod-C .module-icon {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981
+    }
+
+    .mod-D .module-icon {
+      background: rgba(139, 92, 246, 0.15);
+      color: #8b5cf6
+    }
+
+    .module-title {
+      flex: 1
+    }
+
+    .module-title h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    .module-title p {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .module-result {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 100px;
+      text-align: right
+    }
+
+    .module-result .unit {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 400
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0
+    }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 22px;
+      cursor: pointer;
+      transition: var(--trans)
+    }
+
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: var(--trans)
+    }
+
+    .toggle input:checked+.toggle-slider {
+      background: var(--accent)
+    }
+
+    .toggle input:checked+.toggle-slider:before {
+      transform: translateX(18px)
+    }
+
+    /* Module body */
+    .module-body {
+      padding: 0 20px 20px;
+      display: none;
+      animation: fadeIn 0.2s ease
+    }
+
+    .module-body.open {
+      display: block
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 10px;
+      margin-top: 12px
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 0
+    }
+
+    /* Results sidebar */
+    .results-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .total-box {
+      background: rgba(0, 191, 165, 0.08);
+      border: 1px solid rgba(0, 191, 165, 0.3);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 16px
+    }
+
+    .total-box .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px
+    }
+
+    .total-box .value {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.1;
+      margin: 4px 0
+    }
+
+    .total-box .unit {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .module-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .module-row:last-child {
+      border-bottom: none
+    }
+
+    .module-row .name {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .module-row .amount {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text)
+    }
+
+    /* Bar chart */
+    .bar-wrap {
+      margin: 14px 0
+    }
+
+    .bar-item {
+      margin-bottom: 8px
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin-bottom: 3px;
+      color: var(--muted)
+    }
+
+    .bar-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease
+    }
+
+    .fill-A {
+      background: #f59e0b
+    }
+
+    .fill-B {
+      background: #ef4444
+    }
+
+    .fill-C {
+      background: #10b981
+    }
+
+    .fill-D {
+      background: #8b5cf6
+    }
+
+    /* Equivalencies */
+    .equiv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px
+    }
+
+    .equiv-item {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center
+    }
+
+    .equiv-item .eico {
+      font-size: 20px;
+      margin-bottom: 4px
+    }
+
+    .equiv-item .eval {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent2)
+    }
+
+    .equiv-item .elab {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    /* Export */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--trans);
+      border: none;
+      font-family: inherit
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000
+    }
+
+    .btn-primary:hover {
+      background: #00d4b8
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted)
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent2);
+      color: var(--accent2)
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap
+    }
+
+    /* Methodology note */
+    .method-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px
+    }
+
+    /* Info tooltip */
+    .info {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--border);
+      color: var(--muted);
+      font-size: 9px;
+      text-align: center;
+      line-height: 14px;
+      cursor: help;
+      flex-shrink: 0
+    }
+
+    /* Responsive */
+    @media(max-width:820px) {
+      .app {
+        grid-template-columns: 1fr
+      }
+
+      .main-col {
+        padding-right: 0
+      }
+
+      .side-col {
+        position: static
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* Inline formula display */
+    .formula-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: monospace;
+      margin-top: 8px;
+      line-height: 1.8
+    }
+
+    .formula-box b {
+      color: var(--accent)
+    }
+
+    .result-inline {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      background: rgba(0, 191, 165, 0.08);
+      border: 1px solid rgba(0, 191, 165, 0.2);
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin-top: 8px
+    }
+
+    .result-inline .rv {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent)
+    }
+
+    .result-inline .ru {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    /* Splash Screen */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(248, 250, 252, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .splash-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border);
+      margin: 20px;
+    }
+
+    .splash-card h2 {
+      font-size: 24px;
+      color: var(--text);
+      margin-bottom: 16px;
+      font-weight: 800;
+    }
+
+    .splash-card p {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    /* Added Details for portfolio mode */
+    .advanced-assumptions {
+      margin-top: 20px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+    }
+
+    .advanced-assumptions summary {
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      list-style: none;
+    }
+
+    .advanced-assumptions summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .assump-head {
+      font-size: 11px;
+      color: var(--accent2);
+      margin: 16px 0 12px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+  </style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
+</head>
+
+<body>
+
+  <div id="splash" class="splash-overlay">
+    <div class="splash-card">
+      <div class="logo-icon"
+        style="width:64px;height:64px;font-size:32px;margin:0 auto 20px;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+        🌍</div>
+      <h2>CO₂ Savings Calculator</h2>
+      <p>Estimate greenhouse gas reductions from WASH and institutional energy projects in Least Developed Countries
+        using the Gold Standard methodology. Effortlessly calculate aggregated CO₂ emission reductions across large
+        portfolios of Health Care Facilities, Schools, and Household Clusters. Generates detailed reports on annual and
+        lifetime savings, as well as estimated voluntary carbon market revenues.</p>
+      <button class="btn btn-primary"
+        onclick="document.getElementById('splash').style.opacity='0'; setTimeout(()=>document.getElementById('splash').style.visibility='hidden', 500);"
+        style="padding:12px 28px; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Start Tool &rarr;</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🌍</div>
+      <div class="logo-text">
+        <h1>CO₂ Savings Calculator</h1>
+        <p>WASH &amp; Energy · Gold Standard Methodology</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="badge">LDC Countries</span>
+      <span class="badge" style="border-color:var(--accent);color:var(--accent)">Gold Standard</span>
+    </div>
+  </header>
+
+  <div class="app">
+    <div class="main-col">
+
+      <!-- GLOBAL PARAMETERS -->
+      <div class="card">
+        <div class="section-title">🌐 Global Parameters</div>
+        <div class="proj-grid" style="margin-bottom:14px">
+          <div class="field">
+            <label>Country (LDC) <span class="info" title="Only UN-listed Least Developed Countries">i</span></label>
+            <select id="country" onchange="onCountryChange()"></select>
+          </div>
+          <div class="field">
+            <label>Project Currency Year</label>
+            <select id="creditYear">
+              <option value="2024">2024</option>
+              <option value="2025" selected>2025</option>
+              <option value="2026">2026</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Project Lifetime (years)</label>
+            <input type="number" id="lifetime" value="10" min="1" max="30" onchange="recalc()">
+          </div>
+          <div class="field">
+            <label>Carbon Price ($/tCO₂e) <span class="info" title="Voluntary Carbon Market Price">i</span></label>
+            <input type="number" id="carbon-price" value="10" min="0" step="0.5" onchange="recalc()">
+          </div>
+
+        </div>
+        <div class="global-grid" id="globalBadges">
+          <div class="param-badge"><label>fNRB <span class="info"
+                title="Fraction Non-Renewable Biomass — Gold Standard/CDM country default">i</span></label>
+            <div class="val" id="badge-fnrb">–</div>
+            <div class="sub">biomass non-renewable fraction</div>
+          </div>
+          <div class="param-badge"><label>Grid EF <span class="info"
+                title="Grid emission factor from IEA data (kgCO₂/kWh)">i</span></label>
+            <div class="val" id="badge-grid">–</div>
+            <div class="sub">kgCO₂/kWh</div>
+          </div>
+          <div class="param-badge"><label>Region</label>
+            <div class="val" id="badge-region" style="font-size:13px">–</div>
+            <div class="sub">UN classification</div>
+          </div>
+          <div class="param-badge"><label>Main Cooking Fuel</label>
+            <div class="val" id="badge-fuel" style="font-size:13px">–</div>
+            <div class="sub">country baseline</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT TYPE -->
+      <div class="card">
+        <div class="section-title">🏗 Project Portfolio</div>
+
+        <div
+          style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 20px;">
+          <div class="field"
+            style="background:var(--bg); border:1px solid var(--border); padding:16px; border-radius:8px;">
+            <label
+              style="font-size:13px; color:var(--text); margin-bottom:8px; display:flex; justify-content:space-between;"><span>🏥
+                Health Care Facilities</span> <input type="number" id="port-hcfs" value="1" min="0"
+                onchange="onTypeParamChange()" style="width:60px; padding:4px 8px;"></label>
+            <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-water" checked
+                  onchange="onTypeParamChange()"> Solar Water Pumping</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-san" checked
+                  onchange="onTypeParamChange()"> Inst. Sanitation</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-cook" checked
+                  onchange="onTypeParamChange()"> Induction Cooking</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-light" checked
+                  onchange="onTypeParamChange()"> Solar Lighting</label>
+            </div>
+          </div>
+          <div class="field"
+            style="background:var(--bg); border:1px solid var(--border); padding:16px; border-radius:8px;">
+            <label
+              style="font-size:13px; color:var(--text); margin-bottom:8px; display:flex; justify-content:space-between;"><span>🏫
+                Schools / Institutions</span> <input type="number" id="port-schools" value="0" min="0"
+                onchange="onTypeParamChange()" style="width:60px; padding:4px 8px;"></label>
+            <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-water" checked
+                  onchange="onTypeParamChange()"> Solar Water Pumping</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-san" checked
+                  onchange="onTypeParamChange()"> Inst. Sanitation</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-cook" checked
+                  onchange="onTypeParamChange()"> Induction Cooking</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-light" checked
+                  onchange="onTypeParamChange()"> Solar Lighting</label>
+            </div>
+          </div>
+          <div class="field"
+            style="background:var(--bg); border:1px solid var(--border); padding:16px; border-radius:8px;">
+            <label
+              style="font-size:13px; color:var(--text); margin-bottom:8px; display:flex; justify-content:space-between;"><span>🏘
+                Household Clusters</span> <input type="number" id="port-hhs" value="0" min="0"
+                onchange="onTypeParamChange()" style="width:60px; padding:4px 8px;"></label>
+            <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-cook" checked
+                  onchange="onTypeParamChange()"> Improved Cook Stoves</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-ind" checked
+                  onchange="onTypeParamChange()"> Induction Cooker + Solar</label>
+              <label
+                style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-san" checked
+                  onchange="onTypeParamChange()"> HH Sanitation</label>
+            </div>
+          </div>
+        </div>
+
+        <details class="advanced-assumptions">
+          <summary>⚙️ Advanced Unit Assumptions (Expand)</summary>
+          <h4 class="assump-head">Average per HCF</h4>
+          <!-- HCF params -->
+          <div id="params-HCF" class="proj-grid">
+            <div class="field"><label>Inpatient Beds</label><input type="number" id="hcf-beds" value="50" min="1"
+                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Daily OPD Visits</label><input type="number" id="hcf-opd" value="100" min="0"
+                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Staff on Site</label><input type="number" id="hcf-staff" value="30" min="0"
+                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Operating Days/Year</label><input type="number" id="hcf-days" value="365" min="1"
+                max="365" onchange="onTypeParamChange()"></div>
+          </div>
+          <!-- School params -->
+          <div id="params-School" class="proj-grid">
+            <div class="field"><label>Enrolment (pupils)</label><input type="number" id="sch-pupils" value="400" min="1"
+                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Teaching Days/Year</label><input type="number" id="sch-days" value="200" min="1"
+                max="365" onchange="onTypeParamChange()"></div>
+            <div class="field"><label>School Meals/Day</label><input type="number" id="sch-meals" value="400" min="0"
+                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Teachers / Staff</label><input type="number" id="sch-staff" value="20" min="0"
+                onchange="onTypeParamChange()"></div>
+          </div>
+          <h4 class="assump-head">Per Household Cluster</h4>
+          <!-- HH params -->
+          <div id="params-HH" class="proj-grid">
+            <div class="field"><label>No. of Households</label><input type="number" id="hh-count" value="50" min="1"
+                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Avg HH Size (persons)</label><input type="number" id="hh-size" value="5" min="1"
+                max="20" onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Settlement Type</label>
+              <select id="hh-settle" onchange="onTypeParamChange()">
+                <option value="rural">Rural</option>
+                <option value="peri">Peri-urban</option>
+                <option value="urban">Urban</option>
+              </select>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- MODULES HEADING -->
+      <div class="section-title" style="margin-top:8px">⚡ Emission Reduction Modules</div>
+
+      <!-- MODULE A: SOLAR WATER PUMPING -->
+      <div class="module-card mod-A" id="card-A">
+        <div class="module-header" onclick="toggleBody('A')">
+          <div class="module-icon">⚡</div>
+          <div class="module-title">
+            <h3>A — Solar Water Pumping</h3>
+            <p>AMS-I.F / CDM AM0020 · Diesel or grid pump displacement</p>
+          </div>
+          <div class="module-result"><span id="result-A">0</span><br><span class="unit">tCO₂e/yr</span></div>
+          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
+              id="tog-A" onchange="toggleModule('A')" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="module-body open" id="body-A">
+          <div class="method-tag"><a
+              href="https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242"
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard AMS-I.F / CDM AM0020 ↗</a>
+          </div>
+          <div class="module-grid">
+            <div class="field"><label>Baseline Pump Type</label>
+              <select id="A-baseline" onchange="recalc()">
+                <option value="diesel">Diesel pump</option>
+                <option value="grid">Grid electric pump</option>
+              </select>
+            </div>
+            <div class="field"><label>Daily Water Demand (m³/day) <span class="info"
+                  title="Calculated from Population Served &#10;(WHO norms: 75L/bed, 5L/opd, 3L/pupil, 20L/HH)">i</span></label><input
+                type="number" id="A-demand" value="10" min="0" step="0.5" onchange="recalc()"></div>
+            <div class="field"><label>Total Dynamic Head (m)</label><input type="number" id="A-head" value="25" min="0"
+                onchange="recalc()"></div>
+            <div class="field"><label>Operating Days/Year</label><input type="number" id="A-days" value="365" min="1"
+                max="365" onchange="recalc()"></div>
+          </div>
+          <div class="module-grid">
+            <div class="field"><label>Pump Efficiency η <span class="info"
+                  title="Hydraulic pump efficiency (0.5–0.75 typical)">i</span></label><input type="number"
+                id="A-etapump" value="0.60" min="0.1" max="1" step="0.05" onchange="recalc()"></div>
+            <div class="field" id="A-diesel-field"><label>Diesel Engine η <span class="info"
+                  title="Overall diesel genset thermal efficiency">i</span></label><input type="number" id="A-etadiesel"
+                value="0.30" min="0.1" max="0.5" step="0.01" onchange="recalc()"></div>
+            <div class="field" id="A-grid-field" style="display:none"><label>Motor Efficiency η</label><input
+                type="number" id="A-etamotor" value="0.90" min="0.5" max="1" step="0.01" onchange="recalc()"></div>
+          </div>
+          <div class="formula-box" id="A-formula">ER = BE · <b>0 tCO₂e</b> (solar PE = 0)</div>
+          <div class="result-inline"><span class="rv" id="A-detail">0</span><span class="ru">tCO₂e / year saved</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE B: INSTITUTIONAL INDUCTION COOKING -->
+      <div class="module-card mod-B" id="card-B">
+        <div class="module-header" onclick="toggleBody('B')">
+          <div class="module-icon">🍳</div>
+          <div class="module-title">
+            <h3>B — Institutional Induction Cooking</h3>
+            <p>Gold Standard MECD · Replaces charcoal/wood/LPG cooking</p>
+          </div>
+          <div class="module-result"><span id="result-B">0</span><br><span class="unit">tCO₂e/yr</span></div>
+          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
+              id="tog-B" onchange="toggleModule('B')" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="module-body open" id="body-B">
+          <div class="method-tag"><a
+              href="https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf"
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Metered &amp; Measured Energy Cooking Devices) ↗</a></div>
+          <div class="module-grid">
+            <div class="field"><label>Baseline Fuel</label>
+              <select id="B-fuel" onchange="recalc()">
+                <option value="charcoal">Charcoal</option>
+                <option value="wood">Firewood (3-stone)</option>
+                <option value="lpg">LPG</option>
+                <option value="kerosene">Kerosene</option>
+              </select>
+            </div>
+            <div class="field"><label>Daily Fuel Consumption (kg) <span class="info"
+                  title="Calculated from population and institution type meals/day.">i</span></label><input
+                type="number" id="B-fuelkg" value="30" min="0" step="1" onchange="recalc()"></div>
+            <div class="field"><label>Cooking Days/Year</label><input type="number" id="B-days" value="300" min="1"
+                max="365" onchange="recalc()"></div>
+            <div class="field"><label>Electricity Source</label>
+              <select id="B-elec" onchange="recalc()">
+                <option value="solar">Solar PV (zero PE)</option>
+                <option value="grid">Grid electricity</option>
+              </select>
+            </div>
+          </div>
+          <div class="module-grid" id="B-grid-fields" style="display:none">
+            <div class="field"><label>Annual Electricity Use (kWh/yr)</label><input type="number" id="B-kwh"
+                value="5000" min="0" onchange="recalc()"></div>
+          </div>
+          <div class="formula-box" id="B-formula">BE = FC × NCV × EF × fNRB — PE</div>
+          <div class="result-inline"><span class="rv" id="B-detail">0</span><span class="ru">tCO₂e / year saved</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE C: SANITATION (MERGED) -->
+      <div class="module-card mod-C" id="card-C">
+        <div class="module-header" onclick="toggleBody('C')">
+          <div class="module-icon">🚽</div>
+          <div class="module-title">
+            <h3>C — Sanitation Methane Reduction</h3>
+            <p>IPCC Tier 1 · Institutional + HH scale separated</p>
+          </div>
+          <div class="module-result"><span id="result-C">0</span><br><span class="unit">tCO₂e/yr</span></div>
+          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
+              id="tog-C" onchange="toggleModule('C')" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="module-body open" id="body-C">
+          <div class="method-tag"><a href="https://www.goldstandard.org/project-developers/standard-documents"
+              target="_blank" style="color:inherit;text-decoration:none;">📋 IPCC 2006 Waste Ch.6 · Gold Standard
+              Integrated SDG Sanitation ↗</a></div>
+          <div class="module-grid"
+            style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px;">
+            <div style="grid-column: 1 / -1; font-weight:600; font-size:12px; color:var(--accent2); margin-bottom:4px;">
+              🏥🏫 Institutional Sanitation</div>
+            <div class="field"><label>Population Served <span class="info"
+                  title="Aggregated from HCFs, Schools/Institutions">i</span></label><input type="number"
+                id="C-pop-inst" value="0" min="0" onchange="recalc()"></div>
+            <div class="field"><label>Baseline System</label>
+              <select id="C-baseline-inst" onchange="recalc()">
+                <option value="openwater">Open defecation near water (MCF 0.3)</option>
+                <option value="opendry">Open defecation dry field (MCF 0.05)</option>
+                <option value="sharedpit">Unimproved shared pit (MCF 0.5)</option>
+                <option value="septic">Septic / pour-flush (MCF 0.5)</option>
+              </select>
+            </div>
+            <div class="field"><label>Improved System</label>
+              <select id="C-improved-inst" onchange="recalc()">
+                <option value="vip">VIP / dry pit with slab (MCF 0.05)</option>
+                <option value="ecosan">Composting / EcoSan (MCF 0.01)</option>
+                <option value="biogas">Biogas digester – capture (MCF 0.1)</option>
+                <option value="sewer">Sewer to aerobic WWTP (MCF 0.0)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="module-grid"
+            style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px;">
+            <div style="grid-column: 1 / -1; font-weight:600; font-size:12px; color:var(--accent2); margin-bottom:4px;">
+              🏘 Household Sanitation</div>
+            <div class="field"><label>Population Served <span class="info"
+                  title="Aggregated from Household Clusters × Avg HH Size">i</span></label><input type="number"
+                id="C-pop-hh" value="0" min="0" onchange="recalc()"></div>
+            <div class="field"><label>Baseline System</label>
+              <select id="C-baseline-hh" onchange="recalc()">
+                <option value="openwater">Open defecation near water (MCF 0.3)</option>
+                <option value="opendry" selected>Open defecation dry field (MCF 0.05)</option>
+                <option value="sharedpit" selected>Unimproved shared pit (MCF 0.5)</option>
+                <option value="septic">Septic / pour-flush (MCF 0.5)</option>
+              </select>
+            </div>
+            <div class="field"><label>Improved System</label>
+              <select id="C-improved-hh" onchange="recalc()">
+                <option value="vip">VIP / dry pit with slab (MCF 0.05)</option>
+                <option value="ecosan">Composting / EcoSan (MCF 0.01)</option>
+                <option value="biogas">Biogas digester – capture (MCF 0.1)</option>
+                <option value="sewer">Sewer to aerobic WWTP (MCF 0.0)</option>
+              </select>
+            </div>
+          </div>
+          <div class="module-grid">
+            <div class="field"><label>BOD Load (g/person/day) <span class="info"
+                  title="IPCC default: 40 g BOD/person/day">i</span></label><input type="number" id="C-bod" value="40"
+                min="10" max="80" step="5" onchange="recalc()"></div>
+            <div class="field"><label>Bo — Max CH₄ potential <span class="info"
+                  title="IPCC default: 0.6 kg CH4/kg BOD">i</span></label><input type="number" id="C-bo" value="0.6"
+                min="0.1" max="0.8" step="0.05" onchange="recalc()"></div>
+          </div>
+          <div class="formula-box" id="C-formula">ER = U × BOD × Bo × (MCF_base – MCF_imp) × GWP₂₈ / 1000</div>
+          <div class="result-inline"><span class="rv" id="C-detail">0</span><span class="ru">tCO₂e / year saved</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE D: IMPROVED HH COOKSTOVES -->
+      <div class="module-card mod-D" id="card-D">
+        <div class="module-header" onclick="toggleBody('D')">
+          <div class="module-icon">🔥</div>
+          <div class="module-title">
+            <h3>D — Improved HH Cookstoves</h3>
+            <p>Gold Standard TPDDTEC / RECH · fNRB biomass displacement</p>
+          </div>
+          <div class="module-result"><span id="result-D">0</span><br><span class="unit">tCO₂e/yr</span></div>
+          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
+              id="tog-D" onchange="toggleModule('D')" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="module-body open" id="body-D">
+          <div class="method-tag"><a
+              href="https://globalgoals.goldstandard.org/standards/407_V4.0_EE_ICS_Reduced-Emissions-from-Cooking-and-Heating-TPDDTEC.pdf"
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard TPDDTEC v4 / RECH · AMS-II.G
+              ↗</a></div>
+          <div class="module-grid">
+            <div class="field"><label>Number of Stoves/HH units <span class="info"
+                  title="Calculated from total household clusters">i</span></label><input type="number" id="D-stoves"
+                value="100" min="1" onchange="recalc()"></div>
+            <div class="field"><label>Fuel Type</label>
+              <select id="D-fuel" onchange="recalc()">
+                <option value="wood">Firewood</option>
+                <option value="charcoal">Charcoal</option>
+              </select>
+            </div>
+            <div class="field"><label>Baseline Fuel (kg/HH/day)</label><input type="number" id="D-baseline-fc"
+                value="4.0" min="0.5" step="0.5" onchange="recalc()"></div>
+            <div class="field"><label>Baseline Stove Type</label>
+              <select id="D-base-stove" onchange="recalc()">
+                <option value="0.10">3-stone open fire (η 10%)</option>
+                <option value="0.18">Traditional clay stove (η 18%)</option>
+                <option value="0.22">Traditional char jiko (η 22%)</option>
+              </select>
+            </div>
+          </div>
+          <div class="module-grid">
+            <div class="field"><label>Improved Stove Type</label>
+              <select id="D-imp-stove" onchange="recalc()">
+                <option value="0.25">Improved ICS (η 25%)</option>
+                <option value="0.35">Rocket stove (η 35%)</option>
+                <option value="0.40">Gasifier stove (η 40%)</option>
+                <option value="0.55">LPG / clean fuel (η 55%)</option>
+              </select>
+            </div>
+            <div class="field"><label>fNRB (auto from country) <span class="info"
+                  title="Fraction of non-renewable biomass — Gold Standard default by country">i</span></label><input
+                type="number" id="D-fnrb" value="0.80" min="0" max="1" step="0.01" onchange="recalc()"></div>
+            <div class="field"><label>Stacking Discount <span class="info"
+                  title="Gold Standard default 20% discount for parallel old-stove use">i</span></label><input
+                type="number" id="D-stack" value="0.20" min="0" max="0.5" step="0.05" onchange="recalc()"></div>
+          </div>
+          <div class="formula-box" id="D-formula">ER = N × FS × NCV × fNRB × (EF_CO₂+EF_nonCO₂) × (1–stacking)</div>
+          <div class="result-inline"><span class="rv" id="D-detail">0</span><span class="ru">tCO₂e / year saved</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- MODULE E: INSTITUTIONAL SOLAR LIGHTING -->
+      <div class="module-card mod-A" id="card-E">
+        <div class="module-header" onclick="toggleBody('E')">
+          <div class="module-icon" style="background:rgba(250,204,21,0.15); color:#eab308">💡</div>
+          <div class="module-title">
+            <h3>E — Institutional Solar Lighting</h3>
+            <p>AMS-III.AR / Standalone · Replaces Kerosene/Diesel</p>
+          </div>
+          <div class="module-result"><span id="result-E">0</span><br><span class="unit">tCO₂e/yr</span></div>
+          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
+              id="tog-E" onchange="toggleModule('E')" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="module-body open" id="body-E">
+          <div class="method-tag"><a href="https://cdm.unfccc.int/methodologies/DB/S3RZMK6KR289WKK0VB1ETT6K73Y3DR"
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard AMS-III.AR (simplified) ↗</a>
+          </div>
+          <div class="module-grid">
+            <div class="field"><label>Number of Facilities <span class="info"
+                  title="Aggregated from selected HCFs and Schools">i</span></label><input type="number" id="E-count"
+                value="1" min="0" onchange="recalc()"></div>
+            <div class="field"><label>Baseline Fuel System</label>
+              <select id="E-baseline" onchange="recalc()">
+                <option value="kerosene">Kerosene Lamps</option>
+                <option value="diesel">Diesel Gen-set</option>
+              </select>
+            </div>
+            <div class="field"><label>Baseline Emissions/Facility (tCO₂e/yr)</label><input type="number" id="E-ef"
+                value="2.5" min="0.1" step="0.1" onchange="recalc()"></div>
+          </div>
+          <div class="formula-box" id="E-formula">ER = Facilities × ER_baseline</div>
+          <div class="result-inline"><span class="rv" id="E-detail">0</span><span class="ru">tCO₂e / year saved</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE F: HH INDUCTION COOKING + SOLAR -->
+      <div class="module-card mod-B" id="card-F">
+        <div class="module-header" onclick="toggleBody('F')">
+          <div class="module-icon" style="background:rgba(236,72,153,0.15); color:#db2777">☀️</div>
+          <div class="module-title">
+            <h3>F — HH Induction Cooking + Solar</h3>
+            <p>MECD · Replaces household biomass</p>
+          </div>
+          <div class="module-result"><span id="result-F">0</span><br><span class="unit">tCO₂e/yr</span></div>
+          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
+              id="tog-F" onchange="toggleModule('F')" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="module-body" id="body-F">
+          <div class="method-tag"><a
+              href="https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf"
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Household Scale) ↗</a>
+          </div>
+          <div class="module-grid">
+            <div class="field"><label>Number of Households <span class="info"
+                  title="Calculated from total household clusters">i</span></label><input type="number" id="F-count"
+                value="100" min="0" onchange="recalc()"></div>
+            <div class="field"><label>Baseline Fuel</label>
+              <select id="F-fuel" onchange="recalc()">
+                <option value="wood">Firewood</option>
+                <option value="charcoal">Charcoal</option>
+              </select>
+            </div>
+            <div class="field"><label>Baseline Fuel per HH (kg/day)</label><input type="number" id="F-fc" value="4.0"
+                min="0.5" step="0.5" onchange="recalc()"></div>
+          </div>
+          <div class="formula-box" id="F-formula">ER = HHs × FC × NCV × EF × fNRB (Solar PE=0)</div>
+          <div class="result-inline"><span class="rv" id="F-detail">0</span><span class="ru">tCO₂e / year saved</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- end main-col -->
+
+    <!-- RESULTS SIDEBAR -->
+    <div class="side-col">
+      <div class="results-card">
+        <div class="section-title">📊 Results Summary</div>
+        <div class="total-box">
+          <div class="label">Total Annual Savings</div>
+          <div class="value" id="total-co2">0</div>
+          <div class="unit">tCO₂e / year</div>
+        </div>
+        <div class="total-box" style="background:rgba(28,171,226,0.08);border-color:rgba(28,171,226,0.3)">
+          <div class="label">Project Lifetime Total</div>
+          <div class="value" id="lifetime-co2" style="color:var(--accent2);font-size:32px">0</div>
+          <div class="unit">tCO₂e over <span id="lt-yrs">10</span> years</div>
+        </div>
+        <div class="total-box" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.3)">
+          <div class="label">Voluntary Carbon Market</div>
+          <div class="value" id="revenue-annual" style="color:var(--green);font-size:26px">$0</div>
+          <div class="unit">Est. Annual Revenue (at $<span id="lbl-price">10</span>/t)<br><strong
+              style="color:var(--text);margin-top:4px;display:inline-block;border-top:1px solid rgba(16,185,129,0.2);padding-top:4px;width:100%;">Lifetime:
+              <span id="revenue-lifetime" style="color:var(--green)">$0</span></strong></div>
+        </div>
+        <div class="bar-wrap" id="bar-wrap">
+          <div class="bar-item">
+            <div class="bar-label"><span>⚡ A · Solar Pumping</span><span id="bar-a-val">0%</span></div>
+            <div class="bar-track">
+              <div class="bar-fill fill-A" id="bar-A" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label"><span>🍳 B · Induction Cook</span><span id="bar-b-val">0%</span></div>
+            <div class="bar-track">
+              <div class="bar-fill fill-B" id="bar-B" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label"><span>🚽 C · Sanitation</span><span id="bar-c-val">0%</span></div>
+            <div class="bar-track">
+              <div class="bar-fill fill-C" id="bar-C" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label"><span>🔥 D · HH Cookstoves</span><span id="bar-d-val">0%</span></div>
+            <div class="bar-track">
+              <div class="bar-fill fill-D" id="bar-D" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label"><span>💡 E · Inst Lighting</span><span id="bar-e-val">0%</span></div>
+            <div class="bar-track">
+              <div class="bar-fill" id="bar-E" style="width:0%; background:#eab308"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label"><span>☀️ F · HH Induction</span><span id="bar-f-val">0%</span></div>
+            <div class="bar-track">
+              <div class="bar-fill" id="bar-F" style="width:0%; background:#db2777"></div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="section-title">🌱 Equivalencies</div>
+        <div class="equiv-grid">
+          <div class="equiv-item">
+            <div class="eico">🌳</div>
+            <div class="eval" id="eq-trees">0</div>
+            <div class="elab">Trees preserved/yr</div>
+          </div>
+          <div class="equiv-item">
+            <div class="eico">🚗</div>
+            <div class="eval" id="eq-cars">0</div>
+            <div class="elab">Cars off road/yr</div>
+          </div>
+          <div class="equiv-item">
+            <div class="eico">✈️</div>
+            <div class="eval" id="eq-flights">0</div>
+            <div class="elab">Long-haul flights</div>
+          </div>
+          <div class="equiv-item">
+            <div class="eico">💡</div>
+            <div class="eval" id="eq-homes">0</div>
+            <div class="elab">Homes powered/yr</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="section-title">📁 Export</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="exportCSV()">⬇ CSV</button>
+          <button class="btn btn-outline" onclick="window.print()">🖨 Print</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─── DATA ──────────────────────────────────────────────────────────────
+    const LDC = {
+      'AGO': { 'name': 'Angola', 'r': 'Africa', 'fNRB': 0.72, 'gEF': 0.25, 'fuel': 'wood' },
+      'BEN': { 'name': 'Benin', 'r': 'Africa', 'fNRB': 0.82, 'gEF': 0.38, 'fuel': 'charcoal' },
+      'BFA': { 'name': 'Burkina Faso', 'r': 'Africa', 'fNRB': 0.85, 'gEF': 0.45, 'fuel': 'wood' },
+      'BDI': { 'name': 'Burundi', 'r': 'Africa', 'fNRB': 0.89, 'gEF': 0.15, 'fuel': 'wood' },
+      'CAF': { 'name': 'Central African Rep.', 'r': 'Africa', 'fNRB': 0.87, 'gEF': 0.18, 'fuel': 'wood' },
+      'TCD': { 'name': 'Chad', 'r': 'Africa', 'fNRB': 0.83, 'gEF': 0.60, 'fuel': 'wood' },
+      'COM': { 'name': 'Comoros', 'r': 'Africa', 'fNRB': 0.76, 'gEF': 0.80, 'fuel': 'wood' },
+      'COD': { 'name': 'DR Congo', 'r': 'Africa', 'fNRB': 0.87, 'gEF': 0.02, 'fuel': 'charcoal' },
+      'DJI': { 'name': 'Djibouti', 'r': 'Africa', 'fNRB': 0.62, 'gEF': 0.72, 'fuel': 'charcoal' },
+      'ERI': { 'name': 'Eritrea', 'r': 'Africa', 'fNRB': 0.78, 'gEF': 0.66, 'fuel': 'wood' },
+      'ETH': { 'name': 'Ethiopia', 'r': 'Africa', 'fNRB': 0.79, 'gEF': 0.03, 'fuel': 'wood' },
+      'GMB': { 'name': 'Gambia', 'r': 'Africa', 'fNRB': 0.83, 'gEF': 0.55, 'fuel': 'wood' },
+      'GIN': { 'name': 'Guinea', 'r': 'Africa', 'fNRB': 0.81, 'gEF': 0.07, 'fuel': 'wood' },
+      'GNB': { 'name': 'Guinea-Bissau', 'r': 'Africa', 'fNRB': 0.84, 'gEF': 0.60, 'fuel': 'wood' },
+      'LSO': { 'name': 'Lesotho', 'r': 'Africa', 'fNRB': 0.66, 'gEF': 0.01, 'fuel': 'wood' },
+      'LBR': { 'name': 'Liberia', 'r': 'Africa', 'fNRB': 0.86, 'gEF': 0.25, 'fuel': 'charcoal' },
+      'MDG': { 'name': 'Madagascar', 'r': 'Africa', 'fNRB': 0.84, 'gEF': 0.23, 'fuel': 'charcoal' },
+      'MWI': { 'name': 'Malawi', 'r': 'Africa', 'fNRB': 0.87, 'gEF': 0.08, 'fuel': 'charcoal' },
+      'MLI': { 'name': 'Mali', 'r': 'Africa', 'fNRB': 0.82, 'gEF': 0.35, 'fuel': 'wood' },
+      'MRT': { 'name': 'Mauritania', 'r': 'Africa', 'fNRB': 0.77, 'gEF': 0.58, 'fuel': 'wood' },
+      'MOZ': { 'name': 'Mozambique', 'r': 'Africa', 'fNRB': 0.79, 'gEF': 0.06, 'fuel': 'charcoal' },
+      'NER': { 'name': 'Niger', 'r': 'Africa', 'fNRB': 0.84, 'gEF': 0.52, 'fuel': 'wood' },
+      'RWA': { 'name': 'Rwanda', 'r': 'Africa', 'fNRB': 0.84, 'gEF': 0.28, 'fuel': 'wood' },
+      'STP': { 'name': 'São Tomé & Príncipe', 'r': 'Africa', 'fNRB': 0.70, 'gEF': 0.65, 'fuel': 'charcoal' },
+      'SEN': { 'name': 'Senegal', 'r': 'Africa', 'fNRB': 0.76, 'gEF': 0.44, 'fuel': 'charcoal' },
+      'SLE': { 'name': 'Sierra Leone', 'r': 'Africa', 'fNRB': 0.86, 'gEF': 0.14, 'fuel': 'charcoal' },
+      'SOM': { 'name': 'Somalia', 'r': 'Africa', 'fNRB': 0.90, 'gEF': 0.70, 'fuel': 'charcoal' },
+      'SSD': { 'name': 'South Sudan', 'r': 'Africa', 'fNRB': 0.88, 'gEF': 0.65, 'fuel': 'wood' },
+      'SDN': { 'name': 'Sudan', 'r': 'Africa', 'fNRB': 0.79, 'gEF': 0.35, 'fuel': 'wood' },
+      'TZA': { 'name': 'Tanzania', 'r': 'Africa', 'fNRB': 0.87, 'gEF': 0.28, 'fuel': 'charcoal' },
+      'TGO': { 'name': 'Togo', 'r': 'Africa', 'fNRB': 0.80, 'gEF': 0.38, 'fuel': 'charcoal' },
+      'UGA': { 'name': 'Uganda', 'r': 'Africa', 'fNRB': 0.85, 'gEF': 0.06, 'fuel': 'charcoal' },
+      'ZMB': { 'name': 'Zambia', 'r': 'Africa', 'fNRB': 0.79, 'gEF': 0.07, 'fuel': 'charcoal' },
+      'AFG': { 'name': 'Afghanistan', 'r': 'Asia', 'fNRB': 0.69, 'gEF': 0.38, 'fuel': 'wood' },
+      'BGD': { 'name': 'Bangladesh', 'r': 'Asia', 'fNRB': 0.53, 'gEF': 0.53, 'fuel': 'wood' },
+      'BTN': { 'name': 'Bhutan', 'r': 'Asia', 'fNRB': 0.56, 'gEF': 0.01, 'fuel': 'wood' },
+      'KHM': { 'name': 'Cambodia', 'r': 'Asia', 'fNRB': 0.63, 'gEF': 0.43, 'fuel': 'charcoal' },
+      'LAO': { 'name': 'Lao PDR', 'r': 'Asia', 'fNRB': 0.58, 'gEF': 0.04, 'fuel': 'wood' },
+      'MMR': { 'name': 'Myanmar', 'r': 'Asia', 'fNRB': 0.69, 'gEF': 0.22, 'fuel': 'wood' },
+      'NPL': { 'name': 'Nepal', 'r': 'Asia', 'fNRB': 0.64, 'gEF': 0.02, 'fuel': 'wood' },
+      'TLS': { 'name': 'Timor-Leste', 'r': 'Asia', 'fNRB': 0.55, 'gEF': 0.75, 'fuel': 'wood' },
+      'YEM': { 'name': 'Yemen', 'r': 'Asia', 'fNRB': 0.60, 'gEF': 0.50, 'fuel': 'wood' },
+      'HTI': { 'name': 'Haiti', 'r': 'Caribbean', 'fNRB': 0.88, 'gEF': 0.55, 'fuel': 'charcoal' },
+      'KIR': { 'name': 'Kiribati', 'r': 'Pacific', 'fNRB': 0.15, 'gEF': 0.60, 'fuel': 'wood' },
+      'SLB': { 'name': 'Solomon Islands', 'r': 'Pacific', 'fNRB': 0.40, 'gEF': 0.72, 'fuel': 'wood' },
+      'TUV': { 'name': 'Tuvalu', 'r': 'Pacific', 'fNRB': 0.10, 'gEF': 0.75, 'fuel': 'wood' },
+      'VUT': { 'name': 'Vanuatu', 'r': 'Pacific', 'fNRB': 0.35, 'gEF': 0.30, 'fuel': 'wood' },
+    };
+
+    // Fuel emission params (tCO2e/tonne for wood/charcoal, fossil based on IPCC)
+    const FUEL = {
+      wood: { ncv: 15, efCO2: 1.742, efNC: 0.135, eta: 0.10, label: 'Firewood' },
+      charcoal: { ncv: 29.5, efCO2: 2.638, efNC: 0.150, eta: 0.22, label: 'Charcoal', prodRatio: 6 },
+      lpg: { ncv: 47.3, efCO2: 2.983, efNC: 0.008, eta: 0.55, label: 'LPG' },
+      kerosene: { ncv: 43.8, efCO2: 3.172, efNC: 0.010, eta: 0.45, label: 'Kerosene' },
+    };
+
+    // Sanitation MCF values (IPCC 2006, Table 6.3)
+    const MCF = {
+      openwater: 0.30, opendry: 0.05, sharedpit: 0.50, septic: 0.50,
+      vip: 0.05, ecosan: 0.01, biogas: 0.10, sewer: 0.00
+    };
+
+    // ─── STATE ─────────────────────────────────────────────────────────────
+    let state = { country: 'MWI', results: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 } };
+
+    // ─── CALCULATIONS ───────────────────────────────────────────────────────
+    function calcA() {
+      if (!document.getElementById('tog-A').checked) return 0;
+      const Q = +v('A-demand');      // m³/day
+      const H = +v('A-head');        // m
+      const days = +v('A-days');
+      const etaP = +v('A-etapump');
+      const base = v('A-baseline');
+      // Hydraulic energy kWh/day = Q*H*rho*g / (3600*1000)
+      const hydKwh = Q * H * 9.81 / 3600;  // kWh/day
+      const shaftKwh = hydKwh / etaP;       // kWh/day
+      let BE = 0;
+      if (base === 'diesel') {
+        const etaD = +v('A-etadiesel');
+        const LHV = 10.0;  // kWh/litre diesel (≈36 MJ/L)
+        const dieselL = shaftKwh / (etaD * LHV) * days; // L/year
+        BE = dieselL * 2.68 / 1000; // tCO2/year (IPCC EF diesel)
+        document.getElementById('A-formula').innerHTML =
+          `Diesel: <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> × ${days} days × 2.68 kgCO₂/L = <b>${BE.toFixed(1)} tCO₂e/yr</b>`;
+      } else {
+        const etaM = +v('A-etamotor');
+        const kwhYr = shaftKwh / etaM * days;
+        const co = getLDC();
+        BE = kwhYr * co.gEF / 1000;
+        document.getElementById('A-formula').innerHTML =
+          `Grid: <b>${kwhYr.toFixed(0)} kWh/yr</b> × ${co.gEF} kgCO₂/kWh = <b>${BE.toFixed(1)} tCO₂e/yr</b>`;
+      }
+      return BE;
+    }
+
+    function calcB() {
+      if (!document.getElementById('tog-B').checked) return 0;
+      const fuelType = v('B-fuel');
+      const fc_day = +v('B-fuelkg');   // kg/day
+      const days = +v('B-days');
+      const elec = v('B-elec');
+      const co = getLDC();
+      const fNRB = co.fNRB;
+      const fc_t = fc_day * days / 1000; // tonnes/year
+
+      let BE = 0;
+      if (fuelType === 'wood') {
+        BE = fc_t * (FUEL.wood.efCO2 + FUEL.wood.efNC) * fNRB;
+      } else if (fuelType === 'charcoal') {
+        // Charcoal: combustion EF + wood production chain × fNRB
+        const prod = FUEL.charcoal.prodRatio; // kg wood per kg charcoal
+        BE = fc_t * (FUEL.charcoal.efCO2 + prod * FUEL.wood.efCO2 * fNRB);
+      } else {
+        // Fossil fuels – no fNRB
+        const f = FUEL[fuelType];
+        BE = fc_t * (f.efCO2 + f.efNC);
+      }
+
+      let PE = 0;
+      if (elec === 'grid') {
+        const kwh = +v('B-kwh');
+        PE = kwh * co.gEF / 1000;
+        document.getElementById('B-grid-fields').style.display = 'grid';
+      } else {
+        document.getElementById('B-grid-fields').style.display = 'none';
+      }
+      const er = Math.max(0, BE - PE);
+      document.getElementById('B-formula').innerHTML =
+        `BE = <b>${BE.toFixed(2)} tCO₂e/yr</b> — PE = <b>${PE.toFixed(2)}</b> → ER = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      return er;
+    }
+
+    function calcC() {
+      if (!document.getElementById('tog-C').checked) return 0;
+      const BOD = +v('C-bod') / 1000; // kg/person/day
+      const Bo = +v('C-bo');
+
+      const U_inst = +v('C-pop-inst');
+      const mcfB_inst = MCF[v('C-baseline-inst')];
+      const mcfI_inst = MCF[v('C-improved-inst')];
+      const dMCF_inst = Math.max(0, mcfB_inst - mcfI_inst);
+      const ch4_inst = U_inst * BOD * 365 * Bo * dMCF_inst;
+
+      const U_hh = +v('C-pop-hh');
+      const mcfB_hh = MCF[v('C-baseline-hh')];
+      const mcfI_hh = MCF[v('C-improved-hh')];
+      const dMCF_hh = Math.max(0, mcfB_hh - mcfI_hh);
+      const ch4_hh = U_hh * BOD * 365 * Bo * dMCF_hh;
+
+      const er = (ch4_inst + ch4_hh) * 28 / 1000;  // tCO2e/year (GWP AR5)
+      document.getElementById('C-formula').innerHTML =
+        `Inst: ${U_inst}p · HH: ${U_hh}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF × GWP28 = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      return er;
+    }
+
+
+    function calcE() {
+      if (!document.getElementById('tog-E').checked) return 0;
+      const count = +v('E-count');
+      const ef = +v('E-ef');
+      const er = count * ef;
+      document.getElementById('E-formula').innerHTML = `${count} facilities × ${ef} tCO₂e/yr = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      return er;
+    }
+
+    function calcF() {
+      if (!document.getElementById('tog-F').checked) return 0;
+      const count = +v('F-count');
+      const fcDay = +v('F-fc');
+      const fuelT = v('F-fuel');
+      const co = getLDC();
+      const fNRB = co.fNRB;
+
+      const fc_t = fcDay * 365 / 1000; // tonnes/year per HH
+      let EF = 0;
+      if (fuelT === 'wood') {
+        EF = (FUEL.wood.efCO2 + FUEL.wood.efNC) * fNRB;
+      } else {
+        const prod = FUEL.charcoal.prodRatio;
+        EF = (FUEL.charcoal.efCO2 + prod * FUEL.wood.efCO2 * fNRB);
+      }
+
+      const er = count * fc_t * EF;
+      document.getElementById('F-formula').innerHTML = `${count} HHs × ${fc_t.toFixed(2)} t/yr × ${EF.toFixed(2)} EF × fNRB = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      return er;
+    }
+    function calcD() {
+      if (!document.getElementById('tog-D').checked) return 0;
+      const N = +v('D-stoves');
+      const fcDay = +v('D-baseline-fc');
+      const etaB = +v('D-base-stove');
+      const etaI = +v('D-imp-stove');
+      const fNRB = +v('D-fnrb');
+      const stack = +v('D-stack');
+      const fuelT = v('D-fuel');
+
+      // Fuel savings per stove per year (tonnes)
+      const fcYr = fcDay * 365 / 1000;          // tonnes/stove/year (baseline)
+      const FS = fcYr * (1 - etaB / etaI);    // fuel saved per stove/year
+
+      let EF;
+      if (fuelT === 'wood') {
+        EF = (FUEL.wood.efCO2 + FUEL.wood.efNC);  // tCO2e/tonne
+      } else {
+        // charcoal: include production wood chain
+        EF = FUEL.charcoal.efCO2 + FUEL.charcoal.prodRatio * FUEL.wood.efCO2;
+      }
+
+      const er = N * FS * fNRB * EF * (1 - stack);
+      document.getElementById('D-formula').innerHTML =
+        `${N} stoves × ${FS.toFixed(3)} t FS × ${fNRB} fNRB × ${EF.toFixed(3)} EF × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      return er;
+    }
+
+    // ─── UI HELPERS ─────────────────────────────────────────────────────────
+    function v(id) { return document.getElementById(id).value; }
+    function getLDC() { return LDC[state.country] || LDC['MWI']; }
+    function fmt(n) { return n < 1 ? n.toFixed(2) : n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString(); }
+
+    function recalc() {
+      state.results.A = calcA();
+      state.results.B = calcB();
+      state.results.C = calcC();
+      state.results.D = calcD();
+      state.results.E = calcE();
+      state.results.F = calcF();
+
+      ['A', 'B', 'C', 'D', 'E', 'F'].forEach(m => {
+        const r = state.results[m];
+        document.getElementById('result-' + m).textContent = fmt(r);
+        document.getElementById(m.toLowerCase() + '-detail') && (document.getElementById(m + '-detail') || document.getElementById(m.toLowerCase() + '-detail')).textContent;
+      });
+      // Update inline detail text
+      ['A', 'B', 'C', 'D', 'E', 'F'].forEach(m => {
+        const el = document.getElementById(m + '-detail');
+        if (el) el.textContent = fmt(state.results[m]);
+      });
+
+      const total = Object.values(state.results).reduce((a, b) => a + b, 0);
+      const lt = +v('lifetime');
+      document.getElementById('lbl-price').textContent = v('carbon-price');
+      document.getElementById('total-co2').textContent = fmt(total);
+      document.getElementById('lifetime-co2').textContent = fmt(total * lt);
+      document.getElementById('lt-yrs').textContent = lt;
+      const carbonPrice = +v('carbon-price');
+      const revAnnual = total * carbonPrice;
+      const revLifetime = revAnnual * lt;
+      document.getElementById('revenue-annual').textContent = '$' + fmt(revAnnual);
+      document.getElementById('revenue-lifetime').textContent = '$' + fmt(revLifetime);
+
+      // Bars
+      ['A', 'B', 'C', 'D', 'E', 'F'].forEach(m => {
+        const pct = total > 0 ? (state.results[m] / total * 100) : 0;
+        document.getElementById('bar-' + m).style.width = pct + '%';
+        document.getElementById('bar-' + m.toLowerCase() + '-val').textContent = pct.toFixed(0) + '%';
+      });
+
+      // Equivalencies (EPA/IPCC standard factors)
+      document.getElementById('eq-trees').textContent = Math.round(total * 16.5).toLocaleString(); // 1 tCO2 ≈ 16.5 trees/yr
+      document.getElementById('eq-cars').textContent = Math.round(total / 4.6).toLocaleString();   // avg car 4.6 tCO2/yr
+      document.getElementById('eq-flights').textContent = Math.round(total / 0.9).toLocaleString();   // per flight ~0.9 tCO2
+      document.getElementById('eq-homes').textContent = Math.round(total / 7.0).toLocaleString();   // US avg home 7 tCO2/yr
+    }
+
+    function onCountryChange() {
+      const iso = v('country');
+      state.country = iso;
+      const co = LDC[iso];
+      if (!co) return;
+      document.getElementById('badge-fnrb').textContent = co.fNRB.toFixed(2);
+      document.getElementById('badge-grid').textContent = co.gEF.toFixed(3) + ' kgCO₂/kWh';
+      document.getElementById('badge-region').textContent = co.r;
+      document.getElementById('badge-fuel').textContent = FUEL[co.fuel]?.label || co.fuel;
+      // Auto-set fuel selects
+      document.getElementById('B-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
+      document.getElementById('D-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
+      document.getElementById('D-fnrb').value = co.fNRB.toFixed(2);
+      recalc();
+    }
+
+
+
+    function onTypeParamChange() {
+      const hcfs = +v('port-hcfs');
+      const schools = +v('port-schools');
+      const hhs = +v('port-hhs');
+
+      // Flags
+      const hcfWater = document.getElementById('chk-hcf-water').checked;
+      const hcfSan = document.getElementById('chk-hcf-san').checked;
+      const hcfCook = document.getElementById('chk-hcf-cook').checked;
+      const hcfLight = document.getElementById('chk-hcf-light').checked;
+
+      const schWater = document.getElementById('chk-sch-water').checked;
+      const schSan = document.getElementById('chk-sch-san').checked;
+      const schCook = document.getElementById('chk-sch-cook').checked;
+      const schLight = document.getElementById('chk-sch-light').checked;
+
+      const hhCook = document.getElementById('chk-hh-cook').checked;
+      const hhInd = document.getElementById('chk-hh-ind').checked;
+      const hhSan = document.getElementById('chk-hh-san').checked;
+
+      const hcfBeds = +v('hcf-beds'), hcfOpd = +v('hcf-opd'), hcfStaff = +v('hcf-staff'), hcfDays = +v('hcf-days') || 365;
+      const hcfPop = hcfBeds + Math.round(hcfOpd * 0.3) + hcfStaff;
+      const hcfWaterPerDay = (hcfBeds * 75 + hcfOpd * 5) / 1000;
+
+      const schPupils = +v('sch-pupils'), schStaff = +v('sch-staff'), schDays = +v('sch-days') || 200, schMeals = +v('sch-meals');
+      const schPop = schPupils + schStaff;
+      const schWaterPerDay = (schPop * 3) / 1000;
+      const schFuelKgPerDay = schMeals * 0.10;
+
+      const hhCount = +v('hh-count'), hhSize = +v('hh-size');
+      const hhPop = hhCount * hhSize;
+
+      // Community expansion for water (assume 600 HH per installation)
+      const commWaterPerDay = (600 * hhSize * 20) / 1000;
+
+      // Module A: Water
+      const hcfWaterTotal = hcfs > 0 && hcfWater ? (hcfs * hcfWaterPerDay * hcfDays) + (hcfs * commWaterPerDay * 365) : 0;
+      const schWaterTotal = schools > 0 && schWater ? (schools * schWaterPerDay * schDays) + (schools * commWaterPerDay * 365) : 0;
+      const totalWaterAnnual = hcfWaterTotal + schWaterTotal;
+      document.getElementById('A-demand').value = totalWaterAnnual > 0 ? (totalWaterAnnual / 365).toFixed(2) : 0;
+
+      // Module B: Cooking
+      const hcfFuelPerDay = hcfPop * 0.15;
+      const totalFuelAnnual = (hcfs > 0 && hcfCook ? hcfs * hcfFuelPerDay * hcfDays : 0) + (schools > 0 && schCook ? schools * schFuelKgPerDay * schDays : 0);
+      document.getElementById('B-fuelkg').value = totalFuelAnnual > 0 ? (totalFuelAnnual / 365).toFixed(1) : 0;
+
+      // Module C: Sanitation
+      const instPop = (hcfs > 0 && hcfSan ? hcfs * hcfPop : 0) + (schools > 0 && schSan ? schools * schPop : 0);
+      const hhSanPop = (hhs > 0 && hhSan ? hhs * hhPop : 0);
+      document.getElementById('C-pop-inst').value = instPop;
+      document.getElementById('C-pop-hh').value = hhSanPop;
+
+      // Module D: Cookstoves
+      document.getElementById('D-stoves').value = hhs > 0 && hhCook ? hhs * hhCount : 0;
+
+      // Module E: Lighting
+      document.getElementById('E-count').value = (hcfs > 0 && hcfLight ? hcfs : 0) + (schools > 0 && schLight ? schools : 0);
+
+      // Module F: HH Induction
+      document.getElementById('F-count').value = hhs > 0 && hhInd ? hhs * hhCount : 0;
+
+      recalc();
+    }
+
+    function toggleBody(m) {
+      document.getElementById('body-' + m).classList.toggle('open');
+    }
+    function toggleModule(m) {
+      document.getElementById('tog-' + m).setAttribute('data-user-toggled', 'true');
+      recalc();
+    }
+
+    function exportCSV() {
+      const co = getLDC();
+      const t = 'Portfolio';
+      const lt = +v('lifetime');
+      const tot = Object.values(state.results).reduce((a, b) => a + b, 0);
+
+      const hcfs = +v('port-hcfs');
+      const schools = +v('port-schools');
+      const hhs = +v('port-hhs');
+
+      const popInst = +v('C-pop-inst');
+      const popHh = +v('C-pop-hh');
+
+      const hcfBeds = +v('hcf-beds'), hcfOpd = +v('hcf-opd'), hcfStaff = +v('hcf-staff'), hcfDays = +v('hcf-days');
+      const schPupils = +v('sch-pupils'), schMeals = +v('sch-meals'), schStaff = +v('sch-staff'), schDays = +v('sch-days');
+      const hhCount = +v('hh-count'), hhSize = +v('hh-size');
+
+      const waterDemand = v('A-demand');
+      const fuelIndDay = v('B-fuelkg');
+
+      const rows = [
+        ['CO2 Savings Calculator - Gold Standard Methodology', '', ''],
+        ['Country', co.name, ''],
+        ['Project Currency Year', v('creditYear'), ''],
+        ['Project Lifetime (Years)', lt, ''],
+        ['Carbon Price ($/tCO2e)', v('carbon-price'), ''],
+        ['fNRB', co.fNRB, ''],
+        ['Grid EF (kgCO2/kWh)', co.gEF, ''],
+        ['', '', ''],
+        ['PORTFOLIO INPUTS', 'Count', 'Details'],
+        ['Health Care Facilities', hcfs, `${hcfBeds} Beds, ${hcfOpd} OPD/day, ${hcfStaff} Staff`],
+        ['Schools / Institutions', schools, `${schPupils} Pupils, ${schStaff} Staff, ${schMeals} Meals/day`],
+        ['Household Clusters', hhs, `${hhCount} HHs per cluster, ${hhSize} persons/HH`],
+        ['', '', ''],
+        ['AGGREGATED PARAMETERS', 'Value', 'Unit'],
+        ['Total Daily Water Demand (Pumping)', waterDemand, 'm3/day'],
+        ['Total Inst. Daily Cooking Fuel (Baseline)', fuelIndDay, 'kg/day'],
+        ['Total Institutional Population Served', popInst, 'persons'],
+        ['Total Household Population Served', popHh, 'persons'],
+        ['', '', ''],
+        ['RESULTS', 'Annual tCO2e/yr', 'Lifetime tCO2e'],
+        ['A - Solar Water Pumping', state.results.A.toFixed(2), (state.results.A * lt).toFixed(1)],
+        ['B - Institutional Induction Cooking', state.results.B.toFixed(2), (state.results.B * lt).toFixed(1)],
+        ['C - Sanitation Methane Reduction', state.results.C.toFixed(2), (state.results.C * lt).toFixed(1)],
+        ['D - Improved HH Cookstoves', state.results.D.toFixed(2), (state.results.D * lt).toFixed(1)],
+        ['E - Institutional Solar Lighting', state.results.E.toFixed(2), (state.results.E * lt).toFixed(1)],
+        ['F - HH Induction Cooking + Solar', state.results.F.toFixed(2), (state.results.F * lt).toFixed(1)],
+        ['TOTAL EMISSION REDUCTIONS', tot.toFixed(2), (tot * lt).toFixed(1)],
+        ['TOTAL ESTIMATED REVENUE', '$' + (tot * v('carbon-price')).toFixed(2), '$' + (tot * lt * v('carbon-price')).toFixed(2)],
+        ['', '', ''],
+        ['METHODOLOGY REFERENCES', '', ''],
+        ['A: Gold Standard AMS-I.F / CDM AM0020', 'https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242', ''],
+        ['B: Gold Standard MECD v1.2', 'https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf', ''],
+        ['C: IPCC / Gold Standard Integrated SDG Sanitation', 'https://globalgoals.goldstandard.org/in-development/integrated-sdg-methodology-for-sanitation/', ''],
+        ['D: Gold Standard TPDDTEC / AMS-II.G', 'https://globalgoals.goldstandard.org/standards/407_V4.0_EE_ICS_Reduced-Emissions-from-Cooking-and-Heating-TPDDTEC.pdf', ''],
+        ['E: Gold Standard AMS-III.AR', 'https://cdm.unfccc.int/methodologies/DB/S3RZMK6KR289WKK0VB1ETT6K73Y3DR', ''],
+        ['F: Gold Standard MECD v1.2', 'https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf', ''],
+      ];
+      const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+      const a = document.createElement('a');
+      a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent('\uFEFF' + csv);
+      a.download = `CO2_Savings_${co.name.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    }
+
+    // ─── INIT ───────────────────────────────────────────────────────────────
+    (function init() {
+      const sel = document.getElementById('country');
+      Object.keys(LDC).sort((a, b) => LDC[a].name.localeCompare(LDC[b].name)).forEach(iso => {
+        const o = document.createElement('option');
+        o.value = iso; o.textContent = LDC[iso].name + ' (' + LDC[iso].r + ')';
+        if (iso === 'MWI') o.selected = true;
+        sel.appendChild(o);
+      });
+      // Diesel/grid field toggle
+      document.getElementById('A-baseline').addEventListener('change', function () {
+        const isDiesel = this.value === 'diesel';
+        document.getElementById('A-diesel-field').style.display = isDiesel ? 'flex' : 'none';
+        document.getElementById('A-grid-field').style.display = isDiesel ? 'none' : 'flex';
+      });
+      onCountryChange();
+      onTypeParamChange();
+    })();
+
+  </script>
+</body>
+
+</html>
