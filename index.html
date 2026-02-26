@@ -72,7 +72,7 @@
       z-index: 100;
       box-shadow: var(--shadow);
     }
-    
+
     .estimator-banner {
       background: #fef08a;
       color: #854d0e;
@@ -85,16 +85,6 @@
       top: 64px;
       z-index: 99;
       border-bottom: 1px solid #fde047;
-    }
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow);
     }
 
     .logo {
@@ -816,7 +806,8 @@
       padding-bottom: 6px;
     }
   </style>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
 </head>
 
 <body>
@@ -850,6 +841,9 @@
       <span class="badge" style="border-color:var(--accent);color:var(--accent)">Gold Standard</span>
     </div>
   </header>
+
+  <div class="estimator-banner">⚠️ SCREENING ESTIMATOR ONLY: Indicative results for planning. Not for certified carbon
+    issuance.</div>
 
   <div class="app">
     <div class="main-col">
@@ -917,20 +911,20 @@
             <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-water" checked
-                  onchange="onTypeParamChange()"> Solar Water Pumping</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-water" checked onchange="onTypeParamChange()">
+                Solar Water Pumping</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-san" checked
-                  onchange="onTypeParamChange()"> Inst. Sanitation</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-san" checked onchange="onTypeParamChange()">
+                Inst. Sanitation</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-cook" checked
-                  onchange="onTypeParamChange()"> Induction Cooking</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-cook" checked onchange="onTypeParamChange()">
+                Induction Cooking</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-light" checked
-                  onchange="onTypeParamChange()"> Solar Lighting</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-light" checked onchange="onTypeParamChange()">
+                Solar Lighting</label>
             </div>
           </div>
           <div class="field"
@@ -942,20 +936,20 @@
             <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-water" checked
-                  onchange="onTypeParamChange()"> Solar Water Pumping</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-water" checked onchange="onTypeParamChange()">
+                Solar Water Pumping</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-san" checked
-                  onchange="onTypeParamChange()"> Inst. Sanitation</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-san" checked onchange="onTypeParamChange()">
+                Inst. Sanitation</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-cook" checked
-                  onchange="onTypeParamChange()"> Induction Cooking</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-cook" checked onchange="onTypeParamChange()">
+                Induction Cooking</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-light" checked
-                  onchange="onTypeParamChange()"> Solar Lighting</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-light" checked onchange="onTypeParamChange()">
+                Solar Lighting</label>
             </div>
           </div>
           <div class="field"
@@ -967,16 +961,16 @@
             <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-cook" checked
-                  onchange="onTypeParamChange()"> Improved Cook Stoves</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-cook" checked onchange="onTypeParamChange()">
+                Improved Cook Stoves</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-ind" checked
-                  onchange="onTypeParamChange()"> Induction Cooker + Solar</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-ind" checked onchange="onTypeParamChange()">
+                Induction Cooker + Solar</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-san" checked
-                  onchange="onTypeParamChange()"> HH Sanitation</label>
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-san" checked onchange="onTypeParamChange()"> HH
+                Sanitation</label>
             </div>
           </div>
         </div>
@@ -1040,8 +1034,7 @@
               id="tog-A" onchange="toggleModule('A')" checked><span class="toggle-slider"></span></label>
         </div>
         <div class="module-body open" id="body-A">
-          <div class="method-tag"><a
-              href="https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242"
+          <div class="method-tag"><a href="https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242"
               target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard AMS-I.F / CDM AM0020 ↗</a>
           </div>
           <div class="module-grid">
@@ -1090,7 +1083,8 @@
         <div class="module-body open" id="body-B">
           <div class="method-tag"><a
               href="https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf"
-              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Metered &amp; Measured Energy Cooking Devices) ↗</a></div>
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Metered &amp;
+              Measured Energy Cooking Devices) ↗</a></div>
           <div class="module-grid">
             <div class="field"><label>Baseline Fuel</label>
               <select id="B-fuel" onchange="recalc()">
@@ -1311,7 +1305,8 @@
         <div class="module-body" id="body-F">
           <div class="method-tag"><a
               href="https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf"
-              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Household Scale) ↗</a>
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Household Scale)
+              ↗</a>
           </div>
           <div class="module-grid">
             <div class="field"><label>Number of Households <span class="info"
@@ -1497,7 +1492,7 @@
 
     // Unified Fuel Engine
     const FuelEngine = {
-      calculateEmissions: function(fuelType, massKg, fNRB) {
+      calculateEmissions: function (fuelType, massKg, fNRB) {
         if (!state.defaults) return 0;
         const fuelDef = state.defaults.fuels[fuelType];
         if (!fuelDef) return 0;
@@ -1625,10 +1620,10 @@
       const co = getLDC();
       const fNRB = co.fNRB;
 
-      const totalMassKg = fcDay * 365 * count; 
+      const totalMassKg = fcDay * 365 * count;
       const ER = FuelEngine.calculateEmissions(fuelT, totalMassKg, fNRB);
 
-      document.getElementById('F-formula').innerHTML = `${count} HHs × ${(totalMassKg/1000).toFixed(2)} t/yr × FuelEngine(fNRB) = <b>${ER.toFixed(2)} tCO₂e/yr</b>`;
+      document.getElementById('F-formula').innerHTML = `${count} HHs × ${(totalMassKg / 1000).toFixed(2)} t/yr × FuelEngine(fNRB) = <b>${ER.toFixed(2)} tCO₂e/yr</b>`;
       return ER;
     }
     function calcD() {
@@ -1643,13 +1638,13 @@
 
       const fcYrKg = fcDay * 365;          // kg/stove/year (baseline)
       const FSKg = fcYrKg * (1 - etaB / etaI);    // fuel saved per stove/year (kg)
-      
+
       const totalSavedKg = N * FSKg;
       const ER_gross = FuelEngine.calculateEmissions(fuelT, totalSavedKg, fNRB);
       const er = ER_gross * (1 - stack);
 
       document.getElementById('D-formula').innerHTML =
-        `${N} stoves × ${(FSKg/1000).toFixed(3)} t FS × FuelEngine(fNRB) × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+        `${N} stoves × ${(FSKg / 1000).toFixed(3)} t FS × FuelEngine(fNRB) × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
       return er;
     }
 
@@ -1754,7 +1749,7 @@
       const hhCountTotal = +v('hh-count');
       const hhSize = +v('hh-size');
       const hhPop = hhCountTotal * hhSize;
-      
+
       // Calculate overlapping fractions to prevent double counting
       const stoveRatio = hhCook ? (+v('port-stoves') / 100) : 0;
       const indRatio = hhInd ? (+v('port-induction') / 100) : 0;
