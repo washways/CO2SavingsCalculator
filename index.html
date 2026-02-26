@@ -1052,6 +1052,21 @@
               </select>
             </div>
           </div>
+          <h4 class="assump-head">Water Systems (Community & Boiling)</h4>
+          <div id="params-Water" class="proj-grid">
+            <div class="field"><label>Community Size (per system)</label><input type="number" id="A-comm-pop"
+                value="3000" min="0" step="100" onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Drinking Water Boiled (L/person/day)</label><input type="number" id="A-boil-vol"
+                value="2.0" min="0" step="0.5" onchange="recalc()"></div>
+            <div class="field"><label>Baseline Boiling Fuel</label>
+              <select id="A-boil-fuel" onchange="recalc()">
+                <option value="wood">Firewood</option>
+                <option value="charcoal">Charcoal</option>
+              </select>
+            </div>
+            <div class="field"><label>Baseline Stove η</label><input type="number" id="A-boil-eta" value="0.10"
+                min="0.05" step="0.01" max="1" onchange="recalc()"></div>
+          </div>
         </details>
       </div>
 
@@ -1072,7 +1087,12 @@
         </div>
         <div class="module-body open" id="body-A">
           <div class="method-tag"><a href="https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242"
-              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard AMS-I.F / CDM AM0020 ↗</a>
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard AMS-I.F / CDM AM0020
+              (Pumping) ↗</a>
+            <br><a
+              href="https://globalgoals.goldstandard.org/standards/443_v1.0_ee_gs-methodology-for-emission-reductions-from-safe-drinking-water-supply/"
+              target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard Safe Water Supply Methodology
+              (Avoided Boiling) ↗</a>
           </div>
           <div class="module-grid">
             <div class="field"><label>Baseline Pump Type</label>
@@ -1099,7 +1119,12 @@
             <div class="field" id="A-grid-field" style="display:none"><label>Motor Efficiency η</label><input
                 type="number" id="A-etamotor" value="0.90" min="0.5" max="1" step="0.01" onchange="recalc()"></div>
           </div>
+          <div style="margin: 10px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
+            <strong>Total Population Served: </strong><span id="A-total-pop"
+              style="font-weight: bold; color: var(--primary);">0</span> persons
+          </div>
           <div class="formula-box" id="A-formula">ER = BE · <b>0 tCO₂e</b> (solar PE = 0)</div>
+          <div class="formula-box" id="A-boil-formula" style="margin-top: 8px;">Avoided Boiling = <b>0 tCO₂e</b></div>
           <div class="result-inline"><span class="rv" id="A-detail">0</span><span class="ru">tCO₂e / year saved</span>
           </div>
         </div>
@@ -1527,26 +1552,63 @@
       // Hydraulic energy kWh/day = Q*H*rho*g / (3600*1000)
       const hydKwh = Q * H * 9.81 / 3600;  // kWh/day
       const shaftKwh = hydKwh / etaP;       // kWh/day
-      let BE = 0;
+      let BE_pump = 0;
       if (base === 'diesel') {
         const etaD = +v('A-etadiesel');
         const LHV = 10.0;  // kWh/litre diesel (≈36 MJ/L)
         const dieselL = shaftKwh / (etaD * LHV) * days; // L/year
-        BE = dieselL * 2.68 / 1000; // tCO2/year (IPCC EF diesel)
+        BE_pump = dieselL * 2.68 / 1000; // tCO2/year (IPCC EF diesel)
         document.getElementById('A-formula').innerHTML =
-          `Diesel: <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> × ${days} days × 2.68 kgCO₂/L = <b>${BE.toFixed(1)} tCO₂e/yr</b>`;
+          `Pump Displacement: Diesel <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> × ${days} days × 2.68 kgCO₂/L = <b>${BE_pump.toFixed(1)} tCO₂e/yr</b>`;
 
-        // Fuel Savings
-        state.fuelSavings.A = dieselL * (+v('price-diesel'));
+        // Fuel Savings (Pump)
+        state.fuelSavings.A += dieselL * (+v('price-diesel'));
       } else {
         const etaM = +v('A-etamotor');
         const kwhYr = shaftKwh / etaM * days;
         const co = getLDC();
-        BE = kwhYr * co.gEF / 1000;
+        BE_pump = kwhYr * co.gEF / 1000;
         document.getElementById('A-formula').innerHTML =
-          `Grid: <b>${kwhYr.toFixed(0)} kWh/yr</b> × ${co.gEF} kgCO₂/kWh = <b>${BE.toFixed(1)} tCO₂e/yr</b>`;
+          `Pump Displacement: Grid <b>${kwhYr.toFixed(0)} kWh/yr</b> × ${co.gEF} kgCO₂/kWh = <b>${BE_pump.toFixed(1)} tCO₂e/yr</b>`;
       }
-      return BE;
+
+      // Calculate Avoided Boiling Emissions
+      const popElement = document.getElementById('A-total-pop');
+      const totalPop = popElement ? parseInt(popElement.textContent.replace(/,/g, '')) || 0 : 0;
+
+      const boilVol = +v('A-boil-vol'); // L/person/day
+      const boilFuel = v('A-boil-fuel'); // 'wood' or 'charcoal'
+      const boilEta = +v('A-boil-eta');
+      const co = getLDC();
+      const fNRB = co ? co.fNRB : 0.81;
+
+      let BE_boil = 0;
+      if (totalPop > 0 && boilVol > 0 && state.defaults && state.defaults.fuels) {
+        // Energy to boil 1L of water from 20C to 100C + 5 min boiling (roughly 0.1 kWh or 0.36 MJ)
+        // Specific heat of water: 4.184 kJ/kgC. 80C diff = 334.7 kJ. Latent heat/evaporation losses = ~0.36 MJ total per L.
+        const energyPerL_MJ = 0.36;
+        const totalEnergyRea_MJ_yr = totalPop * boilVol * 365 * energyPerL_MJ;
+
+        const fuelDef = state.defaults.fuels[boilFuel];
+        if (fuelDef) {
+          const fuelNCV_MJ_kg = fuelDef.ncv_Mj_kg;
+          // Total mass of fuel needed = (Useful Energy Required / NCV) / boiling efficiency
+          const fuelMassKg_yr = (totalEnergyRea_MJ_yr / fuelNCV_MJ_kg) / boilEta;
+
+          // Calculate emissions using FuelEngine
+          BE_boil = FuelEngine.calculateEmissions(boilFuel, fuelMassKg_yr, fNRB);
+
+          document.getElementById('A-boil-formula').innerHTML =
+            `Avoided Boiling: ${totalPop} pop × ${boilVol}L/d × 365d = ${(totalPop * boilVol * 365 / 1000).toFixed(1)} m³/yr at η ${Math.round(boilEta * 100)}% → ${(fuelMassKg_yr / 1000).toFixed(1)} t ${boilFuel}/yr = <b>${BE_boil.toFixed(1)} tCO₂e/yr</b>`;
+
+          // Fuel Savings (Boiling)
+          state.fuelSavings.A += fuelMassKg_yr * (+v('price-' + boilFuel));
+        }
+      } else {
+        document.getElementById('A-boil-formula').innerHTML = `Avoided Boiling: = <b>0 tCO₂e/yr</b>`;
+      }
+
+      return BE_pump + BE_boil;
     }
 
     function calcB() {
@@ -1829,8 +1891,19 @@
       const fHouseholds = Math.round(hhs * hhCountTotal * indRatio);
       document.getElementById('F-count').value = fHouseholds;
 
-      // Community expansion for water (assume 600 HH per installation)
-      const commWaterPerDay = (600 * hhSize * 20) / 1000;
+      // Community expansion for water (configurable pop per installation)
+      const commPopPerSystem = +v('A-comm-pop');
+      const totalCommPop = (hcfs > 0 && hcfWater ? hcfs * commPopPerSystem : 0) + (schools > 0 && schWater ? schools * commPopPerSystem : 0);
+
+      // Calculate Total Population Served for Module A
+      const hcfInstituPop = hcfs > 0 && hcfWater ? hcfs * hcfPop : 0;
+      const schInstituPop = schools > 0 && schWater ? schools * schPop : 0;
+      const totalPopServedA = hcfInstituPop + schInstituPop + totalCommPop;
+
+      document.getElementById('A-total-pop').textContent = Math.round(totalPopServedA).toLocaleString();
+
+      // Assume 20L per person per day for the community
+      const commWaterPerDay = (commPopPerSystem * 20) / 1000;
 
       // Module A: Water
       const hcfWaterTotal = hcfs > 0 && hcfWater ? (hcfs * hcfWaterPerDay * hcfDays) + (hcfs * commWaterPerDay * 365) : 0;
@@ -1880,8 +1953,16 @@
       const schPupils = +v('sch-pupils'), schMeals = +v('sch-meals'), schStaff = +v('sch-staff'), schDays = +v('sch-days');
       const hhCount = +v('hh-count'), hhSize = +v('hh-size');
 
+      // Water / Boiling assumptions
       const waterDemand = v('A-demand');
+      const commPopSys = v('A-comm-pop');
+      const boilVol = v('A-boil-vol');
+      const boilFuel = document.getElementById('A-boil-fuel').options[document.getElementById('A-boil-fuel').selectedIndex].text;
+      const boilEta = v('A-boil-eta');
       const fuelIndDay = v('B-fuelkg');
+
+      const popElement = document.getElementById('A-total-pop');
+      const totalPopServedA = popElement ? popElement.textContent : '0';
 
       const rows = [
         ['CO2 Savings Calculator - Gold Standard Methodology', '', ''],
@@ -1907,11 +1988,16 @@
         ['AGGREGATED PARAMETERS', 'Value', 'Unit'],
         ['Total Daily Water Demand (Pumping)', waterDemand, 'm3/day'],
         ['Total Inst. Daily Cooking Fuel (Baseline)', fuelIndDay, 'kg/day'],
+        ['Total Wash/Water Population Served (Module A)', totalPopServedA, 'persons'],
+        ['Community Size (Per Water System)', commPopSys, 'persons'],
+        ['Avoided Boiling - Baseline Fuel', boilFuel, ''],
+        ['Avoided Boiling - Drinking Water Vol', boilVol, 'L/person/day'],
+        ['Avoided Boiling - Stove Efficiency', boilEta, ''],
         ['Total Institutional Population Served', popInst, 'persons'],
         ['Total Household Population Served', popHh, 'persons'],
         ['', '', ''],
         ['RESULTS', 'Annual tCO2e/yr', 'Lifetime tCO2e'],
-        ['A - Solar Water Pumping', state.results.A.toFixed(2), (state.results.A * lt).toFixed(1)],
+        ['A - Solar Water Pumping & Avoided Boiling', state.results.A.toFixed(2), (state.results.A * lt).toFixed(1)],
         ['B - Institutional Induction Cooking', state.results.B.toFixed(2), (state.results.B * lt).toFixed(1)],
         ['C - Sanitation Methane Reduction', state.results.C.toFixed(2), (state.results.C * lt).toFixed(1)],
         ['D - Improved HH Cookstoves', state.results.D.toFixed(2), (state.results.D * lt).toFixed(1)],
@@ -1921,7 +2007,7 @@
         ['TOTAL ESTIMATED REVENUE', '$' + (tot * v('carbon-price')).toFixed(2), '$' + (tot * lt * v('carbon-price')).toFixed(2)],
         ['', '', ''],
         ['FINANCIAL SAVINGS', 'Annual Savings (USD)', 'Lifetime Savings (USD)'],
-        ['A - Diesel Displaced', state.fuelSavings.A.toFixed(2), (state.fuelSavings.A * lt).toFixed(2)],
+        ['A - Diesel & Boiling Fuel Displaced', state.fuelSavings.A.toFixed(2), (state.fuelSavings.A * lt).toFixed(2)],
         ['B - Cooking Fuel Displaced (Inst)', state.fuelSavings.B.toFixed(2), (state.fuelSavings.B * lt).toFixed(2)],
         ['D - Cooking Fuel Displaced (HH)', state.fuelSavings.D.toFixed(2), (state.fuelSavings.D * lt).toFixed(2)],
         ['E - Lighting Fuel Displaced (Inst)', state.fuelSavings.E.toFixed(2), (state.fuelSavings.E * lt).toFixed(2)],
@@ -1938,6 +2024,7 @@
         ['', '', ''],
         ['METHODOLOGY REFERENCES', '', ''],
         ['A: Gold Standard AMS-I.F / CDM AM0020', 'https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242', ''],
+        ['A (Boiling): GS Safe Water Supply Methodology', 'https://globalgoals.goldstandard.org/standards/443_v1.0_ee_gs-methodology-for-emission-reductions-from-safe-drinking-water-supply/', ''],
         ['B: Gold Standard MECD v1.2', 'https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf', ''],
         ['C: IPCC / Gold Standard Integrated SDG Sanitation', 'https://globalgoals.goldstandard.org/in-development/integrated-sdg-methodology-for-sanitation/', ''],
         ['D: Gold Standard TPDDTEC / AMS-II.G', 'https://globalgoals.goldstandard.org/standards/407_V4.0_EE_ICS_Reduced-Emissions-from-Cooking-and-Heating-TPDDTEC.pdf', ''],
