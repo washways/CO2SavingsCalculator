@@ -505,6 +505,18 @@
       border-bottom: 1px solid var(--border)
     }
 
+    #validation-alert {
+      display: none;
+      background: #fee2e2;
+      border: 1px solid #ef4444;
+      color: #991b1b;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
     .module-row:last-child {
       border-bottom: none
     }
@@ -1330,6 +1342,7 @@
 
     <!-- RESULTS SIDEBAR -->
     <div class="side-col">
+      <div id="validation-alert"></div>
       <div class="results-card">
         <div class="section-title">📊 Results Summary</div>
         <div class="total-box">
@@ -1504,19 +1517,17 @@
           // Both CO2 and NC are subject to fNRB for woody biomass
           ER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg) * fNRB;
         } else if (fuelType === 'charcoal') {
-          // Charcoal Combustion (assume all NC from charcoal is non-renewable/net emitting, CO2 is renewable unless fNRB applied)
-          const combER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg);
-          // Upstream Wood Production: mass * prodRatio * wood EFs * fNRB
+          // Charcoal combustion: Apply to biogenic portion only if method dictates.
+          // Minimal patch constraint: Apply fNRB to the CO2 term ONLY for biomass-derived fuels.
+          const combER = massT * (fuelDef.efCO2_kg_kg * fNRB + fuelDef.efNC_kg_kg);
+
+          // Upstream Wood Production: mass * prodRatio * wood EFs
           const woodDef = state.defaults.fuels.wood;
-          const upER = massT * fuelDef.prodRatio * (woodDef.efCO2_kg_kg + woodDef.efNC_kg_kg) * fNRB;
-          ER = combER + upER; // Note: if strictly applying fNRB, charcoal combustion CO2 might also need fNRB factor instead of taking it full natively.
-          // Corrected logic based on implementation plan:
-          // Charcoal combustion is net-zero except for non-CO2. NCV-based IPCC EF for charcoal CO2 is 112000 kg/TJ, but fNRB applies to the wood used to make it.
-          // To prevent double counting and be strictly conservative based on plan:
-          // Total Biomass equivalent = massT * prodRatio. Total ER = Total Biomass * wood_ef * fNRB.
-          ER = massT * fuelDef.prodRatio * (woodDef.efCO2_kg_kg + woodDef.efNC_kg_kg) * fNRB + massT * fuelDef.efNC_kg_kg;
+          // Apply fNRB to CO2 portion
+          const upER = massT * fuelDef.prodRatio * (woodDef.efCO2_kg_kg * fNRB + woodDef.efNC_kg_kg);
+          ER = combER + upER;
         } else {
-          // Fossil fuels
+          // Fossil fuels - NO fNRB applied
           ER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg);
         }
         return ER;
@@ -1623,7 +1634,11 @@
       const totalMassKg = fcDay * 365 * count;
       const ER = FuelEngine.calculateEmissions(fuelT, totalMassKg, fNRB);
 
-      document.getElementById('F-formula').innerHTML = `${count} HHs × ${(totalMassKg / 1000).toFixed(2)} t/yr × FuelEngine(fNRB) = <b>${ER.toFixed(2)} tCO₂e/yr</b>`;
+      let formulaText = `${count} HHs × ${(totalMassKg / 1000).toFixed(2)} t/yr × FuelEngine(fNRB) = <b>${ER.toFixed(2)} tCO₂e/yr</b>`;
+      if (fuelT === 'charcoal') {
+        formulaText += ` <span class="info" title="Includes upstream wood-to-charcoal emissions (prodRatio 6)">i</span>`;
+      }
+      document.getElementById('F-formula').innerHTML = formulaText;
       return ER;
     }
     function calcD() {
@@ -1643,8 +1658,11 @@
       const ER_gross = FuelEngine.calculateEmissions(fuelT, totalSavedKg, fNRB);
       const er = ER_gross * (1 - stack);
 
-      document.getElementById('D-formula').innerHTML =
-        `${N} stoves × ${(FSKg / 1000).toFixed(3)} t FS × FuelEngine(fNRB) × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      let formulaText = `${N} stoves × ${(FSKg / 1000).toFixed(3)} t FS × FuelEngine(fNRB) × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      if (fuelT === 'charcoal') {
+        formulaText += ` <span class="info" title="Includes upstream wood-to-charcoal emissions (prodRatio 6)">i</span>`;
+      }
+      document.getElementById('D-formula').innerHTML = formulaText;
       return er;
     }
 
@@ -1654,12 +1672,28 @@
     function fmt(n) { return n < 1 ? n.toFixed(2) : n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString(); }
 
     function recalc() {
-      state.results.A = calcA();
-      state.results.B = calcB();
-      state.results.C = calcC();
-      state.results.D = calcD();
-      state.results.E = calcE();
-      state.results.F = calcF();
+      // Validation: Double counting overlap check
+      const dHH = document.getElementById('tog-D').checked ? +v('D-stoves') : 0;
+      const fHH = document.getElementById('tog-F').checked ? +v('F-count') : 0;
+      const totalAvailableHH = (+v('hhs') || 10) * (+v('hh-count') || 1); // Defaults if not dynamically populated
+
+      let validationFailed = false;
+      const alertBox = document.getElementById('validation-alert');
+      // Only block if total D+F actually overlaps given absolute numbers. Simple block if D>0 and F>0.
+      if (dHH > 0 && fHH > 0 && document.getElementById('tog-D').checked && document.getElementById('tog-F').checked) {
+        alertBox.innerHTML = `⚠️ Households cannot be counted in both Module D (ICS) and Module F (HH induction). Split households between modules or disable one module.`;
+        alertBox.style.display = 'block';
+        validationFailed = true;
+      } else {
+        alertBox.style.display = 'none';
+      }
+
+      state.results.A = validationFailed ? NaN : calcA();
+      state.results.B = validationFailed ? NaN : calcB();
+      state.results.C = validationFailed ? NaN : calcC();
+      state.results.D = validationFailed ? NaN : calcD();
+      state.results.E = validationFailed ? NaN : calcE();
+      state.results.F = validationFailed ? NaN : calcF();
 
       ['A', 'B', 'C', 'D', 'E', 'F'].forEach(m => {
         const r = state.results[m];
@@ -1844,7 +1878,11 @@
         ['E - Institutional Solar Lighting', state.results.E.toFixed(2), (state.results.E * lt).toFixed(1)],
         ['F - HH Induction Cooking + Solar', state.results.F.toFixed(2), (state.results.F * lt).toFixed(1)],
         ['TOTAL EMISSION REDUCTIONS', tot.toFixed(2), (tot * lt).toFixed(1)],
-        ['INDICATIVE GROSS CARBON VALUE', '$' + (tot * v('carbon-price')).toFixed(2), '$' + (tot * lt * v('carbon-price')).toFixed(2)],
+        ['TOTAL ESTIMATED REVENUE', '$' + (tot * v('carbon-price')).toFixed(2), '$' + (tot * lt * v('carbon-price')).toFixed(2)],
+        ['', '', ''],
+        ['ASSUMPTIONS & FLAGS', '', ''],
+        ['Charcoal Upstream Production Used?', 'Yes', ''],
+        ['Validation Status', document.getElementById('validation-alert').style.display === 'block' ? 'FAILED (Overlap)' : 'PASS', ''],
         ['', '', ''],
         ['DATA PROVENANCE', '', ''],
         ['Defaults Version', state.defaults.version, ''],
