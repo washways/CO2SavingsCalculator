@@ -88,4 +88,4 @@ Calculates savings by totally replacing household biomass with solar-powered ind
 - **Emission Reduction (tCO₂e/yr)** = `Households × FuelEngine(fuel, Fuel Consumption (kg/yr), fNRB)`
 
 ## Deployment
-This project is built using basic HTML, CSS, and JS. It can be hosted on GitHub Pages by pushing the `index.html` file to the `main` or `gh-pages` branch.
+This project is built using basic HTML, CSS, and JS. It can be hosted on GitHub Pages by pushing the `index.html` file to the `main` or `gh-pages` branch. The live calculator can be accessed at: [https://washways.github.io/CO2SavingsCalculator/](https://washways.github.io/CO2SavingsCalculator/)
