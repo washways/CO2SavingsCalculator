@@ -906,6 +906,31 @@
             <div class="sub">country baseline</div>
           </div>
         </div>
+
+        <div class="section-title" style="margin-top:20px; border-bottom:none; padding-bottom:0;">⛽ Local Fuel Prices
+          (Optional overrides)</div>
+        <div class="proj-grid" style="margin-top:10px;">
+          <div class="field">
+            <label>Firewood ($/kg)</label>
+            <input type="number" id="price-wood" value="0.05" min="0" step="0.01" onchange="recalc()">
+          </div>
+          <div class="field">
+            <label>Charcoal ($/kg)</label>
+            <input type="number" id="price-charcoal" value="0.20" min="0" step="0.01" onchange="recalc()">
+          </div>
+          <div class="field">
+            <label>LPG ($/kg)</label>
+            <input type="number" id="price-lpg" value="1.00" min="0" step="0.05" onchange="recalc()">
+          </div>
+          <div class="field">
+            <label>Kerosene ($/L)</label>
+            <input type="number" id="price-kerosene" value="0.80" min="0" step="0.05" onchange="recalc()">
+          </div>
+          <div class="field">
+            <label>Diesel ($/L)</label>
+            <input type="number" id="price-diesel" value="1.10" min="0" step="0.05" onchange="recalc()">
+          </div>
+        </div>
       </div>
 
       <!-- PROJECT TYPE -->
@@ -1362,6 +1387,13 @@
               style="color:var(--text);margin-top:4px;display:inline-block;border-top:1px solid rgba(16,185,129,0.2);padding-top:4px;width:100%;">Lifetime:
               <span id="revenue-lifetime" style="color:var(--green)">$0</span></strong></div>
         </div>
+        <div class="total-box" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3)">
+          <div class="label">Total Est. Fuel Cost Savings</div>
+          <div class="value" id="fuel-annual" style="color:#d97706;font-size:26px">$0</div>
+          <div class="unit">Avoided spending per year<br><strong
+              style="color:var(--text);margin-top:4px;display:inline-block;border-top:1px solid rgba(245,158,11,0.2);padding-top:4px;width:100%;">Lifetime:
+              <span id="fuel-lifetime" style="color:#d97706">$0</span></strong></div>
+        </div>
         <div class="bar-wrap" id="bar-wrap">
           <div class="bar-item">
             <div class="bar-label"><span>⚡ A · Solar Pumping</span><span id="bar-a-val">0%</span></div>
@@ -1445,7 +1477,12 @@
     };
 
     // ─── STATE & SHARED LOGIC ──────────────────────────────────────────────
-    let state = { country: 'MWI', results: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 }, defaults: null };
+    let state = {
+      country: 'MWI',
+      results: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 },
+      fuelSavings: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 },
+      defaults: null
+    };
 
     // Unified Fuel Engine
     const FuelEngine = {
@@ -1480,6 +1517,7 @@
 
     // ─── CALCULATIONS ───────────────────────────────────────────────────────
     function calcA() {
+      state.fuelSavings.A = 0;
       if (!document.getElementById('tog-A').checked) return 0;
       const Q = +v('A-demand');      // m³/day
       const H = +v('A-head');        // m
@@ -1497,6 +1535,9 @@
         BE = dieselL * 2.68 / 1000; // tCO2/year (IPCC EF diesel)
         document.getElementById('A-formula').innerHTML =
           `Diesel: <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> × ${days} days × 2.68 kgCO₂/L = <b>${BE.toFixed(1)} tCO₂e/yr</b>`;
+
+        // Fuel Savings
+        state.fuelSavings.A = dieselL * (+v('price-diesel'));
       } else {
         const etaM = +v('A-etamotor');
         const kwhYr = shaftKwh / etaM * days;
@@ -1509,6 +1550,7 @@
     }
 
     function calcB() {
+      state.fuelSavings.B = 0;
       if (!document.getElementById('tog-B').checked) return 0;
       const fuelType = v('B-fuel');
       const fc_day = +v('B-fuelkg');   // kg/day
@@ -1531,6 +1573,11 @@
       const er = Math.max(0, BE - PE);
       document.getElementById('B-formula').innerHTML =
         `BE = <b>${BE.toFixed(2)} tCO₂e/yr</b> — PE = <b>${PE.toFixed(2)}</b> → ER = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+
+      // Fuel Savings: total kg of displaced fuel * price per kg
+      const fuelPrice = +v('price-' + fuelType) || 0;
+      state.fuelSavings.B = (fc_day * days) * fuelPrice;
+
       return er;
     }
 
@@ -1559,15 +1606,30 @@
 
 
     function calcE() {
+      state.fuelSavings.E = 0;
       if (!document.getElementById('tog-E').checked) return 0;
       const count = +v('E-count');
       const ef = +v('E-ef');
       const er = count * ef;
       document.getElementById('E-formula').innerHTML = `${count} facilities × ${ef} tCO₂e/yr = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+
+      // Fuel Savings estimation
+      // Kerosene EF: ~2.5 kgCO2/L. Diesel EF: ~2.68 kgCO2/L.
+      // To estimate L from tCO2e, divide by EF.
+      const baseline = v('E-baseline');
+      if (baseline === 'kerosene') {
+        const litersKero = (er * 1000) / 2.5;
+        state.fuelSavings.E = litersKero * (+v('price-kerosene'));
+      } else if (baseline === 'diesel') {
+        const litersDiesel = (er * 1000) / 2.68;
+        state.fuelSavings.E = litersDiesel * (+v('price-diesel'));
+      }
+
       return er;
     }
 
     function calcF() {
+      state.fuelSavings.F = 0;
       if (!document.getElementById('tog-F').checked) return 0;
       const count = +v('F-count');
       const fcDay = +v('F-fc');
@@ -1583,9 +1645,14 @@
         formulaText += ` <span class="info" title="Includes upstream wood-to-charcoal emissions (prodRatio 6)">i</span>`;
       }
       document.getElementById('F-formula').innerHTML = formulaText;
+
+      // Fuel Savings: displaced kg * price per kg
+      state.fuelSavings.F = totalMassKg * (+v('price-' + fuelT));
+
       return ER;
     }
     function calcD() {
+      state.fuelSavings.D = 0;
       if (!document.getElementById('tog-D').checked) return 0;
       const N = +v('D-stoves');
       const fcDay = +v('D-baseline-fc');
@@ -1607,6 +1674,10 @@
         formulaText += ` <span class="info" title="Includes upstream wood-to-charcoal emissions (prodRatio 6)">i</span>`;
       }
       document.getElementById('D-formula').innerHTML = formulaText;
+
+      // Fuel Savings: displaced kg * price per kg * stack adjustment
+      state.fuelSavings.D = (totalSavedKg * (1 - stack)) * (+v('price-' + fuelT));
+
       return er;
     }
 
@@ -1665,6 +1736,10 @@
       document.getElementById('revenue-annual').textContent = '$' + fmt(revAnnual);
       document.getElementById('revenue-lifetime').textContent = '$' + fmt(revLifetime);
 
+      const totalFuel = Object.values(state.fuelSavings).reduce((a, b) => a + b, 0);
+      document.getElementById('fuel-annual').textContent = '$' + fmt(totalFuel);
+      document.getElementById('fuel-lifetime').textContent = '$' + fmt(totalFuel * lt);
+
       // Bars
       ['A', 'B', 'C', 'D', 'E', 'F'].forEach(m => {
         const pct = total > 0 ? (state.results[m] / total * 100) : 0;
@@ -1693,6 +1768,17 @@
       document.getElementById('B-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
       document.getElementById('D-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
       document.getElementById('D-fnrb').value = co.fNRB.toFixed(2);
+
+      // Auto-set local fuel prices from defaults
+      if (state.defaults && state.defaults.fuels) {
+        ['wood', 'charcoal', 'lpg', 'kerosene', 'diesel'].forEach(f => {
+          const input = document.getElementById('price-' + f);
+          if (input && state.defaults.fuels[f] && state.defaults.fuels[f].price_usd !== undefined) {
+            input.value = state.defaults.fuels[f].price_usd.toFixed(2);
+          }
+        });
+      }
+
       recalc();
     }
 
@@ -1806,6 +1892,13 @@
         ['fNRB', co.fNRB, ''],
         ['Grid EF (kgCO2/kWh)', co.gEF, ''],
         ['', '', ''],
+        ['LOCAL FUEL PRICES USED (USD)', 'Price', 'Unit'],
+        ['Firewood', v('price-wood'), '$/kg'],
+        ['Charcoal', v('price-charcoal'), '$/kg'],
+        ['LPG', v('price-lpg'), '$/kg'],
+        ['Kerosene', v('price-kerosene'), '$/L'],
+        ['Diesel', v('price-diesel'), '$/L'],
+        ['', '', ''],
         ['PORTFOLIO INPUTS', 'Count', 'Details'],
         ['Health Care Facilities', hcfs, `${hcfBeds} Beds, ${hcfOpd} OPD/day, ${hcfStaff} Staff`],
         ['Schools / Institutions', schools, `${schPupils} Pupils, ${schStaff} Staff, ${schMeals} Meals/day`],
@@ -1826,6 +1919,14 @@
         ['F - HH Induction Cooking + Solar', state.results.F.toFixed(2), (state.results.F * lt).toFixed(1)],
         ['TOTAL EMISSION REDUCTIONS', tot.toFixed(2), (tot * lt).toFixed(1)],
         ['TOTAL ESTIMATED REVENUE', '$' + (tot * v('carbon-price')).toFixed(2), '$' + (tot * lt * v('carbon-price')).toFixed(2)],
+        ['', '', ''],
+        ['FINANCIAL SAVINGS', 'Annual Savings (USD)', 'Lifetime Savings (USD)'],
+        ['A - Diesel Displaced', state.fuelSavings.A.toFixed(2), (state.fuelSavings.A * lt).toFixed(2)],
+        ['B - Cooking Fuel Displaced (Inst)', state.fuelSavings.B.toFixed(2), (state.fuelSavings.B * lt).toFixed(2)],
+        ['D - Cooking Fuel Displaced (HH)', state.fuelSavings.D.toFixed(2), (state.fuelSavings.D * lt).toFixed(2)],
+        ['E - Lighting Fuel Displaced (Inst)', state.fuelSavings.E.toFixed(2), (state.fuelSavings.E * lt).toFixed(2)],
+        ['F - Cooking Fuel Displaced (HH)', state.fuelSavings.F.toFixed(2), (state.fuelSavings.F * lt).toFixed(2)],
+        ['TOTAL ESTIMATED FUEL COST SAVINGS', '$' + Object.values(state.fuelSavings).reduce((a, b) => a + b, 0).toFixed(2), '$' + (Object.values(state.fuelSavings).reduce((a, b) => a + b, 0) * lt).toFixed(2)],
         ['', '', ''],
         ['ASSUMPTIONS & FLAGS', '', ''],
         ['Charcoal Upstream Production Used?', 'Yes', ''],
