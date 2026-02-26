@@ -31,17 +31,24 @@ All cooking and fuel-combustion modules (B, D, F) rely on a single shared method
   - `Upstream Wood Production emissions = Mass_charcoal × Production_Ratio × (EF_wood_CO₂ + EF_wood_NC) × fNRB`
   - `Total Emission Reduction = Upstream Wood Production emissions + Combustion emissions`
 
-### Module A: Solar Water Pumping
-**Methodology:** Gold Standard AMS-I.F / CDM AM0020
+### Module A: Solar Water Pumping & Avoided Boiling
+**Methodology:** 
+- GS AMS-I.F / CDM AM0020 (Pumping Displacement)
+- GS Safe Water Supply Methodology (Avoided Boiling)
 
-Calculates baseline emissions from water pumping that would have occurred without the solar intervention.
+Calculates baseline emissions from water pumping that would have occurred without the solar intervention, as well as the emissions avoided by eliminating the need to boil unsafe water with biomass.
+- **Total Population Served** = Institutional populations + Total Community Size (default 3,000 per system).
 - **Hydraulic Energy (kWh/day)** = `(Volume × Head × 9.81) / 3600`
 - **Shaft Energy (kWh/day)** = `Hydraulic Energy / Pump Efficiency`
-- **Baseline (Diesel):** 
+- **Pumping Baseline (Diesel):** 
   - `Diesel Consumed (L/yr) = (Shaft Energy / (Diesel Efficiency × LHV)) × Operating Days`
   - `Emission Reduction (tCO₂e/yr) = Diesel Consumed × 2.68 kgCO₂/L / 1000`
-- **Baseline (Grid):**
+- **Pumping Baseline (Grid):**
   - `Emissions = (Shaft Energy / Motor Efficiency) × Operating Days × Grid EF / 1000`
+- **Avoided Boiling (Wood/Charcoal):**
+  - Calculates the energy required to boil the assumed drinking water volume (2L/person/day) from 20°C to 100°C for 5 minutes (`~0.36 MJ/L`).
+  - Total required fuel mass = `(Total Energy / Fuel NCV) / Stove Efficiency`.
+  - Emission reduction is derived via the `FuelEngine` applying fNRB.
 
 ### Module B: Institutional Induction Cooking
 **Methodology:** Gold Standard MECD v1.2
@@ -86,6 +93,12 @@ Calculates savings from displacing kerosene or diesel lighting in institutions.
 
 Calculates savings by totally replacing household biomass with solar-powered induction setups (Project Emissions assumed negligible/zero).
 - **Emission Reduction (tCO₂e/yr)** = `Households × FuelEngine(fuel, Fuel Consumption (kg/yr), fNRB)`
+
+## Financial Fuel Cost Savings
+
+The calculator automatically tracks the amount of underlying fossil fuels or biomass displaced by these interventions (e.g. avoided diesel for pumps/lighting, avoided wood/charcoal for cooking) and translates these physical quantities into aggregate financial savings. 
+- Local unit fuel prices (`$/kg` for wood/charcoal/LPG, `$/L` for diesel/kerosene) are populated automatically by country from the `defaults.json` database, and can be overridden by users locally via the Advanced Assumptions UI.
+- Calculated savings are integrated into both the UI dashboard and CSV portfolio export as "Lifetime Fuel Cost Savings".
 
 ## Deployment
 This project is built using basic HTML, CSS, and JS. It can be hosted on GitHub Pages by pushing the `index.html` file to the `main` or `gh-pages` branch. The live calculator can be accessed at: [https://washways.github.io/CO2SavingsCalculator/](https://washways.github.io/CO2SavingsCalculator/)
