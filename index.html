@@ -72,6 +72,30 @@
       z-index: 100;
       box-shadow: var(--shadow);
     }
+    
+    .estimator-banner {
+      background: #fef08a;
+      color: #854d0e;
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 64px;
+      z-index: 99;
+      border-bottom: 1px solid #fde047;
+    }
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
 
     .logo {
       display: flex;
@@ -1324,9 +1348,9 @@
           <div class="unit">tCO₂e over <span id="lt-yrs">10</span> years</div>
         </div>
         <div class="total-box" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.3)">
-          <div class="label">Voluntary Carbon Market</div>
+          <div class="label">Indicative Gross Carbon Value</div>
           <div class="value" id="revenue-annual" style="color:var(--green);font-size:26px">$0</div>
-          <div class="unit">Est. Annual Revenue (at $<span id="lbl-price">10</span>/t)<br><strong
+          <div class="unit">Est. Annual Value (at $<span id="lbl-price">10</span>/t)<br><strong
               style="color:var(--text);margin-top:4px;display:inline-block;border-top:1px solid rgba(16,185,129,0.2);padding-top:4px;width:100%;">Lifetime:
               <span id="revenue-lifetime" style="color:var(--green)">$0</span></strong></div>
         </div>
@@ -1468,8 +1492,41 @@
       vip: 0.05, ecosan: 0.01, biogas: 0.10, sewer: 0.00
     };
 
-    // ─── STATE ─────────────────────────────────────────────────────────────
-    let state = { country: 'MWI', results: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 } };
+    // ─── STATE & SHARED LOGIC ──────────────────────────────────────────────
+    let state = { country: 'MWI', results: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 }, defaults: null };
+
+    // Unified Fuel Engine
+    const FuelEngine = {
+      calculateEmissions: function(fuelType, massKg, fNRB) {
+        if (!state.defaults) return 0;
+        const fuelDef = state.defaults.fuels[fuelType];
+        if (!fuelDef) return 0;
+
+        const massT = massKg / 1000;
+        let ER = 0;
+
+        if (fuelType === 'wood') {
+          // Both CO2 and NC are subject to fNRB for woody biomass
+          ER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg) * fNRB;
+        } else if (fuelType === 'charcoal') {
+          // Charcoal Combustion (assume all NC from charcoal is non-renewable/net emitting, CO2 is renewable unless fNRB applied)
+          const combER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg);
+          // Upstream Wood Production: mass * prodRatio * wood EFs * fNRB
+          const woodDef = state.defaults.fuels.wood;
+          const upER = massT * fuelDef.prodRatio * (woodDef.efCO2_kg_kg + woodDef.efNC_kg_kg) * fNRB;
+          ER = combER + upER; // Note: if strictly applying fNRB, charcoal combustion CO2 might also need fNRB factor instead of taking it full natively.
+          // Corrected logic based on implementation plan:
+          // Charcoal combustion is net-zero except for non-CO2. NCV-based IPCC EF for charcoal CO2 is 112000 kg/TJ, but fNRB applies to the wood used to make it.
+          // To prevent double counting and be strictly conservative based on plan:
+          // Total Biomass equivalent = massT * prodRatio. Total ER = Total Biomass * wood_ef * fNRB.
+          ER = massT * fuelDef.prodRatio * (woodDef.efCO2_kg_kg + woodDef.efNC_kg_kg) * fNRB + massT * fuelDef.efNC_kg_kg;
+        } else {
+          // Fossil fuels
+          ER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg);
+        }
+        return ER;
+      }
+    };
 
     // ─── CALCULATIONS ───────────────────────────────────────────────────────
     function calcA() {
@@ -1511,18 +1568,7 @@
       const fNRB = co.fNRB;
       const fc_t = fc_day * days / 1000; // tonnes/year
 
-      let BE = 0;
-      if (fuelType === 'wood') {
-        BE = fc_t * (FUEL.wood.efCO2 + FUEL.wood.efNC) * fNRB;
-      } else if (fuelType === 'charcoal') {
-        // Charcoal: combustion EF + wood production chain × fNRB
-        const prod = FUEL.charcoal.prodRatio; // kg wood per kg charcoal
-        BE = fc_t * (FUEL.charcoal.efCO2 + prod * FUEL.wood.efCO2 * fNRB);
-      } else {
-        // Fossil fuels – no fNRB
-        const f = FUEL[fuelType];
-        BE = fc_t * (f.efCO2 + f.efNC);
-      }
+      let BE = FuelEngine.calculateEmissions(fuelType, fc_day * days, fNRB);
 
       let PE = 0;
       if (elec === 'grid') {
@@ -1579,18 +1625,11 @@
       const co = getLDC();
       const fNRB = co.fNRB;
 
-      const fc_t = fcDay * 365 / 1000; // tonnes/year per HH
-      let EF = 0;
-      if (fuelT === 'wood') {
-        EF = (FUEL.wood.efCO2 + FUEL.wood.efNC) * fNRB;
-      } else {
-        const prod = FUEL.charcoal.prodRatio;
-        EF = (FUEL.charcoal.efCO2 + prod * FUEL.wood.efCO2 * fNRB);
-      }
+      const totalMassKg = fcDay * 365 * count; 
+      const ER = FuelEngine.calculateEmissions(fuelT, totalMassKg, fNRB);
 
-      const er = count * fc_t * EF;
-      document.getElementById('F-formula').innerHTML = `${count} HHs × ${fc_t.toFixed(2)} t/yr × ${EF.toFixed(2)} EF × fNRB = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
-      return er;
+      document.getElementById('F-formula').innerHTML = `${count} HHs × ${(totalMassKg/1000).toFixed(2)} t/yr × FuelEngine(fNRB) = <b>${ER.toFixed(2)} tCO₂e/yr</b>`;
+      return ER;
     }
     function calcD() {
       if (!document.getElementById('tog-D').checked) return 0;
@@ -1602,27 +1641,21 @@
       const stack = +v('D-stack');
       const fuelT = v('D-fuel');
 
-      // Fuel savings per stove per year (tonnes)
-      const fcYr = fcDay * 365 / 1000;          // tonnes/stove/year (baseline)
-      const FS = fcYr * (1 - etaB / etaI);    // fuel saved per stove/year
+      const fcYrKg = fcDay * 365;          // kg/stove/year (baseline)
+      const FSKg = fcYrKg * (1 - etaB / etaI);    // fuel saved per stove/year (kg)
+      
+      const totalSavedKg = N * FSKg;
+      const ER_gross = FuelEngine.calculateEmissions(fuelT, totalSavedKg, fNRB);
+      const er = ER_gross * (1 - stack);
 
-      let EF;
-      if (fuelT === 'wood') {
-        EF = (FUEL.wood.efCO2 + FUEL.wood.efNC);  // tCO2e/tonne
-      } else {
-        // charcoal: include production wood chain
-        EF = FUEL.charcoal.efCO2 + FUEL.charcoal.prodRatio * FUEL.wood.efCO2;
-      }
-
-      const er = N * FS * fNRB * EF * (1 - stack);
       document.getElementById('D-formula').innerHTML =
-        `${N} stoves × ${FS.toFixed(3)} t FS × ${fNRB} fNRB × ${EF.toFixed(3)} EF × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+        `${N} stoves × ${(FSKg/1000).toFixed(3)} t FS × FuelEngine(fNRB) × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
       return er;
     }
 
     // ─── UI HELPERS ─────────────────────────────────────────────────────────
     function v(id) { return document.getElementById(id).value; }
-    function getLDC() { return LDC[state.country] || LDC['MWI']; }
+    function getLDC() { return state.defaults ? state.defaults.countries[state.country] : null; }
     function fmt(n) { return n < 1 ? n.toFixed(2) : n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString(); }
 
     function recalc() {
@@ -1673,12 +1706,13 @@
     function onCountryChange() {
       const iso = v('country');
       state.country = iso;
-      const co = LDC[iso];
+      const co = getLDC();
       if (!co) return;
       document.getElementById('badge-fnrb').textContent = co.fNRB.toFixed(2);
       document.getElementById('badge-grid').textContent = co.gEF.toFixed(3) + ' kgCO₂/kWh';
       document.getElementById('badge-region').textContent = co.r;
-      document.getElementById('badge-fuel').textContent = FUEL[co.fuel]?.label || co.fuel;
+      const fDef = state.defaults.fuels[co.fuel];
+      document.getElementById('badge-fuel').textContent = fDef ? fDef.label : co.fuel;
       // Auto-set fuel selects
       document.getElementById('B-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
       document.getElementById('D-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
@@ -1717,8 +1751,21 @@
       const schWaterPerDay = (schPop * 3) / 1000;
       const schFuelKgPerDay = schMeals * 0.10;
 
-      const hhCount = +v('hh-count'), hhSize = +v('hh-size');
-      const hhPop = hhCount * hhSize;
+      const hhCountTotal = +v('hh-count');
+      const hhSize = +v('hh-size');
+      const hhPop = hhCountTotal * hhSize;
+      
+      // Calculate overlapping fractions to prevent double counting
+      const stoveRatio = hhCook ? (+v('port-stoves') / 100) : 0;
+      const indRatio = hhInd ? (+v('port-induction') / 100) : 0;
+
+      // Module D: Cookstoves
+      const dHouseholds = Math.round(hhs * hhCountTotal * stoveRatio * (1 - indRatio));
+      document.getElementById('D-stoves').value = dHouseholds;
+
+      // Module F: HH Induction
+      const fHouseholds = Math.round(hhs * hhCountTotal * indRatio);
+      document.getElementById('F-count').value = fHouseholds;
 
       // Community expansion for water (assume 600 HH per installation)
       const commWaterPerDay = (600 * hhSize * 20) / 1000;
@@ -1740,14 +1787,8 @@
       document.getElementById('C-pop-inst').value = instPop;
       document.getElementById('C-pop-hh').value = hhSanPop;
 
-      // Module D: Cookstoves
-      document.getElementById('D-stoves').value = hhs > 0 && hhCook ? hhs * hhCount : 0;
-
       // Module E: Lighting
       document.getElementById('E-count').value = (hcfs > 0 && hcfLight ? hcfs : 0) + (schools > 0 && schLight ? schools : 0);
-
-      // Module F: HH Induction
-      document.getElementById('F-count').value = hhs > 0 && hhInd ? hhs * hhCount : 0;
 
       recalc();
     }
@@ -1808,7 +1849,11 @@
         ['E - Institutional Solar Lighting', state.results.E.toFixed(2), (state.results.E * lt).toFixed(1)],
         ['F - HH Induction Cooking + Solar', state.results.F.toFixed(2), (state.results.F * lt).toFixed(1)],
         ['TOTAL EMISSION REDUCTIONS', tot.toFixed(2), (tot * lt).toFixed(1)],
-        ['TOTAL ESTIMATED REVENUE', '$' + (tot * v('carbon-price')).toFixed(2), '$' + (tot * lt * v('carbon-price')).toFixed(2)],
+        ['INDICATIVE GROSS CARBON VALUE', '$' + (tot * v('carbon-price')).toFixed(2), '$' + (tot * lt * v('carbon-price')).toFixed(2)],
+        ['', '', ''],
+        ['DATA PROVENANCE', '', ''],
+        ['Defaults Version', state.defaults.version, ''],
+        ['Source', state.defaults.metadata.source, ''],
         ['', '', ''],
         ['METHODOLOGY REFERENCES', '', ''],
         ['A: Gold Standard AMS-I.F / CDM AM0020', 'https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242', ''],
@@ -1826,14 +1871,26 @@
     }
 
     // ─── INIT ───────────────────────────────────────────────────────────────
-    (function init() {
-      const sel = document.getElementById('country');
-      Object.keys(LDC).sort((a, b) => LDC[a].name.localeCompare(LDC[b].name)).forEach(iso => {
-        const o = document.createElement('option');
-        o.value = iso; o.textContent = LDC[iso].name + ' (' + LDC[iso].r + ')';
-        if (iso === 'MWI') o.selected = true;
-        sel.appendChild(o);
-      });
+    (async function init() {
+      try {
+        const res = await fetch('defaults.json');
+        state.defaults = await res.json();
+      } catch (e) {
+        console.error("Failed to load defaults.json. Falling back to internal data.");
+        // Fallback or error handled appropriately
+      }
+
+      if (state.defaults) {
+        const sel = document.getElementById('country');
+        const defaultLDC = state.defaults.countries;
+        Object.keys(defaultLDC).sort((a, b) => defaultLDC[a].name.localeCompare(defaultLDC[b].name)).forEach(iso => {
+          const o = document.createElement('option');
+          o.value = iso; o.textContent = defaultLDC[iso].name + ' (' + defaultLDC[iso].r + ')';
+          if (iso === 'MWI') o.selected = true;
+          sel.appendChild(o);
+        });
+      }
+
       // Diesel/grid field toggle
       document.getElementById('A-baseline').addEventListener('change', function () {
         const isDiesel = this.value === 'diesel';

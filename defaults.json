@@ -1,0 +1,372 @@
+{
+    "version": "1.0.0",
+    "metadata": {
+        "source": "Gold Standard methodologies, UNFCCC CDM defaults (2024)",
+        "description": "Default values for fNRB, Grid Emission Factors, and baseline fuel characteristics.",
+        "last_updated": "2024-05-10"
+    },
+    "fuels": {
+        "wood": {
+            "ncv_Mj_kg": 15,
+            "efCO2_kg_kg": 1.742,
+            "efNC_kg_kg": 0.135,
+            "eta": 0.10,
+            "label": "Firewood",
+            "notes": "EF based on IPCC 2006 Vol 2 Table 2.2 for solid biomass."
+        },
+        "charcoal": {
+            "ncv_Mj_kg": 29.5,
+            "efCO2_kg_kg": 2.638,
+            "efNC_kg_kg": 0.150,
+            "eta": 0.22,
+            "label": "Charcoal",
+            "prodRatio": 6,
+            "notes": "Production ratio assumes 6 kg wood required per 1 kg charcoal."
+        },
+        "lpg": {
+            "ncv_Mj_kg": 47.3,
+            "efCO2_kg_kg": 2.983,
+            "efNC_kg_kg": 0.008,
+            "eta": 0.55,
+            "label": "LPG"
+        },
+        "kerosene": {
+            "ncv_Mj_kg": 43.8,
+            "efCO2_kg_kg": 3.172,
+            "efNC_kg_kg": 0.010,
+            "eta": 0.45,
+            "label": "Kerosene"
+        }
+    },
+    "countries": {
+        "AGO": {
+            "name": "Angola",
+            "r": "Africa",
+            "fNRB": 0.72,
+            "gEF": 0.25,
+            "fuel": "wood"
+        },
+        "BEN": {
+            "name": "Benin",
+            "r": "Africa",
+            "fNRB": 0.82,
+            "gEF": 0.38,
+            "fuel": "charcoal"
+        },
+        "BFA": {
+            "name": "Burkina Faso",
+            "r": "Africa",
+            "fNRB": 0.85,
+            "gEF": 0.45,
+            "fuel": "wood"
+        },
+        "BDI": {
+            "name": "Burundi",
+            "r": "Africa",
+            "fNRB": 0.89,
+            "gEF": 0.15,
+            "fuel": "wood"
+        },
+        "CAF": {
+            "name": "Central African Rep.",
+            "r": "Africa",
+            "fNRB": 0.87,
+            "gEF": 0.18,
+            "fuel": "wood"
+        },
+        "TCD": {
+            "name": "Chad",
+            "r": "Africa",
+            "fNRB": 0.83,
+            "gEF": 0.60,
+            "fuel": "wood"
+        },
+        "COM": {
+            "name": "Comoros",
+            "r": "Africa",
+            "fNRB": 0.76,
+            "gEF": 0.80,
+            "fuel": "wood"
+        },
+        "COD": {
+            "name": "DR Congo",
+            "r": "Africa",
+            "fNRB": 0.87,
+            "gEF": 0.02,
+            "fuel": "charcoal"
+        },
+        "DJI": {
+            "name": "Djibouti",
+            "r": "Africa",
+            "fNRB": 0.62,
+            "gEF": 0.72,
+            "fuel": "charcoal"
+        },
+        "ERI": {
+            "name": "Eritrea",
+            "r": "Africa",
+            "fNRB": 0.78,
+            "gEF": 0.66,
+            "fuel": "wood"
+        },
+        "ETH": {
+            "name": "Ethiopia",
+            "r": "Africa",
+            "fNRB": 0.79,
+            "gEF": 0.03,
+            "fuel": "wood"
+        },
+        "GMB": {
+            "name": "Gambia",
+            "r": "Africa",
+            "fNRB": 0.83,
+            "gEF": 0.55,
+            "fuel": "wood"
+        },
+        "GIN": {
+            "name": "Guinea",
+            "r": "Africa",
+            "fNRB": 0.81,
+            "gEF": 0.07,
+            "fuel": "wood"
+        },
+        "GNB": {
+            "name": "Guinea-Bissau",
+            "r": "Africa",
+            "fNRB": 0.84,
+            "gEF": 0.60,
+            "fuel": "wood"
+        },
+        "LSO": {
+            "name": "Lesotho",
+            "r": "Africa",
+            "fNRB": 0.66,
+            "gEF": 0.01,
+            "fuel": "wood"
+        },
+        "LBR": {
+            "name": "Liberia",
+            "r": "Africa",
+            "fNRB": 0.86,
+            "gEF": 0.25,
+            "fuel": "charcoal"
+        },
+        "MDG": {
+            "name": "Madagascar",
+            "r": "Africa",
+            "fNRB": 0.84,
+            "gEF": 0.23,
+            "fuel": "charcoal"
+        },
+        "MWI": {
+            "name": "Malawi",
+            "r": "Africa",
+            "fNRB": 0.87,
+            "gEF": 0.08,
+            "fuel": "charcoal"
+        },
+        "MLI": {
+            "name": "Mali",
+            "r": "Africa",
+            "fNRB": 0.82,
+            "gEF": 0.35,
+            "fuel": "wood"
+        },
+        "MRT": {
+            "name": "Mauritania",
+            "r": "Africa",
+            "fNRB": 0.77,
+            "gEF": 0.58,
+            "fuel": "wood"
+        },
+        "MOZ": {
+            "name": "Mozambique",
+            "r": "Africa",
+            "fNRB": 0.79,
+            "gEF": 0.06,
+            "fuel": "charcoal"
+        },
+        "NER": {
+            "name": "Niger",
+            "r": "Africa",
+            "fNRB": 0.84,
+            "gEF": 0.52,
+            "fuel": "wood"
+        },
+        "RWA": {
+            "name": "Rwanda",
+            "r": "Africa",
+            "fNRB": 0.84,
+            "gEF": 0.28,
+            "fuel": "wood"
+        },
+        "STP": {
+            "name": "São Tomé & Príncipe",
+            "r": "Africa",
+            "fNRB": 0.70,
+            "gEF": 0.65,
+            "fuel": "charcoal"
+        },
+        "SEN": {
+            "name": "Senegal",
+            "r": "Africa",
+            "fNRB": 0.76,
+            "gEF": 0.44,
+            "fuel": "charcoal"
+        },
+        "SLE": {
+            "name": "Sierra Leone",
+            "r": "Africa",
+            "fNRB": 0.86,
+            "gEF": 0.14,
+            "fuel": "charcoal"
+        },
+        "SOM": {
+            "name": "Somalia",
+            "r": "Africa",
+            "fNRB": 0.90,
+            "gEF": 0.70,
+            "fuel": "charcoal"
+        },
+        "SSD": {
+            "name": "South Sudan",
+            "r": "Africa",
+            "fNRB": 0.88,
+            "gEF": 0.65,
+            "fuel": "wood"
+        },
+        "SDN": {
+            "name": "Sudan",
+            "r": "Africa",
+            "fNRB": 0.79,
+            "gEF": 0.35,
+            "fuel": "wood"
+        },
+        "TZA": {
+            "name": "Tanzania",
+            "r": "Africa",
+            "fNRB": 0.87,
+            "gEF": 0.28,
+            "fuel": "charcoal"
+        },
+        "TGO": {
+            "name": "Togo",
+            "r": "Africa",
+            "fNRB": 0.80,
+            "gEF": 0.38,
+            "fuel": "charcoal"
+        },
+        "UGA": {
+            "name": "Uganda",
+            "r": "Africa",
+            "fNRB": 0.85,
+            "gEF": 0.06,
+            "fuel": "charcoal"
+        },
+        "ZMB": {
+            "name": "Zambia",
+            "r": "Africa",
+            "fNRB": 0.79,
+            "gEF": 0.07,
+            "fuel": "charcoal"
+        },
+        "AFG": {
+            "name": "Afghanistan",
+            "r": "Asia",
+            "fNRB": 0.69,
+            "gEF": 0.38,
+            "fuel": "wood"
+        },
+        "BGD": {
+            "name": "Bangladesh",
+            "r": "Asia",
+            "fNRB": 0.53,
+            "gEF": 0.53,
+            "fuel": "wood"
+        },
+        "BTN": {
+            "name": "Bhutan",
+            "r": "Asia",
+            "fNRB": 0.56,
+            "gEF": 0.01,
+            "fuel": "wood"
+        },
+        "KHM": {
+            "name": "Cambodia",
+            "r": "Asia",
+            "fNRB": 0.63,
+            "gEF": 0.43,
+            "fuel": "charcoal"
+        },
+        "LAO": {
+            "name": "Lao PDR",
+            "r": "Asia",
+            "fNRB": 0.58,
+            "gEF": 0.04,
+            "fuel": "wood"
+        },
+        "MMR": {
+            "name": "Myanmar",
+            "r": "Asia",
+            "fNRB": 0.69,
+            "gEF": 0.22,
+            "fuel": "wood"
+        },
+        "NPL": {
+            "name": "Nepal",
+            "r": "Asia",
+            "fNRB": 0.64,
+            "gEF": 0.02,
+            "fuel": "wood"
+        },
+        "TLS": {
+            "name": "Timor-Leste",
+            "r": "Asia",
+            "fNRB": 0.55,
+            "gEF": 0.75,
+            "fuel": "wood"
+        },
+        "YEM": {
+            "name": "Yemen",
+            "r": "Asia",
+            "fNRB": 0.60,
+            "gEF": 0.50,
+            "fuel": "wood"
+        },
+        "HTI": {
+            "name": "Haiti",
+            "r": "Caribbean",
+            "fNRB": 0.88,
+            "gEF": 0.55,
+            "fuel": "charcoal"
+        },
+        "KIR": {
+            "name": "Kiribati",
+            "r": "Pacific",
+            "fNRB": 0.15,
+            "gEF": 0.60,
+            "fuel": "wood"
+        },
+        "SLB": {
+            "name": "Solomon Islands",
+            "r": "Pacific",
+            "fNRB": 0.40,
+            "gEF": 0.72,
+            "fuel": "wood"
+        },
+        "TUV": {
+            "name": "Tuvalu",
+            "r": "Pacific",
+            "fNRB": 0.10,
+            "gEF": 0.75,
+            "fuel": "wood"
+        },
+        "VUT": {
+            "name": "Vanuatu",
+            "r": "Pacific",
+            "fNRB": 0.35,
+            "gEF": 0.30,
+            "fuel": "wood"
+        }
+    }
+}
