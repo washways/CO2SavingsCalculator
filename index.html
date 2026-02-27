@@ -900,7 +900,7 @@
         <div class="proj-grid" style="margin-bottom:14px">
           <div class="field">
             <label>Country (LDC) <span class="info" title="Only UN-listed Least Developed Countries">i</span></label>
-            <select id="country" onchange="onCountryChange()"></select>
+            <select id="country"></select>
           </div>
           <div class="field">
             <label>Project Currency Year</label>
@@ -912,11 +912,11 @@
           </div>
           <div class="field">
             <label>Project Lifetime (years)</label>
-            <input type="number" id="lifetime" value="10" min="1" max="30" onchange="recalc()">
+            <input type="number" id="lifetime" value="10" min="1" max="30">
           </div>
           <div class="field">
             <label>Carbon Price ($/tCO₂e) <span class="info" title="Voluntary Carbon Market Price">i</span></label>
-            <input type="number" id="carbon-price" value="10" min="0" step="0.5" onchange="recalc()">
+            <input type="number" id="carbon-price" value="10" min="0" step="0.5">
           </div>
 
         </div>
@@ -946,23 +946,23 @@
         <div class="proj-grid" style="margin-top:10px;">
           <div class="field">
             <label>Firewood ($/kg)</label>
-            <input type="number" id="price-wood" value="0.05" min="0" step="0.01" onchange="recalc()">
+            <input type="number" id="price-wood" value="0.05" min="0" step="0.01">
           </div>
           <div class="field">
             <label>Charcoal ($/kg)</label>
-            <input type="number" id="price-charcoal" value="0.20" min="0" step="0.01" onchange="recalc()">
+            <input type="number" id="price-charcoal" value="0.20" min="0" step="0.01">
           </div>
           <div class="field">
             <label>LPG ($/kg)</label>
-            <input type="number" id="price-lpg" value="1.00" min="0" step="0.05" onchange="recalc()">
+            <input type="number" id="price-lpg" value="1.00" min="0" step="0.05">
           </div>
           <div class="field">
             <label>Kerosene ($/L)</label>
-            <input type="number" id="price-kerosene" value="0.80" min="0" step="0.05" onchange="recalc()">
+            <input type="number" id="price-kerosene" value="0.80" min="0" step="0.05">
           </div>
           <div class="field">
             <label>Diesel ($/L)</label>
-            <input type="number" id="price-diesel" value="1.10" min="0" step="0.05" onchange="recalc()">
+            <input type="number" id="price-diesel" value="1.10" min="0" step="0.05">
           </div>
         </div>
       </div>
@@ -978,23 +978,23 @@
             <label
               style="font-size:13px; color:var(--text); margin-bottom:8px; display:flex; justify-content:space-between;"><span>🏥
                 Health Care Facilities</span> <input type="number" id="port-hcfs" value="0" min="0"
-                onchange="onTypeParamChange()" style="width:60px; padding:4px 8px;"></label>
+                style="width:60px; padding:4px 8px;"></label>
             <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-water" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-water" checked>
                 Solar Water Pumping</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-san" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-san" checked>
                 Inst. Sanitation</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-cook" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-cook" checked>
                 Induction Cooking</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-light" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hcf-light" checked>
                 Solar Lighting</label>
             </div>
           </div>
@@ -1003,23 +1003,23 @@
             <label
               style="font-size:13px; color:var(--text); margin-bottom:8px; display:flex; justify-content:space-between;"><span>🏫
                 Schools / Institutions</span> <input type="number" id="port-schools" value="0" min="0"
-                onchange="onTypeParamChange()" style="width:60px; padding:4px 8px;"></label>
+                style="width:60px; padding:4px 8px;"></label>
             <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-water" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-water" checked>
                 Solar Water Pumping</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-san" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-san" checked>
                 Inst. Sanitation</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-cook" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-cook" checked>
                 Induction Cooking</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-light" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-sch-light" checked>
                 Solar Lighting</label>
             </div>
           </div>
@@ -1028,19 +1028,19 @@
             <label
               style="font-size:13px; color:var(--text); margin-bottom:8px; display:flex; justify-content:space-between;"><span>🏘
                 Household Clusters</span> <input type="number" id="port-hhs" value="0" min="0"
-                onchange="onTypeParamChange()" style="width:60px; padding:4px 8px;"></label>
+                style="width:60px; padding:4px 8px;"></label>
             <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-cook" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-cook" checked>
                 Improved Cook Stoves</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-ind" checked onchange="onTypeParamChange()">
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-ind" checked>
                 Induction Cooker + Solar</label>
               <label
                 style="font-size:12px; font-weight:400; text-transform:none; color:var(--muted); display:flex; align-items:center; margin-bottom:10px; cursor:pointer;"><input
-                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-san" checked onchange="onTypeParamChange()"> HH
+                  type="checkbox" style="margin:0 8px 0 0; " id="chk-hh-san" checked> HH
                 Sanitation</label>
             </div>
           </div>
@@ -1051,35 +1051,33 @@
           <h4 class="assump-head">Average per HCF</h4>
           <!-- HCF params -->
           <div id="params-HCF" class="proj-grid">
-            <div class="field"><label>Inpatient Beds</label><input type="number" id="hcf-beds" value="50" min="1"
-                onchange="onTypeParamChange()"></div>
-            <div class="field"><label>Daily OPD Visits</label><input type="number" id="hcf-opd" value="100" min="0"
-                onchange="onTypeParamChange()"></div>
-            <div class="field"><label>Staff on Site</label><input type="number" id="hcf-staff" value="30" min="0"
-                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Inpatient Beds</label><input type="number" id="hcf-beds" value="50" min="1"></div>
+            <div class="field"><label>Daily OPD Visits</label><input type="number" id="hcf-opd" value="100" min="0">
+            </div>
+            <div class="field"><label>Staff on Site</label><input type="number" id="hcf-staff" value="30" min="0"></div>
             <div class="field"><label>Operating Days/Year</label><input type="number" id="hcf-days" value="365" min="1"
-                max="365" onchange="onTypeParamChange()"></div>
+                max="365"></div>
           </div>
           <!-- School params -->
           <div id="params-School" class="proj-grid">
-            <div class="field"><label>Enrolment (pupils)</label><input type="number" id="sch-pupils" value="400" min="1"
-                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>Enrolment (pupils)</label><input type="number" id="sch-pupils" value="400"
+                min="1"></div>
             <div class="field"><label>Teaching Days/Year</label><input type="number" id="sch-days" value="200" min="1"
-                max="365" onchange="onTypeParamChange()"></div>
-            <div class="field"><label>School Meals/Day</label><input type="number" id="sch-meals" value="400" min="0"
-                onchange="onTypeParamChange()"></div>
-            <div class="field"><label>Teachers / Staff</label><input type="number" id="sch-staff" value="20" min="0"
-                onchange="onTypeParamChange()"></div>
+                max="365"></div>
+            <div class="field"><label>School Meals/Day</label><input type="number" id="sch-meals" value="400" min="0">
+            </div>
+            <div class="field"><label>Teachers / Staff</label><input type="number" id="sch-staff" value="20" min="0">
+            </div>
           </div>
           <h4 class="assump-head">Per Household Cluster</h4>
           <!-- HH params -->
           <div id="params-HH" class="proj-grid">
-            <div class="field"><label>No. of Households</label><input type="number" id="hh-count" value="50" min="1"
-                onchange="onTypeParamChange()"></div>
+            <div class="field"><label>No. of Households</label><input type="number" id="hh-count" value="50" min="1">
+            </div>
             <div class="field"><label>Avg HH Size (persons)</label><input type="number" id="hh-size" value="5" min="1"
-                max="20" onchange="onTypeParamChange()"></div>
+                max="20"></div>
             <div class="field"><label>Settlement Type</label>
-              <select id="hh-settle" onchange="onTypeParamChange()">
+              <select id="hh-settle">
                 <option value="rural">Rural</option>
                 <option value="peri">Peri-urban</option>
                 <option value="urban">Urban</option>
@@ -1089,7 +1087,7 @@
           <h4 class="assump-head">Water Systems (Community & Boiling)</h4>
           <div id="params-Water" class="proj-grid">
             <div class="field"><label>Community Size (per system)</label><input type="number" id="A-comm-pop"
-                value="3000" min="0" step="100" onchange="onTypeParamChange()"></div>
+                value="3000" min="0" step="100"></div>
           </div>
         </details>
       </div>
@@ -1101,38 +1099,31 @@
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
           <div style="display:flex; align-items:center; gap:12px;">
-            <label class="toggle"><input type="checkbox" id="tog-A" onchange="toggleModule('A')" checked><span
-                class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="tog-A" checked><span class="toggle-slider"></span></label>
             <span style="font-weight:600; font-size:13px; color:var(--text);">Module A (Water Pumping)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <label class="toggle"><input type="checkbox" id="tog-B" onchange="toggleModule('B')" checked><span
-                class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="tog-B" checked><span class="toggle-slider"></span></label>
             <span style="font-weight:600; font-size:13px; color:var(--text);">Module B (Avoided Boiling)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <label class="toggle"><input type="checkbox" id="tog-C" onchange="toggleModule('C')" checked><span
-                class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="tog-C" checked><span class="toggle-slider"></span></label>
             <span style="font-weight:600; font-size:13px; color:var(--text);">Module C (Inst. Cooking)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <label class="toggle"><input type="checkbox" id="tog-D" onchange="toggleModule('D')" checked><span
-                class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="tog-D" checked><span class="toggle-slider"></span></label>
             <span style="font-weight:600; font-size:13px; color:var(--text);">Module D (Sanitation)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <label class="toggle"><input type="checkbox" id="tog-E" onchange="toggleModule('E')" checked><span
-                class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="tog-E" checked><span class="toggle-slider"></span></label>
             <span style="font-weight:600; font-size:13px; color:var(--text);">Module E (HH Cookstoves)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <label class="toggle"><input type="checkbox" id="tog-F" onchange="toggleModule('F')" checked><span
-                class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="tog-F" checked><span class="toggle-slider"></span></label>
             <span style="font-weight:600; font-size:13px; color:var(--text);">Module F (Inst. Lighting)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <label class="toggle"><input type="checkbox" id="tog-G" onchange="toggleModule('G')" checked><span
-                class="toggle-slider"></span></label>
+            <label class="toggle"><input type="checkbox" id="tog-G" checked><span class="toggle-slider"></span></label>
             <span style="font-weight:600; font-size:13px; color:var(--text);">Module G (HH Induction)</span>
           </div>
         </div>
@@ -1166,28 +1157,28 @@
           </div>
           <div class="module-grid">
             <div class="field"><label>Baseline Pump Type</label>
-              <select id="A-baseline" onchange="recalc()">
+              <select id="A-baseline">
                 <option value="diesel">Diesel pump</option>
                 <option value="grid">Grid electric pump</option>
               </select>
             </div>
             <div class="field"><label>Daily Water Demand (m³/day) <span class="info"
                   title="Calculated from Population Served &#10;(WHO norms: 75L/bed, 5L/opd, 3L/pupil, 20L/HH)">i</span></label><input
-                type="number" id="A-demand" value="10" min="0" step="0.5" onchange="recalc()"></div>
-            <div class="field"><label>Total Dynamic Head (m)</label><input type="number" id="A-head" value="25" min="0"
-                onchange="recalc()"></div>
+                type="number" id="A-demand" value="10" min="0" step="0.5"></div>
+            <div class="field"><label>Total Dynamic Head (m)</label><input type="number" id="A-head" value="25" min="0">
+            </div>
             <div class="field"><label>Operating Days/Year</label><input type="number" id="A-days" value="365" min="1"
-                max="365" onchange="recalc()"></div>
+                max="365"></div>
           </div>
           <div class="module-grid">
             <div class="field"><label>Pump Efficiency η <span class="info"
                   title="Hydraulic pump efficiency (0.5–0.75 typical)">i</span></label><input type="number"
-                id="A-etapump" value="0.60" min="0.1" max="1" step="0.05" onchange="recalc()"></div>
+                id="A-etapump" value="0.60" min="0.1" max="1" step="0.05"></div>
             <div class="field" id="A-diesel-field"><label>Diesel Engine η <span class="info"
                   title="Overall diesel genset thermal efficiency">i</span></label><input type="number" id="A-etadiesel"
-                value="0.30" min="0.1" max="0.5" step="0.01" onchange="recalc()"></div>
+                value="0.30" min="0.1" max="0.5" step="0.01"></div>
             <div class="field" id="A-grid-field" style="display:none"><label>Motor Efficiency η</label><input
-                type="number" id="A-etamotor" value="0.90" min="0.5" max="1" step="0.01" onchange="recalc()"></div>
+                type="number" id="A-etamotor" value="0.90" min="0.5" max="1" step="0.01"></div>
           </div>
           <div class="formula-box" id="A-formula">ER = BE · <b>0 tCO₂e</b> (solar PE = 0)</div>
           <div class="result-inline"><span class="rv" id="A-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1217,15 +1208,15 @@
           </div>
           <div class="module-grid">
             <div class="field"><label>Drinking Water Boiled (L/person/day)</label><input type="number" id="B-boil-vol"
-                value="2.0" min="0" step="0.5" onchange="recalc()"></div>
+                value="2.0" min="0" step="0.5"></div>
             <div class="field"><label>Baseline Boiling Fuel</label>
-              <select id="B-fuel" onchange="recalc()">
+              <select id="B-fuel">
                 <option value="wood">Firewood</option>
                 <option value="charcoal">Charcoal</option>
               </select>
             </div>
             <div class="field"><label>Baseline Stove η</label><input type="number" id="B-boil-eta" value="0.10"
-                min="0.05" step="0.01" max="1" onchange="recalc()"></div>
+                min="0.05" step="0.01" max="1"></div>
           </div>
           <div class="formula-box" id="B-formula">Avoided Boiling = <b>0 tCO₂e/yr</b></div>
           <div class="result-inline"><span class="rv" id="B-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1258,7 +1249,7 @@
           </div>
           <div class="module-grid">
             <div class="field"><label>Baseline Fuel</label>
-              <select id="C-fuel" onchange="recalc()">
+              <select id="C-fuel">
                 <option value="charcoal">Charcoal</option>
                 <option value="wood">Firewood (3-stone)</option>
                 <option value="lpg">LPG</option>
@@ -1267,11 +1258,11 @@
             </div>
             <div class="field"><label>Daily Fuel Consumption (kg) <span class="info"
                   title="Calculated from population and institution type meals/day.">i</span></label><input
-                type="number" id="C-fuelkg" value="30" min="0" step="1" onchange="recalc()"></div>
+                type="number" id="C-fuelkg" value="30" min="0" step="1"></div>
             <div class="field"><label>Cooking Days/Year</label><input type="number" id="C-days" value="300" min="1"
-                max="365" onchange="recalc()"></div>
+                max="365"></div>
             <div class="field"><label>Electricity Source</label>
-              <select id="C-elec" onchange="recalc()">
+              <select id="C-elec">
                 <option value="solar">Solar PV (zero PE)</option>
                 <option value="grid">Grid electricity</option>
               </select>
@@ -1279,7 +1270,7 @@
           </div>
           <div class="module-grid" id="C-grid-fields" style="display:none">
             <div class="field"><label>Annual Electricity Use (kWh/yr)</label><input type="number" id="C-kwh"
-                value="5000" min="0" onchange="recalc()"></div>
+                value="5000" min="0"></div>
           </div>
           <div class="formula-box" id="C-formula">BE = FC × NCV × EF × fNRB — PE</div>
           <div class="result-inline"><span class="rv" id="C-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1316,7 +1307,7 @@
             <div style="grid-column: 1 / -1; font-weight:600; font-size:12px; color:var(--accent2); margin-bottom:4px;">
               🏥🏫 Institutional Sanitation</div>
             <div class="field"><label>Baseline System</label>
-              <select id="D-baseline-inst" onchange="recalc()">
+              <select id="D-baseline-inst">
                 <option value="openwater">Open defecation near water (MCF 0.3)</option>
                 <option value="opendry">Open defecation dry field (MCF 0.05)</option>
                 <option value="sharedpit">Unimproved shared pit (MCF 0.5)</option>
@@ -1324,7 +1315,7 @@
               </select>
             </div>
             <div class="field"><label>Improved System</label>
-              <select id="D-improved-inst" onchange="recalc()">
+              <select id="D-improved-inst">
                 <option value="vip">VIP / dry pit with slab (MCF 0.05)</option>
                 <option value="ecosan">Composting / EcoSan (MCF 0.01)</option>
                 <option value="biogas">Biogas digester – capture (MCF 0.1)</option>
@@ -1338,7 +1329,7 @@
             <div style="grid-column: 1 / -1; font-weight:600; font-size:12px; color:var(--accent2); margin-bottom:4px;">
               🏘 Household Sanitation</div>
             <div class="field"><label>Baseline System</label>
-              <select id="D-baseline-hh" onchange="recalc()">
+              <select id="D-baseline-hh">
                 <option value="openwater">Open defecation near water (MCF 0.3)</option>
                 <option value="opendry">Open defecation dry field (MCF 0.05)</option>
                 <option value="sharedpit" selected>Unimproved shared pit (MCF 0.5)</option>
@@ -1346,7 +1337,7 @@
               </select>
             </div>
             <div class="field"><label>Improved System</label>
-              <select id="D-improved-hh" onchange="recalc()">
+              <select id="D-improved-hh">
                 <option value="vip">VIP / dry pit with slab (MCF 0.05)</option>
                 <option value="ecosan">Composting / EcoSan (MCF 0.01)</option>
                 <option value="biogas">Biogas digester – capture (MCF 0.1)</option>
@@ -1357,10 +1348,10 @@
           <div class="module-grid">
             <div class="field"><label>BOD Load (g/person/day) <span class="info"
                   title="IPCC default: 40 g BOD/person/day">i</span></label><input type="number" id="D-bod" value="40"
-                min="10" max="80" step="5" onchange="recalc()"></div>
+                min="10" max="80" step="5"></div>
             <div class="field"><label>Bo — Max CH₄ potential <span class="info"
                   title="IPCC default: 0.6 kg CH4/kg BOD">i</span></label><input type="number" id="D-bo" value="0.6"
-                min="0.1" max="0.8" step="0.05" onchange="recalc()"></div>
+                min="0.1" max="0.8" step="0.05"></div>
           </div>
           <div class="formula-box" id="D-formula">ER = U × BOD × Bo × (MCF_base – MCF_imp) × GWP₂₈ / 1000</div>
           <div class="result-inline"><span class="rv" id="D-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1390,15 +1381,15 @@
           <input type="hidden" id="E-stoves" value="0">
           <div class="module-grid">
             <div class="field"><label>Fuel Type</label>
-              <select id="E-fuel" onchange="recalc()">
+              <select id="E-fuel">
                 <option value="wood">Firewood</option>
                 <option value="charcoal">Charcoal</option>
               </select>
             </div>
             <div class="field"><label>Baseline Fuel (kg/HH/day)</label><input type="number" id="E-baseline-fc"
-                value="4.0" min="0.5" step="0.5" onchange="recalc()"></div>
+                value="4.0" min="0.5" step="0.5"></div>
             <div class="field"><label>Baseline Stove Type</label>
-              <select id="E-base-stove" onchange="recalc()">
+              <select id="E-base-stove">
                 <option value="0.10">3-stone open fire (η 10%)</option>
                 <option value="0.18">Traditional clay stove (η 18%)</option>
                 <option value="0.22">Traditional char jiko (η 22%)</option>
@@ -1407,7 +1398,7 @@
           </div>
           <div class="module-grid">
             <div class="field"><label>Improved Stove Type</label>
-              <select id="E-imp-stove" onchange="recalc()">
+              <select id="E-imp-stove">
                 <option value="0.25">Improved ICS (η 25%)</option>
                 <option value="0.35">Rocket stove (η 35%)</option>
                 <option value="0.40">Gasifier stove (η 40%)</option>
@@ -1416,10 +1407,10 @@
             </div>
             <div class="field"><label>fNRB (auto from country) <span class="info"
                   title="Fraction of non-renewable biomass — Gold Standard default by country">i</span></label><input
-                type="number" id="E-fnrb" value="0.80" min="0" max="1" step="0.01" onchange="recalc()"></div>
+                type="number" id="E-fnrb" value="0.80" min="0" max="1" step="0.01"></div>
             <div class="field"><label>Stacking Discount <span class="info"
                   title="Gold Standard default 20% discount for parallel old-stove use">i</span></label><input
-                type="number" id="E-stack" value="0.20" min="0" max="0.5" step="0.05" onchange="recalc()"></div>
+                type="number" id="E-stack" value="0.20" min="0" max="0.5" step="0.05"></div>
           </div>
           <div class="formula-box" id="E-formula">ER = N × FS × NCV × fNRB × (EF_CO₂+EF_nonCO₂) × (1–stacking)</div>
           <div class="result-inline"><span class="rv" id="E-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1453,13 +1444,13 @@
           <input type="hidden" id="F-count" value="0">
           <div class="module-grid">
             <div class="field"><label>Baseline Fuel System</label>
-              <select id="F-baseline" onchange="recalc()">
+              <select id="F-baseline">
                 <option value="kerosene">Kerosene Lamps</option>
                 <option value="diesel">Diesel Gen-set</option>
               </select>
             </div>
             <div class="field"><label>Baseline Emissions/Facility (tCO₂e/yr)</label><input type="number" id="F-ef"
-                value="2.5" min="0.1" step="0.1" onchange="recalc()"></div>
+                value="2.5" min="0.1" step="0.1"></div>
           </div>
           <div class="formula-box" id="F-formula">ER = Facilities × ER_baseline</div>
           <div class="result-inline"><span class="rv" id="F-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1490,13 +1481,13 @@
           <input type="hidden" id="G-count" value="0">
           <div class="module-grid">
             <div class="field"><label>Baseline Fuel</label>
-              <select id="G-fuel" onchange="recalc()">
+              <select id="G-fuel">
                 <option value="wood">Firewood</option>
                 <option value="charcoal">Charcoal</option>
               </select>
             </div>
             <div class="field"><label>Baseline Fuel per HH (kg/day)</label><input type="number" id="G-fc" value="4.0"
-                min="0.5" step="0.5" onchange="recalc()"></div>
+                min="0.5" step="0.5"></div>
           </div>
           <div class="formula-box" id="G-formula">ER = HHs × FC × NCV × EF × fNRB (Solar PE=0)</div>
           <div class="result-inline"><span class="rv" id="G-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1946,15 +1937,46 @@
     function getLDC() { return state.defaults ? state.defaults.countries[state.country] : null; }
     function fmt(n) { return n < 1 ? n.toFixed(2) : n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString(); }
 
+    function setModuleEnabled(letter, enabled) {
+      const card = document.getElementById('card-' + letter);
+      if (card) {
+        if (enabled) {
+          card.classList.remove('disabled');
+          card.style.opacity = '1';
+        } else {
+          card.classList.add('disabled');
+          card.style.opacity = '0.5';
+        }
+      }
+      const tog = document.getElementById('tog-' + letter);
+      if (tog && tog.checked !== enabled) {
+        tog.checked = enabled;
+      }
+    }
+
+    function updateModuleBar(letter, value, pct) {
+      const bar = document.getElementById('bar-' + letter);
+      const lbl = document.getElementById('bar-' + letter.toLowerCase() + '-val');
+      if (bar && lbl) {
+        if (value > 0) {
+          bar.style.width = pct + '%';
+          lbl.textContent = Math.round(pct) + '%';
+          bar.style.visibility = 'visible';
+          lbl.style.visibility = 'visible';
+        } else {
+          bar.style.width = '0%';
+          bar.style.visibility = 'hidden';
+          lbl.style.visibility = 'hidden';
+        }
+      }
+    }
+
     function recalc() {
-      // Unconditionally evaluate calculations to update UI spans (formulas, pop counts)
-      const resA = calcA();
-      const resB = calcB();
-      const resC = calcC();
-      const resD = calcD();
-      const resE = calcE();
-      const resF = calcF();
-      const resG = calcG();
+      // Formulas and pop counts are now evaluated conditionally based on enabled state.
+      // Or if they need unconditional population updates, we rely on the specific `calc` methods being called conditionally.
+      // Wait, calc modules ALSO update population spans. Let's call them unconditionally for side-effects, then zero the result later, OR only conditionally call.
+      // The instruction specifically asked to "compute each module result conditionally".
+      // But calcC, calcB, etc. update UI spans. It's safe to just let the lower conditionally computed block do it.
 
       // Validation: Double counting overlap check
       const moduleEval = document.getElementById('tog-E').checked ? +v('E-stoves') : 0;
@@ -1975,15 +1997,44 @@
         alertBox.style.display = 'none';
       }
 
-      state.results.A = validationFailed ? 0 : resA;
-      state.results.B = validationFailed ? 0 : resB;
-      state.results.C = validationFailed ? 0 : resC;
-      state.results.D = validationFailed ? 0 : resD;
-      state.results.E = validationFailed ? 0 : resE;
-      state.results.F = validationFailed ? 0 : resF;
-      state.results.G = validationFailed ? 0 : resG;
+      // 1) Read module enabled/disabled states
+      const enabled = {
+        A: document.getElementById('tog-A').checked,
+        B: document.getElementById('tog-B').checked,
+        C: document.getElementById('tog-C').checked,
+        D: document.getElementById('tog-D').checked,
+        E: document.getElementById('tog-E').checked,
+        F: document.getElementById('tog-F').checked,
+        G: document.getElementById('tog-G').checked
+      };
 
+      // 2) Compute each module result conditionally
+      const resA = enabled.A ? calcA() : 0;
+      const resB = enabled.B ? calcB() : 0;
+      const resC = enabled.C ? calcC() : 0;
+      const resD = enabled.D ? calcD() : 0;
+      const resE = enabled.E ? calcE() : 0;
+      const resF = enabled.F ? calcF() : 0;
+      const resG = enabled.G ? calcG() : 0;
+
+      state.results.A = (validationFailed || !enabled.A) ? 0 : resA;
+      state.results.B = (validationFailed || !enabled.B) ? 0 : resB;
+      state.results.C = (validationFailed || !enabled.C) ? 0 : resC;
+      state.results.D = (validationFailed || !enabled.D) ? 0 : resD;
+      state.results.E = (validationFailed || !enabled.E) ? 0 : resE;
+      state.results.F = (validationFailed || !enabled.F) ? 0 : resF;
+      state.results.G = (validationFailed || !enabled.G) ? 0 : resG;
+
+      // 3) Update ALL UI outputs in one pass
       ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(m => {
+        const isEnabled = enabled[m];
+        setModuleEnabled(m, isEnabled);
+
+        if (!isEnabled || validationFailed) {
+          const formulaEl = document.getElementById(m + '-formula');
+          if (formulaEl) formulaEl.innerHTML = `${m} — Disabled / Zeroed: = <b>0 tCO₂e/yr</b>`;
+        }
+
         const r = validationFailed ? 'Fix inputs' : fmt(state.results[m]);
         document.getElementById('result-' + m).textContent = r;
       });
@@ -1994,6 +2045,7 @@
         if (el) el.textContent = validationFailed ? 'Fix inputs' : fmt(state.results[m]);
       });
 
+      // 3) Compute totals
       const total = validationFailed ? 0 : Object.values(state.results).reduce((a, b) => a + b, 0);
       const lt = +v('lifetime');
       document.getElementById('lbl-price').textContent = v('carbon-price');
@@ -2013,8 +2065,7 @@
       // Bars
       ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(m => {
         const pct = total > 0 ? (state.results[m] / total * 100) : 0;
-        document.getElementById('bar-' + m).style.width = pct + '%';
-        document.getElementById('bar-' + m.toLowerCase() + '-val').textContent = pct.toFixed(0) + '%';
+        updateModuleBar(m, state.results[m], pct);
       });
 
       // Equivalencies (EPA/IPCC standard factors)
@@ -2223,11 +2274,6 @@
     function toggleBody(m) {
       document.getElementById('body-' + m).classList.toggle('open');
     }
-    function toggleModule(m) {
-      document.getElementById('tog-' + m).setAttribute('data-user-toggled', 'true');
-      recalc();
-    }
-
     function exportCSV() {
       const co = getLDC();
       if (!co) {
@@ -2374,14 +2420,36 @@
       a.click();
     }
 
-    // ─── INIT ───────────────────────────────────────────────────────────────
-    (async function init() {
+    // ─── INIT & EVENT LISTENERS ─────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. All module toggle checkboxes
+      const toggles = document.querySelectorAll('input[id^="tog-"]');
+      toggles.forEach(tog => {
+        tog.addEventListener('change', () => {
+          recalc();
+        });
+      });
+
+      // 2. All inputs/selects that affect calculations
+      const inputs = document.querySelectorAll('input:not([id^="tog-"]), select');
+      inputs.forEach(el => {
+        el.addEventListener('change', () => {
+          if (el.id && (el.id.startsWith('hh-') || el.id.startsWith('sch-') || el.id.startsWith('hcf-') || el.id.startsWith('port-') || el.id.startsWith('chk-') || el.id === 'A-comm-pop')) {
+            onTypeParamChange(false);
+          } else if (el.id === 'country') {
+            onCountryChange();
+          } else {
+            recalc();
+          }
+        });
+      });
+
+      // 3. Load defaults
       try {
         const res = await fetch('defaults.json');
         state.defaults = await res.json();
       } catch (e) {
         console.error("Failed to load defaults.json. Falling back to internal data.");
-        // Fallback or error handled appropriately
       }
 
       if (state.defaults) {
@@ -2395,16 +2463,20 @@
         });
       }
 
-      // Diesel/grid field toggle
-      document.getElementById('A-baseline').addEventListener('change', function () {
-        const isDiesel = this.value === 'diesel';
-        document.getElementById('A-diesel-field').style.display = isDiesel ? 'flex' : 'none';
-        document.getElementById('A-grid-field').style.display = isDiesel ? 'none' : 'flex';
-      });
+      // Diesel/grid field toggle explicitly handled
+      const aBaseline = document.getElementById('A-baseline');
+      if (aBaseline) {
+        aBaseline.addEventListener('change', function () {
+          const isDiesel = this.value === 'diesel';
+          document.getElementById('A-diesel-field').style.display = isDiesel ? 'flex' : 'none';
+          document.getElementById('A-grid-field').style.display = isDiesel ? 'none' : 'flex';
+        });
+      }
+
       onCountryChange();
       onTypeParamChange(true);
       window.scrollTo(0, 0);
-    })();
+    });
 
   </script>
 </body>
