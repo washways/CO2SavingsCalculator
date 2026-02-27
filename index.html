@@ -1679,7 +1679,6 @@
         const hydKwh = Q * H * 9.81 / 3600;  // kWh/day
         const shaftKwh = hydKwh / etaP;       // kWh/day
 
-        let BE_pump = 0;
         if (base === 'diesel') {
           const etaD = +v('A-etadiesel');
           const LHV = 10.0;  // kWh/litre diesel (≈36 MJ/L)
@@ -2081,6 +2080,13 @@
 
 
     function onTypeParamChange(force = false) {
+      // Exclusivity for HH Checkboxes
+      if (document.activeElement && document.activeElement.id === 'chk-hh-cook' && document.getElementById('chk-hh-cook').checked) {
+        document.getElementById('chk-hh-ind').checked = false;
+      } else if (document.activeElement && document.activeElement.id === 'chk-hh-ind' && document.getElementById('chk-hh-ind').checked) {
+        document.getElementById('chk-hh-cook').checked = false;
+      }
+
       const hcfs = +v('port-hcfs');
       const schools = +v('port-schools');
       const hhs = +v('port-hhs');
