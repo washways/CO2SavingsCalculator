@@ -830,10 +830,23 @@
         style="width:64px;height:64px;font-size:32px;margin:0 auto 20px;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
         🌍</div>
       <h2>CO₂ Savings Calculator</h2>
-      <p>Estimate greenhouse gas reductions from WASH and institutional energy projects in Least Developed Countries
-        using the Gold Standard methodology. Effortlessly calculate aggregated CO₂ emission reductions across large
-        portfolios of Health Care Facilities, Schools, and Household Clusters. Generates detailed reports on annual and
-        lifetime savings, as well as estimated voluntary carbon market revenues.</p>
+      <p style="margin-bottom: 20px;">Estimate greenhouse gas reductions from WASH and institutional energy projects in
+        Least Developed Countries using Gold Standard methodologies.</p>
+
+      <div
+        style="text-align: left; font-size: 13px; color: var(--muted); margin-bottom: 30px; background: var(--bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+        <strong style="color: var(--text); font-size: 14px;">Purpose & Capabilities:</strong>
+        <ul style="margin-top: 10px; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <li><strong>Portfolio Aggregation:</strong> Effortlessly calculate aggregated savings across entire portfolios
+            of clinics, schools, and household clusters simultaneously.</li>
+          <li><strong>Strict Methodology:</strong> Built-in guardrails against double counting and rigorous adherence to
+            mass-based fuel calculations (Averting NCV inconsistencies).</li>
+          <li><strong>Financial Tracking:</strong> Automatically estimates indicative voluntary carbon market revenues
+            and lifetime avoided fuel spending.</li>
+          <li><strong>Dashboard Ready:</strong> Export transparent, detailed CSV reports capturing over 60 granular
+            assumptions.</li>
+        </ul>
+      </div>
       <button class="btn btn-primary"
         onclick="document.getElementById('splash').style.opacity='0'; setTimeout(()=>document.getElementById('splash').style.visibility='hidden', 500);"
         style="padding:12px 28px; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Start Tool &rarr;</button>
@@ -849,6 +862,10 @@
       </div>
     </div>
     <div class="header-right">
+      <a href="https://github.com/washways/CO2SavingsCalculator#readme" target="_blank" class="badge"
+        style="background:#fff; color:var(--text); border-color:var(--border); display:flex; align-items:center; gap:4px; font-size:11px;">
+        <span>📖</span> Documentation ↗
+      </a>
       <span class="badge">LDC Countries</span>
       <span class="badge" style="border-color:var(--accent);color:var(--accent)">Gold Standard</span>
     </div>
@@ -1070,6 +1087,45 @@
         </details>
       </div>
 
+      <!-- ACTIVE MODULES TOGGLES -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="section-title">⚡ Active Calculation Modules <span class="info"
+            title="Switch off specific calculation tools globally. Inactive modules will contribute 0 to the total.">i</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label class="toggle"><input type="checkbox" id="tog-A" onchange="toggleModule('A')" checked><span
+                class="toggle-slider"></span></label>
+            <span style="font-weight:600; font-size:13px; color:var(--text);">Module A (Water Pumping)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label class="toggle"><input type="checkbox" id="tog-B" onchange="toggleModule('B')" checked><span
+                class="toggle-slider"></span></label>
+            <span style="font-weight:600; font-size:13px; color:var(--text);">Module B (Inst. Cooking)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label class="toggle"><input type="checkbox" id="tog-C" onchange="toggleModule('C')" checked><span
+                class="toggle-slider"></span></label>
+            <span style="font-weight:600; font-size:13px; color:var(--text);">Module C (Sanitation)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label class="toggle"><input type="checkbox" id="tog-D" onchange="toggleModule('D')" checked><span
+                class="toggle-slider"></span></label>
+            <span style="font-weight:600; font-size:13px; color:var(--text);">Module D (HH Cookstoves)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label class="toggle"><input type="checkbox" id="tog-E" onchange="toggleModule('E')" checked><span
+                class="toggle-slider"></span></label>
+            <span style="font-weight:600; font-size:13px; color:var(--text);">Module E (Inst. Lighting)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <label class="toggle"><input type="checkbox" id="tog-F" onchange="toggleModule('F')" checked><span
+                class="toggle-slider"></span></label>
+            <span style="font-weight:600; font-size:13px; color:var(--text);">Module F (HH Induction)</span>
+          </div>
+        </div>
+      </div>
+
       <!-- MODULES HEADING -->
       <div class="section-title" style="margin-top:8px">⚡ Emission Reduction Modules</div>
 
@@ -1082,8 +1138,6 @@
             <p>AMS-I.F / CDM AM0020 · Diesel or grid pump displacement</p>
           </div>
           <div class="module-result"><span id="result-A">0</span><br><span class="unit">tCO₂e/yr</span></div>
-          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
-              id="tog-A" onchange="toggleModule('A')" checked><span class="toggle-slider"></span></label>
         </div>
         <div class="module-body open" id="body-A">
           <div class="method-tag"><a href="https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242"
@@ -1093,6 +1147,10 @@
               href="https://globalgoals.goldstandard.org/standards/443_v1.0_ee_gs-methodology-for-emission-reductions-from-safe-drinking-water-supply/"
               target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard Safe Water Supply Methodology
               (Avoided Boiling) ↗</a>
+          </div>
+          <div style="margin: 0 0 16px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
+            <strong>Total Population Served (HCFs, Schools, & Community): </strong><span id="A-total-pop"
+              style="font-weight: bold; color: var(--primary);">0</span> persons
           </div>
           <div class="module-grid">
             <div class="field"><label>Baseline Pump Type</label>
@@ -1119,10 +1177,6 @@
             <div class="field" id="A-grid-field" style="display:none"><label>Motor Efficiency η</label><input
                 type="number" id="A-etamotor" value="0.90" min="0.5" max="1" step="0.01" onchange="recalc()"></div>
           </div>
-          <div style="margin: 10px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
-            <strong>Total Population Served: </strong><span id="A-total-pop"
-              style="font-weight: bold; color: var(--primary);">0</span> persons
-          </div>
           <div class="formula-box" id="A-formula">ER = BE · <b>0 tCO₂e</b> (solar PE = 0)</div>
           <div class="formula-box" id="A-boil-formula" style="margin-top: 8px;">Avoided Boiling = <b>0 tCO₂e</b></div>
           <div class="result-inline"><span class="rv" id="A-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1139,14 +1193,16 @@
             <p>Gold Standard MECD · Replaces charcoal/wood/LPG cooking</p>
           </div>
           <div class="module-result"><span id="result-B">0</span><br><span class="unit">tCO₂e/yr</span></div>
-          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
-              id="tog-B" onchange="toggleModule('B')" checked><span class="toggle-slider"></span></label>
         </div>
         <div class="module-body open" id="body-B">
           <div class="method-tag"><a
               href="https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf"
               target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Metered &amp;
               Measured Energy Cooking Devices) ↗</a></div>
+          <div style="margin: 0 0 16px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
+            <strong>Total Population Served (HCFs & Schools): </strong><span id="B-total-pop"
+              style="font-weight: bold; color: var(--primary);">0</span> persons
+          </div>
           <div class="module-grid">
             <div class="field"><label>Baseline Fuel</label>
               <select id="B-fuel" onchange="recalc()">
@@ -1175,6 +1231,10 @@
           <div class="formula-box" id="B-formula">BE = FC × NCV × EF × fNRB — PE</div>
           <div class="result-inline"><span class="rv" id="B-detail">0</span><span class="ru">tCO₂e / year saved</span>
           </div>
+          <p class="info-text"
+            style="font-size:11px;color:var(--muted);margin-top:12px;border-top:1px solid var(--border);padding-top:8px;">
+            Fuel EFs used are mass-based (kgCO₂e/kg fuel). NCV is stored for future use but not applied to mass-based
+            EFs.</p>
         </div>
       </div>
 
@@ -1187,20 +1247,21 @@
             <p>IPCC Tier 1 · Institutional + HH scale separated</p>
           </div>
           <div class="module-result"><span id="result-C">0</span><br><span class="unit">tCO₂e/yr</span></div>
-          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
-              id="tog-C" onchange="toggleModule('C')" checked><span class="toggle-slider"></span></label>
         </div>
         <div class="module-body open" id="body-C">
           <div class="method-tag"><a href="https://www.goldstandard.org/project-developers/standard-documents"
               target="_blank" style="color:inherit;text-decoration:none;">📋 IPCC 2006 Waste Ch.6 · Gold Standard
               Integrated SDG Sanitation ↗</a></div>
+          <div style="margin: 0 0 16px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
+            <strong>Total Population Served (Institutional + Household): </strong><span id="C-total-pop"
+              style="font-weight: bold; color: var(--primary);">0</span> persons
+          </div>
+          <input type="hidden" id="C-pop-inst" value="0">
+          <input type="hidden" id="C-pop-hh" value="0">
           <div class="module-grid"
             style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px;">
             <div style="grid-column: 1 / -1; font-weight:600; font-size:12px; color:var(--accent2); margin-bottom:4px;">
               🏥🏫 Institutional Sanitation</div>
-            <div class="field"><label>Population Served <span class="info"
-                  title="Aggregated from HCFs, Schools/Institutions">i</span></label><input type="number"
-                id="C-pop-inst" value="0" min="0" onchange="recalc()"></div>
             <div class="field"><label>Baseline System</label>
               <select id="C-baseline-inst" onchange="recalc()">
                 <option value="openwater">Open defecation near water (MCF 0.3)</option>
@@ -1223,9 +1284,6 @@
             style="background:var(--bg); padding:12px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px;">
             <div style="grid-column: 1 / -1; font-weight:600; font-size:12px; color:var(--accent2); margin-bottom:4px;">
               🏘 Household Sanitation</div>
-            <div class="field"><label>Population Served <span class="info"
-                  title="Aggregated from Household Clusters × Avg HH Size">i</span></label><input type="number"
-                id="C-pop-hh" value="0" min="0" onchange="recalc()"></div>
             <div class="field"><label>Baseline System</label>
               <select id="C-baseline-hh" onchange="recalc()">
                 <option value="openwater">Open defecation near water (MCF 0.3)</option>
@@ -1266,18 +1324,18 @@
             <p>Gold Standard TPDDTEC / RECH · fNRB biomass displacement</p>
           </div>
           <div class="module-result"><span id="result-D">0</span><br><span class="unit">tCO₂e/yr</span></div>
-          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
-              id="tog-D" onchange="toggleModule('D')" checked><span class="toggle-slider"></span></label>
         </div>
         <div class="module-body open" id="body-D">
           <div class="method-tag"><a
               href="https://globalgoals.goldstandard.org/standards/407_V4.0_EE_ICS_Reduced-Emissions-from-Cooking-and-Heating-TPDDTEC.pdf"
               target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard TPDDTEC v4 / RECH · AMS-II.G
               ↗</a></div>
+          <div style="margin: 0 0 16px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
+            <strong>Total Population Served (Household Clusters): </strong><span id="D-total-pop"
+              style="font-weight: bold; color: var(--primary);">0</span> persons
+          </div>
+          <input type="hidden" id="D-stoves" value="100">
           <div class="module-grid">
-            <div class="field"><label>Number of Stoves/HH units <span class="info"
-                  title="Calculated from total household clusters">i</span></label><input type="number" id="D-stoves"
-                value="100" min="1" onchange="recalc()"></div>
             <div class="field"><label>Fuel Type</label>
               <select id="D-fuel" onchange="recalc()">
                 <option value="wood">Firewood</option>
@@ -1313,6 +1371,10 @@
           <div class="formula-box" id="D-formula">ER = N × FS × NCV × fNRB × (EF_CO₂+EF_nonCO₂) × (1–stacking)</div>
           <div class="result-inline"><span class="rv" id="D-detail">0</span><span class="ru">tCO₂e / year saved</span>
           </div>
+          <p class="info-text"
+            style="font-size:11px;color:var(--muted);margin-top:12px;border-top:1px solid var(--border);padding-top:8px;">
+            Fuel EFs used are mass-based (kgCO₂e/kg fuel). NCV is stored for future use but not applied to mass-based
+            EFs.</p>
         </div>
       </div>
 
@@ -1326,17 +1388,17 @@
             <p>AMS-III.AR / Standalone · Replaces Kerosene/Diesel</p>
           </div>
           <div class="module-result"><span id="result-E">0</span><br><span class="unit">tCO₂e/yr</span></div>
-          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
-              id="tog-E" onchange="toggleModule('E')" checked><span class="toggle-slider"></span></label>
         </div>
         <div class="module-body open" id="body-E">
           <div class="method-tag"><a href="https://cdm.unfccc.int/methodologies/DB/S3RZMK6KR289WKK0VB1ETT6K73Y3DR"
               target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard AMS-III.AR (simplified) ↗</a>
           </div>
+          <div style="margin: 0 0 16px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
+            <strong>Total Population Served (HCFs & Schools): </strong><span id="E-total-pop"
+              style="font-weight: bold; color: var(--primary);">0</span> persons
+          </div>
+          <input type="hidden" id="E-count" value="1">
           <div class="module-grid">
-            <div class="field"><label>Number of Facilities <span class="info"
-                  title="Aggregated from selected HCFs and Schools">i</span></label><input type="number" id="E-count"
-                value="1" min="0" onchange="recalc()"></div>
             <div class="field"><label>Baseline Fuel System</label>
               <select id="E-baseline" onchange="recalc()">
                 <option value="kerosene">Kerosene Lamps</option>
@@ -1361,8 +1423,6 @@
             <p>MECD · Replaces household biomass</p>
           </div>
           <div class="module-result"><span id="result-F">0</span><br><span class="unit">tCO₂e/yr</span></div>
-          <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" style="margin:2px 0 0 0;"
-              id="tog-F" onchange="toggleModule('F')" checked><span class="toggle-slider"></span></label>
         </div>
         <div class="module-body" id="body-F">
           <div class="method-tag"><a
@@ -1370,10 +1430,12 @@
               target="_blank" style="color:inherit;text-decoration:none;">📋 Gold Standard MECD v1.2 (Household Scale)
               ↗</a>
           </div>
+          <div style="margin: 0 0 16px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
+            <strong>Total Population Served (Household Clusters): </strong><span id="F-total-pop"
+              style="font-weight: bold; color: var(--primary);">0</span> persons
+          </div>
+          <input type="hidden" id="F-count" value="100">
           <div class="module-grid">
-            <div class="field"><label>Number of Households <span class="info"
-                  title="Calculated from total household clusters">i</span></label><input type="number" id="F-count"
-                value="100" min="0" onchange="recalc()"></div>
             <div class="field"><label>Baseline Fuel</label>
               <select id="F-fuel" onchange="recalc()">
                 <option value="wood">Firewood</option>
@@ -1386,6 +1448,10 @@
           <div class="formula-box" id="F-formula">ER = HHs × FC × NCV × EF × fNRB (Solar PE=0)</div>
           <div class="result-inline"><span class="rv" id="F-detail">0</span><span class="ru">tCO₂e / year saved</span>
           </div>
+          <p class="info-text"
+            style="font-size:11px;color:var(--muted);margin-top:12px;border-top:1px solid var(--border);padding-top:8px;">
+            Fuel EFs used are mass-based (kgCO₂e/kg fuel). NCV is stored for future use but not applied to mass-based
+            EFs.</p>
         </div>
       </div>
     </div><!-- end main-col -->
@@ -1524,13 +1590,13 @@
           ER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg) * fNRB;
         } else if (fuelType === 'charcoal') {
           // Charcoal combustion: Apply to biogenic portion only if method dictates.
-          // Minimal patch constraint: Apply fNRB to the CO2 term ONLY for biomass-derived fuels.
-          const combER = massT * (fuelDef.efCO2_kg_kg * fNRB + fuelDef.efNC_kg_kg);
+          // Constraint: Charcoal CO2 is net-zero (not counted); only non-CO2 is counted.
+          const combER = massT * fuelDef.efNC_kg_kg;
 
           // Upstream Wood Production: mass * prodRatio * wood EFs
           const woodDef = state.defaults.fuels.wood;
-          // Apply fNRB to CO2 portion
-          const upER = massT * fuelDef.prodRatio * (woodDef.efCO2_kg_kg * fNRB + woodDef.efNC_kg_kg);
+          // Apply fNRB to both CO2 and NC portions for the upstream wood
+          const upER = massT * fuelDef.prodRatio * (woodDef.efCO2_kg_kg + woodDef.efNC_kg_kg) * fNRB;
           ER = combER + upER;
         } else {
           // Fossil fuels - NO fNRB applied
@@ -1559,7 +1625,7 @@
         const dieselL = shaftKwh / (etaD * LHV) * days; // L/year
         BE_pump = dieselL * 2.68 / 1000; // tCO2/year (IPCC EF diesel)
         document.getElementById('A-formula').innerHTML =
-          `Pump Displacement: Diesel <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> × ${days} days × 2.68 kgCO₂/L = <b>${BE_pump.toFixed(1)} tCO₂e/yr</b>`;
+          `Pump Displacement: Diesel <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> <span class="info" title="Diesel (L/day) = (Volume(m³/day) × Head(m) × 9.81 / 3600) / Pump_η / (Engine_η × 10 kWh/L)">i</span> × ${days} days × 2.68 kgCO₂/L = <b>${BE_pump.toFixed(1)} tCO₂e/yr</b>`;
 
         // Fuel Savings (Pump)
         state.fuelSavings.A += dieselL * (+v('price-diesel'));
@@ -1613,12 +1679,18 @@
 
     function calcB() {
       state.fuelSavings.B = 0;
+      // Also update institution pop regardless of toggle
+      const popInst = (+v('hcf-beds') + +v('hcf-opd') + +v('hcf-staff')) * +v('port-hcfs') +
+        (+v('sch-pupils') + +v('sch-staff')) * +v('port-schools');
+      document.getElementById('B-total-pop').textContent = Math.round(popInst).toLocaleString();
+
       if (!document.getElementById('tog-B').checked) return 0;
       const fuelType = v('B-fuel');
       const fc_day = +v('B-fuelkg');   // kg/day
       const days = +v('B-days');
       const elec = v('B-elec');
       const co = getLDC();
+      if (!co) return 0;
       const fNRB = co.fNRB;
       const fc_t = fc_day * days / 1000; // tonnes/year
 
@@ -1634,7 +1706,7 @@
       }
       const er = Math.max(0, BE - PE);
       document.getElementById('B-formula').innerHTML =
-        `BE = <b>${BE.toFixed(2)} tCO₂e/yr</b> — PE = <b>${PE.toFixed(2)}</b> → ER = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+        `BE = ${fc_t.toFixed(2)} t/yr <span class="info" title="Baseline Fuel (t/yr) = Daily_Consumption × Days_per_Year / 1000">i</span> × (EF<sub>CO2</sub>+EF<sub>NC</sub>) × fNRB = <b>${BE.toFixed(2)} tCO₂e/yr</b> <br> PE = <b>${PE.toFixed(2)}</b> <span class="info" title="Project Emissions (PE) = Annual_Electricity_Use × Grid_Emission_Factor">i</span> → ER = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
 
       // Fuel Savings: total kg of displaced fuel * price per kg
       const fuelPrice = +v('price-' + fuelType) || 0;
@@ -1644,17 +1716,20 @@
     }
 
     function calcC() {
+      const U_inst = +v('C-pop-inst');
+      const U_hh = +v('C-pop-hh');
+      const popEl = document.getElementById('C-total-pop');
+      if (popEl) popEl.textContent = Math.round(U_inst + U_hh).toLocaleString();
+
       if (!document.getElementById('tog-C').checked) return 0;
       const BOD = +v('C-bod') / 1000; // kg/person/day
       const Bo = +v('C-bo');
 
-      const U_inst = +v('C-pop-inst');
       const mcfB_inst = MCF[v('C-baseline-inst')];
       const mcfI_inst = MCF[v('C-improved-inst')];
       const dMCF_inst = Math.max(0, mcfB_inst - mcfI_inst);
       const ch4_inst = U_inst * BOD * 365 * Bo * dMCF_inst;
 
-      const U_hh = +v('C-pop-hh');
       const mcfB_hh = MCF[v('C-baseline-hh')];
       const mcfI_hh = MCF[v('C-improved-hh')];
       const dMCF_hh = Math.max(0, mcfB_hh - mcfI_hh);
@@ -1662,18 +1737,23 @@
 
       const er = (ch4_inst + ch4_hh) * 28 / 1000;  // tCO2e/year (GWP AR5)
       document.getElementById('C-formula').innerHTML =
-        `Inst: ${U_inst}p · HH: ${U_hh}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF × GWP28 = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+        `Inst: ${U_inst}p · HH: ${U_hh}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF <span class="info" title="ΔMCF = MCF_baseline - MCF_improved. It represents the reduced fraction of methane potential realized.">i</span> × GWP28 = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
       return er;
     }
 
 
     function calcE() {
       state.fuelSavings.E = 0;
+      const popInst = (+v('hcf-beds') + +v('hcf-opd') + +v('hcf-staff')) * +v('port-hcfs') +
+        (+v('sch-pupils') + +v('sch-staff')) * +v('port-schools');
+      const popEl = document.getElementById('E-total-pop');
+      if (popEl) popEl.textContent = Math.round(popInst).toLocaleString();
+
       if (!document.getElementById('tog-E').checked) return 0;
       const count = +v('E-count');
       const ef = +v('E-ef');
       const er = count * ef;
-      document.getElementById('E-formula').innerHTML = `${count} facilities × ${ef} tCO₂e/yr = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      document.getElementById('E-formula').innerHTML = `${count} facilities × ${ef} tCO₂e/yr <span class="info" title="Baseline Emission Factor varies by replaced system (e.g. 2.5 tCO₂e/yr/facility for Kerosene)">i</span> = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
 
       // Fuel Savings estimation
       // Kerosene EF: ~2.5 kgCO2/L. Diesel EF: ~2.68 kgCO2/L.
@@ -1692,19 +1772,25 @@
 
     function calcF() {
       state.fuelSavings.F = 0;
-      if (!document.getElementById('tog-F').checked) return 0;
       const count = +v('F-count');
+      const hhSize = +v('hh-size');
+      const popF = count * hhSize;
+      const popEl = document.getElementById('F-total-pop');
+      if (popEl) popEl.textContent = Math.round(popF).toLocaleString();
+
+      if (!document.getElementById('tog-F').checked) return 0;
       const fcDay = +v('F-fc');
       const fuelT = v('F-fuel');
       const co = getLDC();
+      if (!co) return 0;
       const fNRB = co.fNRB;
 
       const totalMassKg = fcDay * 365 * count;
       const ER = FuelEngine.calculateEmissions(fuelT, totalMassKg, fNRB);
 
-      let formulaText = `${count} HHs × ${(totalMassKg / 1000).toFixed(2)} t/yr × FuelEngine(fNRB) = <b>${ER.toFixed(2)} tCO₂e/yr</b>`;
+      let formulaText = `${count} HHs × ${(totalMassKg / 1000).toFixed(2)} t/yr <span class="info" title="Baseline Mass (t/yr) = HHs × Daily_Fuel_per_HH × 365 / 1000">i</span> × (EF<sub>CO2</sub>+EF<sub>NC</sub>) × fNRB = <b>${ER.toFixed(2)} tCO₂e/yr</b>`;
       if (fuelT === 'charcoal') {
-        formulaText += ` <span class="info" title="Includes upstream wood-to-charcoal emissions (prodRatio 6)">i</span>`;
+        formulaText += ` <span class="info" title="Charcoal includes upstream wood-to-charcoal emissions using prodRatio from defaults. Charcoal CO2 treated as biogenic; non-CO2 counted.">i</span>`;
       }
       document.getElementById('F-formula').innerHTML = formulaText;
 
@@ -1715,8 +1801,13 @@
     }
     function calcD() {
       state.fuelSavings.D = 0;
-      if (!document.getElementById('tog-D').checked) return 0;
       const N = +v('D-stoves');
+      const hhSize = +v('hh-size');
+      const popD = N * hhSize;
+      const popEl = document.getElementById('D-total-pop');
+      if (popEl) popEl.textContent = Math.round(popD).toLocaleString();
+
+      if (!document.getElementById('tog-D').checked) return 0;
       const fcDay = +v('D-baseline-fc');
       const etaB = +v('D-base-stove');
       const etaI = +v('D-imp-stove');
@@ -1731,9 +1822,9 @@
       const ER_gross = FuelEngine.calculateEmissions(fuelT, totalSavedKg, fNRB);
       const er = ER_gross * (1 - stack);
 
-      let formulaText = `${N} stoves × ${(FSKg / 1000).toFixed(3)} t FS × FuelEngine(fNRB) × ${(1 - stack)} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+      let formulaText = `${N} stoves × ${(FSKg / 1000).toFixed(3)} t FS/yr <span class="info" title="Fuel Saved (FS) = Baseline_Fuel × (1 - η_baseline / η_improved)">i</span> × (EF<sub>CO2</sub>+EF<sub>NC</sub>) × fNRB × ${(1 - stack).toFixed(2)} (stack) <span class="info" title="Stacking factor accounts for continued use of baseline stoves (default 20% discount).">i</span> = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
       if (fuelT === 'charcoal') {
-        formulaText += ` <span class="info" title="Includes upstream wood-to-charcoal emissions (prodRatio 6)">i</span>`;
+        formulaText += ` <span class="info" title="Charcoal includes upstream wood-to-charcoal emissions using prodRatio from defaults. Charcoal CO2 treated as biogenic; non-CO2 counted.">i</span>`;
       }
       document.getElementById('D-formula').innerHTML = formulaText;
 
@@ -1752,45 +1843,56 @@
     function fmt(n) { return n < 1 ? n.toFixed(2) : n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString(); }
 
     function recalc() {
+      // Unconditionally evaluate calculations to update UI spans (formulas, pop counts)
+      const resA = calcA();
+      const resB = calcB();
+      const resC = calcC();
+      const resD = calcD();
+      const resE = calcE();
+      const resF = calcF();
+
       // Validation: Double counting overlap check
       const dHH = document.getElementById('tog-D').checked ? +v('D-stoves') : 0;
       const fHH = document.getElementById('tog-F').checked ? +v('F-count') : 0;
-      const totalAvailableHH = (+v('hhs') || 10) * (+v('hh-count') || 1); // Defaults if not dynamically populated
 
       let validationFailed = false;
       const alertBox = document.getElementById('validation-alert');
-      // Only block if total D+F actually overlaps given absolute numbers. Simple block if D>0 and F>0.
+      // Block calculation strictly if both HH modules have active input > 0
       if (dHH > 0 && fHH > 0 && document.getElementById('tog-D').checked && document.getElementById('tog-F').checked) {
-        alertBox.innerHTML = `⚠️ Households cannot be counted in both Module D (ICS) and Module F (HH induction). Split households between modules or disable one module.`;
+        alertBox.innerHTML = `<strong>⚠️ Double counting risk:</strong> Households cannot be included in both Module D (ICS) and Module F (HH induction). Split households between modules or set one module to zero.`;
         alertBox.style.display = 'block';
         validationFailed = true;
+
+        // Highlight zeroed population due to double-counting block
+        document.getElementById('D-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
+        document.getElementById('F-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
       } else {
         alertBox.style.display = 'none';
       }
 
-      state.results.A = validationFailed ? NaN : calcA();
-      state.results.B = validationFailed ? NaN : calcB();
-      state.results.C = validationFailed ? NaN : calcC();
-      state.results.D = validationFailed ? NaN : calcD();
-      state.results.E = validationFailed ? NaN : calcE();
-      state.results.F = validationFailed ? NaN : calcF();
+      state.results.A = validationFailed ? 0 : resA;
+      state.results.B = validationFailed ? 0 : resB;
+      state.results.C = validationFailed ? 0 : resC;
+      state.results.D = validationFailed ? 0 : resD;
+      state.results.E = validationFailed ? 0 : resE;
+      state.results.F = validationFailed ? 0 : resF;
 
       ['A', 'B', 'C', 'D', 'E', 'F'].forEach(m => {
-        const r = state.results[m];
-        document.getElementById('result-' + m).textContent = fmt(r);
-        document.getElementById(m.toLowerCase() + '-detail') && (document.getElementById(m + '-detail') || document.getElementById(m.toLowerCase() + '-detail')).textContent;
+        const r = validationFailed ? 'Fix inputs' : fmt(state.results[m]);
+        document.getElementById('result-' + m).textContent = r;
       });
+
       // Update inline detail text
       ['A', 'B', 'C', 'D', 'E', 'F'].forEach(m => {
         const el = document.getElementById(m + '-detail');
-        if (el) el.textContent = fmt(state.results[m]);
+        if (el) el.textContent = validationFailed ? 'Fix inputs' : fmt(state.results[m]);
       });
 
-      const total = Object.values(state.results).reduce((a, b) => a + b, 0);
+      const total = validationFailed ? 0 : Object.values(state.results).reduce((a, b) => a + b, 0);
       const lt = +v('lifetime');
       document.getElementById('lbl-price').textContent = v('carbon-price');
-      document.getElementById('total-co2').textContent = fmt(total);
-      document.getElementById('lifetime-co2').textContent = fmt(total * lt);
+      document.getElementById('total-co2').innerHTML = validationFailed ? '<span style="color:var(--red);font-size:18px;">Fix inputs</span>' : fmt(total);
+      document.getElementById('lifetime-co2').innerHTML = validationFailed ? '<span style="color:var(--red);font-size:18px;">Fix inputs</span>' : fmt(total * lt);
       document.getElementById('lt-yrs').textContent = lt;
       const carbonPrice = +v('carbon-price');
       const revAnnual = total * carbonPrice;
@@ -1938,7 +2040,10 @@
 
     function exportCSV() {
       const co = getLDC();
-      const t = 'Portfolio';
+      if (!co) {
+        alert("Defaults not loaded yet. Please wait.");
+        return;
+      }
       const lt = +v('lifetime');
       const tot = Object.values(state.results).reduce((a, b) => a + b, 0);
 
@@ -1946,20 +2051,13 @@
       const schools = +v('port-schools');
       const hhs = +v('port-hhs');
 
+      // Shared Module C
       const popInst = +v('C-pop-inst');
       const popHh = +v('C-pop-hh');
 
       const hcfBeds = +v('hcf-beds'), hcfOpd = +v('hcf-opd'), hcfStaff = +v('hcf-staff'), hcfDays = +v('hcf-days');
       const schPupils = +v('sch-pupils'), schMeals = +v('sch-meals'), schStaff = +v('sch-staff'), schDays = +v('sch-days');
       const hhCount = +v('hh-count'), hhSize = +v('hh-size');
-
-      // Water / Boiling assumptions
-      const waterDemand = v('A-demand');
-      const commPopSys = v('A-comm-pop');
-      const boilVol = v('A-boil-vol');
-      const boilFuel = document.getElementById('A-boil-fuel').options[document.getElementById('A-boil-fuel').selectedIndex].text;
-      const boilEta = v('A-boil-eta');
-      const fuelIndDay = v('B-fuelkg');
 
       const popElement = document.getElementById('A-total-pop');
       const totalPopServedA = popElement ? popElement.textContent : '0';
@@ -1970,7 +2068,7 @@
         ['Project Currency Year', v('creditYear'), ''],
         ['Project Lifetime (Years)', lt, ''],
         ['Carbon Price ($/tCO2e)', v('carbon-price'), ''],
-        ['fNRB', co.fNRB, ''],
+        ['fNRB (Fraction Non-Renewable Biomass)', co.fNRB, ''],
         ['Grid EF (kgCO2/kWh)', co.gEF, ''],
         ['', '', ''],
         ['LOCAL FUEL PRICES USED (USD)', 'Price', 'Unit'],
@@ -1985,16 +2083,52 @@
         ['Schools / Institutions', schools, `${schPupils} Pupils, ${schStaff} Staff, ${schMeals} Meals/day`],
         ['Household Clusters', hhs, `${hhCount} HHs per cluster, ${hhSize} persons/HH`],
         ['', '', ''],
-        ['AGGREGATED PARAMETERS', 'Value', 'Unit'],
-        ['Total Daily Water Demand (Pumping)', waterDemand, 'm3/day'],
-        ['Total Inst. Daily Cooking Fuel (Baseline)', fuelIndDay, 'kg/day'],
+        ['MODULE A: SOLAR WATER PUMPING & AVOIDED BOILING', 'Value', 'Unit'],
+        ['Total Daily Water Demand (Pumping)', v('A-demand'), 'm3/day'],
+        ['Pumping Head', v('A-head'), 'm'],
+        ['Pump Efficiency', v('A-etapump'), ''],
+        ['Baseline System', v('A-baseline'), ''],
+        ['Community Size (Per Water System)', v('A-comm-pop'), 'persons'],
         ['Total Wash/Water Population Served (Module A)', totalPopServedA, 'persons'],
-        ['Community Size (Per Water System)', commPopSys, 'persons'],
-        ['Avoided Boiling - Baseline Fuel', boilFuel, ''],
-        ['Avoided Boiling - Drinking Water Vol', boilVol, 'L/person/day'],
-        ['Avoided Boiling - Stove Efficiency', boilEta, ''],
-        ['Total Institutional Population Served', popInst, 'persons'],
-        ['Total Household Population Served', popHh, 'persons'],
+        ['Avoided Boiling - Baseline Fuel', v('A-boil-fuel'), ''],
+        ['Avoided Boiling - Drinking Water Vol', v('A-boil-vol'), 'L/person/day'],
+        ['Avoided Boiling - Stove Efficiency', v('A-boil-eta'), ''],
+        ['', '', ''],
+        ['MODULE B: INSTITUTIONAL INDUCTION COOKING', 'Value', 'Unit'],
+        ['Baseline Fuel Type', v('B-fuel'), ''],
+        ['Daily Fuel Consumption', v('B-fuelkg'), 'kg/day'],
+        ['Cooking Days/Year', v('B-days'), 'days/yr'],
+        ['Electricity Source', v('B-elec'), ''],
+        ['Grid Annual Electricity Use (if grid)', v('B-kwh'), 'kWh/yr'],
+        ['', '', ''],
+        ['MODULE C: SANITATION METHANE REDUCTION', 'Value', 'Unit'],
+        ['Institutional Population Served', v('C-pop-inst'), 'persons'],
+        ['Institutional Baseline System', v('C-baseline-inst'), ''],
+        ['Institutional Improved System', v('C-improved-inst'), ''],
+        ['Household Population Served', v('C-pop-hh'), 'persons'],
+        ['Household Baseline System', v('C-baseline-hh'), ''],
+        ['Household Improved System', v('C-improved-hh'), ''],
+        ['BOD Load', v('C-bod'), 'g/person/day'],
+        ['Max CH4 potential (Bo)', v('C-bo'), 'kg CH4/kg BOD'],
+        ['', '', ''],
+        ['MODULE D: IMPROVED HH COOKSTOVES', 'Value', 'Unit'],
+        ['Number of Stoves/HH units', v('D-stoves'), 'stoves'],
+        ['Baseline Fuel Type', v('D-fuel'), ''],
+        ['Baseline Fuel Consumption', v('D-baseline-fc'), 'kg/HH/day'],
+        ['Baseline Stove Efficiency', v('D-base-stove'), ''],
+        ['Improved Stove Efficiency', v('D-imp-stove'), ''],
+        ['fNRB applied', v('D-fnrb'), ''],
+        ['Stacking Discount', v('D-stack'), ''],
+        ['', '', ''],
+        ['MODULE E: INSTITUTIONAL SOLAR LIGHTING', 'Value', 'Unit'],
+        ['Number of Facilities', v('E-count'), 'facilities'],
+        ['Baseline Fuel System', v('E-baseline'), ''],
+        ['Baseline Emissions factor', v('E-ef'), 'tCO2e/yr/facility'],
+        ['', '', ''],
+        ['MODULE F: HH INDUCTION COOKING + SOLAR', 'Value', 'Unit'],
+        ['Number of Households', v('F-count'), 'HHs'],
+        ['Baseline Fuel Type', v('F-fuel'), ''],
+        ['Daily Fuel Consumption', v('F-fc'), 'kg/HH/day'],
         ['', '', ''],
         ['RESULTS', 'Annual tCO2e/yr', 'Lifetime tCO2e'],
         ['A - Solar Water Pumping & Avoided Boiling', state.results.A.toFixed(2), (state.results.A * lt).toFixed(1)],
@@ -2015,18 +2149,21 @@
         ['TOTAL ESTIMATED FUEL COST SAVINGS', '$' + Object.values(state.fuelSavings).reduce((a, b) => a + b, 0).toFixed(2), '$' + (Object.values(state.fuelSavings).reduce((a, b) => a + b, 0) * lt).toFixed(2)],
         ['', '', ''],
         ['ASSUMPTIONS & FLAGS', '', ''],
-        ['Charcoal Upstream Production Used?', 'Yes', ''],
-        ['Validation Status', document.getElementById('validation-alert').style.display === 'block' ? 'FAILED (Overlap)' : 'PASS', ''],
+        ['Mass-Based EFs Used?', 'Yes', 'UI and computation structurally avoids NCV'],
+        ['Charcoal Upstream Production Included?', 'Yes', ''],
+        ['Charcoal CO2 Counted?', 'No (Biogenic / Net-Zero)', ''],
+        ['Charcoal prodRatio Used', state.defaults && state.defaults.fuels && state.defaults.fuels.charcoal ? state.defaults.fuels.charcoal.prodRatio : 'N/A', 'kg wood / kg char'],
+        ['Validation Status', document.getElementById('validation-alert').style.display === 'block' ? 'FAILED (Overlap Risk)' : 'PASS', ''],
         ['', '', ''],
         ['DATA PROVENANCE', '', ''],
-        ['Defaults Version', state.defaults.version, ''],
-        ['Source', state.defaults.metadata.source, ''],
+        ['Defaults Version', state.defaults ? state.defaults.version : 'Unknown', ''],
+        ['Source', state.defaults ? state.defaults.metadata.source : 'Unknown', ''],
         ['', '', ''],
         ['METHODOLOGY REFERENCES', '', ''],
-        ['A: Gold Standard AMS-I.F / CDM AM0020', 'https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242', ''],
-        ['A (Boiling): GS Safe Water Supply Methodology', 'https://globalgoals.goldstandard.org/standards/443_v1.0_ee_gs-methodology-for-emission-reductions-from-safe-drinking-water-supply/', ''],
+        ['A: Pumping - Gold Standard AMS-I.F / CDM AM0020', 'https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242', ''],
+        ['A: Boiling - GS Safe Water Supply Methodology', 'https://globalgoals.goldstandard.org/standards/443_v1.0_ee_gs-methodology-for-emission-reductions-from-safe-drinking-water-supply/', ''],
         ['B: Gold Standard MECD v1.2', 'https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf', ''],
-        ['C: IPCC / Gold Standard Integrated SDG Sanitation', 'https://globalgoals.goldstandard.org/in-development/integrated-sdg-methodology-for-sanitation/', ''],
+        ['C: IPCC / GS Integrated SDG Sanitation', 'https://globalgoals.goldstandard.org/in-development/integrated-sdg-methodology-for-sanitation/', ''],
         ['D: Gold Standard TPDDTEC / AMS-II.G', 'https://globalgoals.goldstandard.org/standards/407_V4.0_EE_ICS_Reduced-Emissions-from-Cooking-and-Heating-TPDDTEC.pdf', ''],
         ['E: Gold Standard AMS-III.AR', 'https://cdm.unfccc.int/methodologies/DB/S3RZMK6KR289WKK0VB1ETT6K73Y3DR', ''],
         ['F: Gold Standard MECD v1.2', 'https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf', ''],

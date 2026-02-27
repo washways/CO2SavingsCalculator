@@ -5,12 +5,17 @@ A pure HTML/JavaScript tool that allows users to enter data to calculate CO₂ s
 ## Purpose
 
 The calculator provides a unified interface to estimate CO₂ emission reductions from multiple project types:
-- **A — Solar Water Pumping:** Replacing diesel or grid-powered water pumps with solar systems.
+- **A — Solar Water Pumping:** Replacing diesel or grid-powered water pumps with solar systems, while also capturing **Avoided Boiling Emissions** from avoiding the need to boil unsafe drinking water.
 - **B — Institutional Induction Cooking:** Replacing biomass (wood/charcoal) cooking with electric induction in schools/hospitals.
 - **C — Sanitation Methane Reduction:** Upgrading baseline sanitation (open defecation/pits) to improved systems (VIP, EcoSan, Biogas).
 - **D — Improved HH Cookstoves:** Distributing improved cookstoves to replace traditional 3-stone fires.
 - **E — Institutional Solar Lighting:** Replacing kerosene or diesel lighting with solar.
 - **F — HH Induction Cooking + Solar:** Replacing household biomass cooking with induction/solar cooking.
+
+### Key Features
+- **Comprehensive CSV Export:** The tool allows users to export all active assumptions and results into a comprehensive CSV sheet detailing over 60 specific parameters, metrics, units, and methodology references, suitable for dashboard ingestion.
+- **Dynamic Population UI:** All 6 modules contain a unified "Total Population Served" readout that dynamically scales up and down based on the overarching Portfolio Input variables (number of clinics, households per cluster, etc.), providing immediate transparency into the scale of interventions.
+- **Transparent Guardrails:** Built-in safeguards actively block invalid logic, such as throwing overlapping double-counting warnings if users attempt to register households in both Module D and Module F simultaneously.
 
 ## Detailed Calculation Methodology
 
@@ -24,11 +29,12 @@ The calculator provides a unified interface to estimate CO₂ emission reduction
   - **Production Ratio (Charcoal):** Assumes 6 kg of wood is required to produce 1 kg of charcoal.
 
 ### Unified FuelEngine
-All cooking and fuel-combustion modules (B, D, F) rely on a single shared methodology engine to prevent double counting and ensure conservative fNRB application.
-- **Wood:** `Emission Reduction = Mass_wood × (EF_CO₂ + EF_NC) × fNRB`
+All cooking and fuel-combustion modules (B, D, F) and Avoided Boiling (A) rely on a single shared methodology engine (`FuelEngine.calculateEmissions`) to prevent double counting and ensure conservative fNRB application. Equations strictly use mass-based units without referencing energetic NCV.
+- **Wood:** 
+  - `Emission Reduction = Mass_wood_saved_kg × (EF_CO₂ + EF_NC) × fNRB`
 - **Charcoal:** 
   - `Combustion emissions = Mass_charcoal × EF_NC` *(Charcoal CO₂ combustion is inherently biogenic/net-zero).*
-  - `Upstream Wood Production emissions = Mass_charcoal × Production_Ratio × (EF_wood_CO₂ + EF_wood_NC) × fNRB`
+  - `Upstream Wood Production emissions = Mass_charcoal × Production_Ratio × (EF_wood_CO₂ + EF_wood_NC) × fNRB` *(Default Production_Ratio is 6.0kg wood per 1kg charcoal).*
   - `Total Emission Reduction = Upstream Wood Production emissions + Combustion emissions`
 
 ### Module A: Solar Water Pumping & Avoided Boiling
@@ -55,7 +61,7 @@ Calculates baseline emissions from water pumping that would have occurred withou
 
 Calculates savings from displacing baseline institutional cooking fuels (wood, charcoal, fossil fuels) with electric/induction cooking.
 - **Baseline Emissions (BE):**
-  - Calculated automatically by the unified `FuelEngine(fuel, total_mass_kg, fNRB)`.
+  - Calculated automatically via the unified mass-based logic: `BE = Mass × (EF_CO₂ + EF_NC) × fNRB`.
 - **Project Emissions (PE):**
   - If Grid connected: `PE = Project Electricity Consumed (kWh) × Grid EF / 1000`
 - **Emission Reduction (ER)** = `BE - PE`
@@ -79,7 +85,8 @@ Calculates methane avoided by upgrading the sanitation system to one with a lowe
 Calculates savings from fuel efficiency improvements in cooking.
 - **Fuel Saved (kg)** = `Baseline Fuel Consumption × (1 - (Efficiency_baseline / Efficiency_improved))`
 - **Stacking Discount:** 20% default discount for parallel old-stove use.
-- **Emission Reduction (tCO₂e/yr)** = `Number of Stoves × FuelEngine(fuel, Fuel Saved (kg), fNRB) × (1 - Stacking Discount)`
+- **Emission Reduction (tCO₂e/yr)** = `Number of Stoves × Fuel Saved (kg) × (EF_CO₂ + EF_NC) × fNRB × (1 - Stacking Discount)`
+- **Anti-Double-Counting Guardrail:** The calculator explicitly blocks calculation and throws an active UI error if households are simultaneously populated (>0) in both Module D (ICS) and Module F (Induction). Users must split their portfolio safely.
 
 ### Module E: Institutional Solar Lighting
 **Methodology:** Gold Standard AMS-III.AR (Simplified)
@@ -92,7 +99,8 @@ Calculates savings from displacing kerosene or diesel lighting in institutions.
 **Methodology:** Gold Standard MECD v1.2 (Household Scale)
 
 Calculates savings by totally replacing household biomass with solar-powered induction setups (Project Emissions assumed negligible/zero).
-- **Emission Reduction (tCO₂e/yr)** = `Households × FuelEngine(fuel, Fuel Consumption (kg/yr), fNRB)`
+- **Emission Reduction (tCO₂e/yr)** = `Households × Fuel Consumption (kg/yr) × (EF_CO₂ + EF_NC) × fNRB`
+- **Anti-Double-Counting Guardrail:** Blocked with a UI warning if households are simultaneously active in Module D.
 
 ## Financial Fuel Cost Savings
 
