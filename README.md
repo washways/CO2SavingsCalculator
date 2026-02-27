@@ -42,8 +42,7 @@ All cooking and fuel-combustion modules (C, E, G) and Avoided Boiling (B) rely o
   - `Total Emission Reduction = Upstream Wood Production emissions + Combustion emissions`
 
 ### Module A: Solar Water Pumping
-**Methodology:** 
-- GS AMS-I.F / CDM AM0020 (Pumping Displacement)
+**Methodology:** [Gold Standard AMS-I.F / CDM AM0020 (Pumping Displacement)](https://cdm.unfccc.int/methodologies/DB/9KJWQ1G0WEG6LKHX21MLPS8BQR7242)
 
 Calculates baseline emissions from water pumping that would have occurred without the solar intervention.
 - **Total Population Served** = Institutional populations + Total Community Size (default 3,000 per system).
@@ -56,8 +55,7 @@ Calculates baseline emissions from water pumping that would have occurred withou
   - `Emissions = (Shaft Energy / Motor Efficiency) × Operating Days × Grid EF / 1000`
 
 ### Module B: Avoided Boiling
-**Methodology:** 
-- GS Safe Water Supply Methodology (Avoided Boiling)
+**Methodology:** [GS Safe Water Supply Methodology (Avoided Boiling)](https://globalgoals.goldstandard.org/standards/443_v1.0_ee_gs-methodology-for-emission-reductions-from-safe-drinking-water-supply/)
 
 Calculates the emissions avoided by eliminating the need to boil unsafe water with biomass.
 - **Avoided Boiling (Wood/Charcoal):**
@@ -66,7 +64,7 @@ Calculates the emissions avoided by eliminating the need to boil unsafe water wi
   - Emission reduction is derived via the `FuelEngine` applying fNRB.
 
 ### Module C: Institutional Induction Cooking
-**Methodology:** Gold Standard MECD v1.2
+**Methodology:** [Gold Standard MECD v1.2](https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf)
 
 Calculates savings from displacing baseline institutional cooking fuels (wood, charcoal, fossil fuels) with electric/induction cooking.
 - **Baseline Emissions (BE):**
@@ -76,7 +74,7 @@ Calculates savings from displacing baseline institutional cooking fuels (wood, c
 - **Emission Reduction (ER)** = `BE - PE`
 
 ### Module D: Sanitation Methane Reduction
-**Methodology:** IPCC 2006 Waste Ch.6 / Gold Standard Integrated SDG Sanitation
+**Methodology:** [IPCC 2006 Waste Ch.6 / Gold Standard Integrated SDG Sanitation](https://globalgoals.goldstandard.org/in-development/integrated-sdg-methodology-for-sanitation/)
 
 Calculates methane avoided by upgrading the sanitation system to one with a lower Methane Correction Factor (MCF).
 - **Variables:**
@@ -89,7 +87,7 @@ Calculates methane avoided by upgrading the sanitation system to one with a lowe
 - Evaluated separately for institutional settings and household levels.
 
 ### Module E: Improved Household Cookstoves
-**Methodology:** Gold Standard TPDDTEC v4 / RECH · AMS-II.G
+**Methodology:** [Gold Standard TPDDTEC v4 / RECH · AMS-II.G](https://globalgoals.goldstandard.org/standards/407_V4.0_EE_ICS_Reduced-Emissions-from-Cooking-and-Heating-TPDDTEC.pdf)
 
 Calculates savings from fuel efficiency improvements in cooking.
 - **Fuel Saved (kg)** = `Baseline Fuel Consumption × (1 - (Efficiency_baseline / Efficiency_improved))`
@@ -98,14 +96,14 @@ Calculates savings from fuel efficiency improvements in cooking.
 - **Anti-Double-Counting Guardrail:** The calculator explicitly blocks calculation and throws an active UI error if households are simultaneously populated (>0) in both Module E (ICS) and Module G (Induction). Users must split their portfolio safely.
 
 ### Module F: Institutional Solar Lighting
-**Methodology:** Gold Standard AMS-III.AR (Simplified)
+**Methodology:** [Gold Standard AMS-III.AR (Simplified)](https://cdm.unfccc.int/methodologies/DB/S3RZMK6KR289WKK0VB1ETT6K73Y3DR)
 
 Calculates savings from displacing kerosene or diesel lighting in institutions.
 - **Calculation:**
   - `Emission Reduction (tCO₂e/yr) = Number of Facilities × Baseline Emissions Factor (tCO₂e/yr/facility)`
 
 ### Module G: Household Induction Cooking + Solar
-**Methodology:** Gold Standard MECD v1.2 (Household Scale)
+**Methodology:** [Gold Standard MECD v1.2 (Household Scale)](https://globalgoals.goldstandard.org/standards/431_V1.2_TC_EE_ICS_Methodology-for-Metered-and-Measured-Energy-Cooking-Devices.pdf)
 
 Calculates savings by totally replacing household biomass with solar-powered induction setups (Project Emissions assumed negligible/zero).
 - **Emission Reduction (tCO₂e/yr)** = `Households × Fuel Consumption (kg/yr) × (EF_CO₂ + EF_NC) × fNRB`
