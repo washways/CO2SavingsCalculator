@@ -856,7 +856,8 @@
           <li><strong>Portfolio Aggregation:</strong> Effortlessly calculate aggregated savings across entire portfolios
             of clinics, schools, and household clusters simultaneously.</li>
           <li><strong>Strict Methodology:</strong> Built-in guardrails against double counting and rigorous adherence to
-            mass-based fuel calculations (Averting NCV inconsistencies).</li>
+            mass-based emission factors (kgCO₂e/kg fuel). NCV is used only to convert energy needs into fuel mass where
+            required.</li>
           <li><strong>Financial Tracking:</strong> Automatically estimates indicative voluntary carbon market revenues
             and lifetime avoided fuel spending.</li>
           <li><strong>Dashboard Ready:</strong> Export transparent, detailed CSV reports capturing over 60 granular
@@ -1241,7 +1242,7 @@
         <div class="module-header" onclick="toggleBody('C')">
           <div class="module-icon">🍳</div>
           <div class="module-title">
-            <h3>B — Institutional Induction Cooking</h3>
+            <h3>C — Institutional Induction Cooking</h3>
             <p>Gold Standard MECD · Replaces charcoal/wood/LPG cooking</p>
           </div>
           <div class="module-result"><span id="result-C">0</span><br><span class="unit">tCO₂e/yr</span></div>
@@ -1339,7 +1340,7 @@
             <div class="field"><label>Baseline System</label>
               <select id="D-baseline-hh" onchange="recalc()">
                 <option value="openwater">Open defecation near water (MCF 0.3)</option>
-                <option value="opendry" selected>Open defecation dry field (MCF 0.05)</option>
+                <option value="opendry">Open defecation dry field (MCF 0.05)</option>
                 <option value="sharedpit" selected>Unimproved shared pit (MCF 0.5)</option>
                 <option value="septic">Septic / pour-flush (MCF 0.5)</option>
               </select>
@@ -1372,7 +1373,7 @@
         <div class="module-header" onclick="toggleBody('E')">
           <div class="module-icon">🔥</div>
           <div class="module-title">
-            <h3>D — Improved HH Cookstoves</h3>
+            <h3>E — Improved HH Cookstoves</h3>
             <p>Gold Standard TPDDTEC / RECH · fNRB biomass displacement</p>
           </div>
           <div class="module-result"><span id="result-E">0</span><br><span class="unit">tCO₂e/yr</span></div>
@@ -1596,7 +1597,7 @@
           </div>
         </div>
         <div class="divider"></div>
-        <div class="section-title">�🌱 Equivalencies</div>
+        <div class="section-title">🌱 Equivalencies</div>
         <div class="equiv-grid">
           <div class="equiv-item">
             <div class="eico">🌳</div>
@@ -2060,9 +2061,13 @@
 
       let baseInstPop = hcfInstituPop + schInstituPop;
       let totalPopReached = Math.max(popA, baseInstPop) + Math.max(popD_HH, popCooking);
+      let overlapWarning = '';
+      if (popD_HH > 0 && popCooking > 0) {
+        overlapWarning = ' <span style="font-size:12px; color:var(--warn);" title="Overlap Possible: Same households may be reached by both Sanitation and Cooking interventions.">⚠️</span>';
+      }
 
       document.getElementById('impact-inst').textContent = validationFailed ? "0" : Math.round(totInst).toLocaleString();
-      document.getElementById('impact-people').textContent = validationFailed ? "0" : Math.round(totalPopReached).toLocaleString();
+      document.getElementById('impact-people').innerHTML = validationFailed ? "0" : Math.round(totalPopReached).toLocaleString() + overlapWarning;
     }
 
     function onCountryChange() {
@@ -2232,6 +2237,9 @@
       const lt = +v('lifetime');
       const tot = Object.values(state.results).reduce((a, b) => a + b, 0);
 
+      // Helper to cleanly export textContent from spans
+      function t(id) { const el = document.getElementById(id); return el ? el.textContent : ''; }
+
       const hcfs = +v('port-hcfs');
       const schools = +v('port-schools');
       const hhs = +v('port-hhs');
@@ -2277,7 +2285,7 @@
         ['Total Wash/Water Population Served (Module A)', totalPopServedA, 'persons'],
         ['', '', ''],
         ['MODULE B: AVOIDED BOILING', 'Value', 'Unit'],
-        ['Avoided Boiling population served', v('B-total-pop'), 'persons'],
+        ['Avoided Boiling population served', t('B-total-pop'), 'persons'],
         ['Avoided Boiling - Baseline Fuel', v('B-fuel'), ''],
         ['Avoided Boiling - Drinking Water Vol', v('B-boil-vol'), 'L/person/day'],
         ['Avoided Boiling - Stove Efficiency', v('B-boil-eta'), ''],
