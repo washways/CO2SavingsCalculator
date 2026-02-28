@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https:; script-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self' https: data:; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
   <title>CO₂ Savings Calculator | Gold Standard</title>
   <meta name="description"
     content="CO₂ savings calculator for WASH/energy projects in Least Developed Countries using Gold Standard methodology">
@@ -68,6 +70,24 @@
     a {
       color: var(--accent2);
       text-decoration: none
+    }
+
+    /* Skip navigation link (accessibility) */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      z-index: 9999;
+      padding: 8px 12px;
+      background: #fff;
+      color: #000;
+      border: 1px solid #000;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .skip-link:focus {
+      left: 12px;
+      top: 12px;
     }
 
     select,
@@ -845,13 +865,14 @@
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
   <div id="splash" class="splash-overlay">
     <div class="splash-card">
       <div class="logo-icon"
         style="width:64px;height:64px;font-size:32px;margin:0 auto 20px;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
         🌍</div>
-      <h2>CO₂ Savings Calculator</h2>
+      <p style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:16px;">Estimate CO₂ Savings</p>
       <p style="margin-bottom: 20px;">Estimate greenhouse gas reductions from WASH and institutional energy projects in
         Least Developed Countries using Gold Standard methodologies.</p>
 
@@ -870,7 +891,7 @@
             assumptions.</li>
         </ul>
       </div>
-      <button class="btn btn-primary"
+      <button type="button" class="btn btn-primary"
         onclick="document.getElementById('splash').style.opacity='0'; setTimeout(()=>document.getElementById('splash').style.visibility='hidden', 500);"
         style="padding:12px 28px; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Start Tool &rarr;</button>
     </div>
@@ -885,7 +906,7 @@
       </div>
     </div>
     <div class="header-right">
-      <a href="https://github.com/washways/CO2SavingsCalculator#readme" target="_blank" class="badge"
+      <a href="https://github.com/washways/CO2SavingsCalculator#readme" target="_blank" rel="noopener noreferrer" class="badge"
         style="background:#fff; color:var(--text); border-color:var(--border); display:flex; align-items:center; gap:4px; font-size:11px;">
         <span>📖</span> Documentation ↗
       </a>
@@ -901,19 +922,19 @@
   <div class="toolbar"
     style="max-width: 1400px; margin: 0 auto 16px; padding: 0 20px; display: flex; gap: 8px; align-items: center; justify-content: space-between;">
     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-      <button class="btn" id="btn-save"
+      <button type="button" class="btn" id="btn-save"
         style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">💾
         Save Scenario</button>
-      <button class="btn" id="btn-load"
+      <button type="button" class="btn" id="btn-load"
         style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">📂
         Load Scenario</button>
-      <button class="btn" id="btn-reset"
+      <button type="button" class="btn" id="btn-reset"
         style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:#ef4444;">🔄
         Reset to defaults</button>
-      <button class="btn" id="btn-export-scenario"
+      <button type="button" class="btn" id="btn-export-scenario"
         style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">⬇️
         Export JSON</button>
-      <button class="btn" id="btn-share-link"
+      <button type="button" class="btn" id="btn-share-link"
         style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">🔗
         Share Link</button>
       <label class="btn"
@@ -921,11 +942,12 @@
         ⬆️ Import JSON <input type="file" id="btn-import-scenario" accept=".json" style="display:none;">
       </label>
     </div>
-    <div id="session-indicator"
+    <div id="session-indicator" role="status" aria-live="polite"
       style="font-size: 12px; font-weight: 500; color: var(--accent); display: none; background: rgba(0,191,165,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(0,191,165,0.2);">
       Restored last session: <span id="session-time"></span></div>
   </div>
 
+  <main id="main">
   <div class="app">
     <div class="main-col">
 
@@ -947,7 +969,7 @@
           </div>
           <div class="field">
             <label>Project Lifetime (years)</label>
-            <input type="number" id="lifetime" value="10" min="1" max="30">
+            <input type="number" id="lifetime" value="10" min="1" max="30" step="1">
           </div>
           <div class="field">
             <label>Carbon Price ($/tCO₂e) <span class="info" title="Voluntary Carbon Market Price">i</span></label>
@@ -1015,7 +1037,7 @@
             style="background:var(--bg); border:1px solid var(--border); padding:16px; border-radius:8px;">
             <label
               style="font-size:13px; color:var(--text); margin-bottom:8px; display:flex; justify-content:space-between;"><span>🏥
-                Health Care Facilities</span> <input type="number" id="port-hcfs" value="0" min="0"
+                Health Care Facilities</span> <input type="number" id="port-hcfs" value="0" min="0" step="1"
                 style="width:60px; padding:4px 8px;"></label>
             <div style="display:block; text-align:left; margin-top:12px; padding-left:4px;">
               <label
@@ -1576,8 +1598,8 @@
 
     <!-- RESULTS SIDEBAR -->
     <div class="side-col">
-      <div id="validation-alert"></div>
-      <div class="results-card">
+      <div id="validation-alert" role="alert" aria-live="assertive" aria-atomic="true"></div>
+      <div class="results-card" aria-live="polite" aria-atomic="true">
         <div class="section-title">📊 Results Summary</div>
         <div class="total-box">
           <div class="label">Total Annual Savings</div>
@@ -1688,12 +1710,13 @@
         <div class="divider"></div>
         <div class="section-title">📁 Export</div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="exportCSV()">⬇ CSV</button>
-          <button class="btn btn-outline" onclick="window.print()">🖨 Print</button>
+          <button type="button" class="btn btn-primary" onclick="exportCSV()">⬇ CSV</button>
+          <button type="button" class="btn btn-outline" onclick="window.print()">🖨 Print</button>
         </div>
       </div>
     </div>
   </div>
+  </main>
 
   <script>
     // ─── DATA ──────────────────────────────────────────────────────────────
@@ -1704,6 +1727,9 @@
       openwater: 0.30, opendry: 0.05, sharedpit: 0.50, septic: 0.50,
       vip: 0.05, ecosan: 0.01, biogas: 0.10, sewer: 0.00
     };
+
+    // ─── DEBUG FLAG ─────────────────────────────────────────────────────────
+    const DEBUG = false;
 
     // ─── STATE & SHARED LOGIC ──────────────────────────────────────────────
     let state = {
@@ -2851,7 +2877,7 @@
           throw new Error("Missing structural fields in defaults.json");
         }
       } catch (e) {
-        console.error("Failed to load defaults.json. Falling back to internal data. Error:", e);
+        if (DEBUG) console.warn('defaults.json unavailable, using embedded fallback:', e.message);
         const banner = document.createElement('div');
         banner.className = "estimator-banner";
         banner.style.background = "#fff3cd";
