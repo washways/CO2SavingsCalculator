@@ -891,6 +891,35 @@
   <div class="estimator-banner">⚠️ SCREENING ESTIMATOR ONLY: Indicative results for planning. Not for certified carbon
     issuance.</div>
 
+  <!-- PERSISTENCE TOOLBAR -->
+  <div class="toolbar"
+    style="max-width: 1400px; margin: 0 auto 16px; padding: 0 20px; display: flex; gap: 8px; align-items: center; justify-content: space-between;">
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <button class="btn" id="btn-save"
+        style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">💾
+        Save Scenario</button>
+      <button class="btn" id="btn-load"
+        style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">📂
+        Load Scenario</button>
+      <button class="btn" id="btn-reset"
+        style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:#ef4444;">🔄
+        Reset to defaults</button>
+      <button class="btn" id="btn-export-scenario"
+        style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">⬇️
+        Export JSON</button>
+      <button class="btn" id="btn-share-link"
+        style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text);">🔗
+        Share Link</button>
+      <label class="btn"
+        style="background:var(--surface); border:1px solid var(--border); padding:8px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; color:var(--text); margin:0;">
+        ⬆️ Import JSON <input type="file" id="btn-import-scenario" accept=".json" style="display:none;">
+      </label>
+    </div>
+    <div id="session-indicator"
+      style="font-size: 12px; font-weight: 500; color: var(--accent); display: none; background: rgba(0,191,165,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(0,191,165,0.2);">
+      Restored last session: <span id="session-time"></span></div>
+  </div>
+
   <div class="app">
     <div class="main-col">
 
@@ -921,13 +950,16 @@
 
         </div>
         <div class="global-grid" id="globalBadges">
-          <div class="param-badge"><label>fNRB <span class="info"
+          <div class="param-badge"><label>fNRB <span class="badge" id="tag-fnrb"
+                style="background:#f1f5f9;border-color:#cbd5e1;color:#475569;font-size:9px;padding:2px 4px;">Default</span>
+              <span class="info"
                 title="Fraction Non-Renewable Biomass — Gold Standard/CDM country default">i</span></label>
             <div class="val" id="badge-fnrb">–</div>
             <div class="sub">biomass non-renewable fraction</div>
           </div>
-          <div class="param-badge"><label>Grid EF <span class="info"
-                title="Grid emission factor from IEA data (kgCO₂/kWh)">i</span></label>
+          <div class="param-badge"><label>Grid EF <span class="badge" id="tag-grid"
+                style="background:#f1f5f9;border-color:#cbd5e1;color:#475569;font-size:9px;padding:2px 4px;">Default</span>
+              <span class="info" title="Grid emission factor from IEA data (kgCO₂/kWh)">i</span></label>
             <div class="val" id="badge-grid">–</div>
             <div class="sub">kgCO₂/kWh</div>
           </div>
@@ -1084,10 +1116,19 @@
               </select>
             </div>
           </div>
-          <h4 class="assump-head">Water Systems (Community & Boiling)</h4>
+          <h4 class="assump-head">Water, Boiling & Sanitation</h4>
           <div id="params-Water" class="proj-grid">
-            <div class="field"><label>Community Size (per system)</label><input type="number" id="A-comm-pop"
-                value="3000" min="0" step="100"></div>
+            <div class="field"><label>Community Size (per sys)</label><input type="number" id="A-comm-pop" value="3000"
+                min="0" step="100"></div>
+            <div class="field"><label>Energy to boil 1L (MJ) <span class="info"
+                  title="Approx. specific heat 20°C to 100°C + latent heat of 5 min boiling">i</span></label><input
+                type="number" id="B-energy-Mj-L" value="0.36" min="0.1" step="0.01"></div>
+            <div class="field"><label>GWP CH₄ (AR5) <span class="info"
+                  title="Global Warming Potential of Methane">i</span></label><input type="number" id="gwp-ch4"
+                value="28" min="20" step="1"></div>
+            <div class="field"><label>Diesel LHV (kWh/L) <span class="info"
+                  title="Diesel Lower Heating Value equivalent">i</span></label><input type="number" id="A-diesel-hc"
+                value="10.0" min="8" step="0.1"></div>
           </div>
         </details>
       </div>
@@ -1228,8 +1269,8 @@
         </div>
       </div>
 
-      <!-- MODULE B: INSTITUTIONAL INDUCTION COOKING -->
-      <div class="module-card mod-B" id="card-C">
+      <!-- MODULE C: INSTITUTIONAL INDUCTION COOKING -->
+      <div class="module-card mod-C" id="card-C">
         <div class="module-header" onclick="toggleBody('C')">
           <div class="module-icon">🍳</div>
           <div class="module-title">
@@ -1498,6 +1539,33 @@
             EFs.</p>
         </div>
       </div>
+
+      <!-- METHODOLOGY & DATA PROVENANCE -->
+      <div class="card" id="prov-panel" style="margin-top:20px;">
+        <div class="section-title">📊 Methodology & Data Provenance</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">Data sources, constants, and versions used
+          in this scenario.</div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; font-size:12px; border-collapse: collapse; text-align:left;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--text);">
+                <th style="padding:8px 4px;">Metric / Constant</th>
+                <th style="padding:8px 4px;">Value Used</th>
+                <th style="padding:8px 4px;">Source / Status</th>
+              </tr>
+            </thead>
+            <tbody id="provenance-tbody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div
+          style="margin-top:12px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); padding-top:8px;">
+          <strong>Defaults Version:</strong> <span id="prov-version">Loading...</span><br>
+          <strong>Global Data Source:</strong> <span id="prov-source">Loading...</span><br>
+        </div>
+      </div>
+
     </div><!-- end main-col -->
 
     <!-- RESULTS SIDEBAR -->
@@ -1639,6 +1707,231 @@
       defaults: null
     };
 
+    // ─── PERSISTENCE & EXPORT ──────────────────────────────────────────────
+    const SCHEMA_VERSION = "1.0.0";
+    const SESSION_KEY = "co2-calculator-scenario";
+
+    function serializeState() {
+      const payload = {
+        schema: SCHEMA_VERSION,
+        timestamp: new Date().toISOString(),
+        inputs: {},
+        toggles: {},
+        computed: {
+          'E-stoves': v('E-stoves'),
+          'F-count': v('F-count'),
+          'G-count': v('G-count'),
+          'D-pop-inst': v('D-pop-inst'),
+          'D-pop-hh': v('D-pop-hh')
+        }
+      };
+
+      document.querySelectorAll('input:not([type="checkbox"]):not([type="file"]), select').forEach(el => {
+        if (el.id) payload.inputs[el.id] = el.value;
+      });
+
+      document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+        if (el.id) payload.toggles[el.id] = el.checked;
+      });
+
+      return payload;
+    }
+
+    function applyState(payload) {
+      if (!payload || payload.schema !== SCHEMA_VERSION) {
+        console.warn("Invalid or missing schema version.");
+        return false;
+      }
+
+      if (payload.toggles) {
+        Object.keys(payload.toggles).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.checked = payload.toggles[id];
+        });
+      }
+
+      if (payload.inputs) {
+        Object.keys(payload.inputs).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = payload.inputs[id];
+        });
+      }
+
+      // Override portfolio auto-computations explicitly if values are stored
+      if (payload.computed) {
+        Object.keys(payload.computed).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = payload.computed[id];
+        });
+      }
+      return true;
+    }
+
+    function saveToLocalStorage(manual = false) {
+      const data = serializeState();
+      localStorage.setItem(SESSION_KEY, JSON.stringify(data));
+      if (manual) alert("Scenario saved to browser!");
+    }
+
+    function loadFromLocalStorage() {
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (raw) {
+        try {
+          const data = JSON.parse(raw);
+          if (applyState(data)) {
+            const ind = document.getElementById('session-indicator');
+            const timeSpan = document.getElementById('session-time');
+            if (ind && timeSpan) {
+              ind.style.display = 'block';
+              timeSpan.textContent = new Date(data.timestamp).toLocaleString();
+            }
+            return true;
+          }
+        } catch (e) {
+          console.error("Failed to load local session", e);
+        }
+      }
+      return false;
+    }
+
+    function resetScenario() {
+      if (!confirm("Are you sure you want to reset all inputs to defaults?")) return;
+      localStorage.removeItem(SESSION_KEY);
+      window.location.href = window.location.pathname; // remove search params
+    }
+
+    async function generateShareLink() {
+      const messages = runValidation();
+      if (messages.some(m => m.level === 'FAIL')) {
+        alert("Cannot generate share link: Validation FAIL detected. Please fix highlighted inputs.");
+        return;
+      }
+      const data = serializeState();
+      const str = JSON.stringify(data);
+      let b64 = '';
+      try {
+        if (window.CompressionStream) {
+          const stream = new Blob([str]).stream().pipeThrough(new CompressionStream('deflate'));
+          const buffer = await new Response(stream).arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          let binary = '';
+          for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          b64 = '1_' + btoa(binary); // 1_ indicates deflate compression
+        } else {
+          b64 = '0_' + btoa(encodeURIComponent(str)); // 0_ indicates raw base64 url-encoded
+        }
+      } catch (e) {
+        b64 = '0_' + btoa(encodeURIComponent(str));
+      }
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('s', b64);
+
+      if (url.toString().length > 2000) {
+        alert("Scenario parameters are too large for a reliable share URL. Please use Export JSON instead.");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(url.toString());
+        alert("Share link copied to clipboard!");
+      } catch (e) {
+        prompt("Copy this link:", url.toString());
+      }
+    }
+
+    async function loadShareLink() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const s = urlParams.get('s');
+      if (!s) return false;
+
+      try {
+        const isDeflate = s.startsWith('1_');
+        const isRaw = s.startsWith('0_');
+        const b64 = (isDeflate || isRaw) ? s.substring(2) : s;
+
+        let str = '';
+        if (isDeflate && window.DecompressionStream) {
+          const binary = atob(b64);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'));
+          str = await new Response(stream).text();
+        } else {
+          if (isDeflate && !window.DecompressionStream) {
+            alert("Your browser does not support decompression required for this link. Please use Chrome/Edge/Safari 16.4+.");
+            return false;
+          }
+          str = decodeURIComponent(atob(b64));
+        }
+        const data = JSON.parse(str);
+        if (applyState(data)) {
+          const ind = document.getElementById('session-indicator');
+          const timeSpan = document.getElementById('session-time');
+          if (ind && timeSpan) {
+            ind.style.display = 'block';
+            timeSpan.textContent = "Shared Link (" + new Date().toLocaleString() + ")";
+          }
+          window.history.replaceState({}, document.title, window.location.pathname);
+          return true;
+        }
+      } catch (e) {
+        console.error("Failed to parse share link", e);
+        alert("Share link is invalid or corrupted.");
+      }
+      return false;
+    }
+
+    function exportScenarioJSON() {
+      const messages = runValidation();
+      if (messages.some(m => m.level === 'FAIL')) {
+        alert("Cannot export scenario: Validation FAIL detected. Please fix highlighted inputs.");
+        return;
+      }
+      const data = serializeState();
+      const str = JSON.stringify(data, null, 2);
+      const blob = new Blob([str], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Scenario_${data.inputs.country || 'Unknown'}_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importScenarioJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (applyState(data)) {
+            alert("Scenario loaded successfully.");
+            onCountryChange();
+            onTypeParamChange(true);
+            saveToLocalStorage();
+            const ind = document.getElementById('session-indicator');
+            const timeSpan = document.getElementById('session-time');
+            if (ind && timeSpan) {
+              ind.style.display = 'block';
+              timeSpan.textContent = new Date(data.timestamp).toLocaleString() + " (Imported)";
+            }
+          } else {
+            alert("Failed to load scenario. Unsupported file or schema version.");
+          }
+        } catch (err) {
+          alert("Error parsing JSON file.");
+        }
+        event.target.value = "";
+      };
+      reader.readAsText(file);
+    }
+
     // Unified Fuel Engine
     const FuelEngine = {
       calculateEmissions: function (fuelType, massKg, fNRB) {
@@ -1689,7 +1982,7 @@
 
         if (base === 'diesel') {
           const etaD = +v('A-etadiesel');
-          const LHV = 10.0;  // kWh/litre diesel (≈36 MJ/L)
+          const LHV = +v('A-diesel-hc') || 10.0;
           const dieselL = shaftKwh / (etaD * LHV) * days; // L/year
           BE_pump = dieselL * 2.68 / 1000; // tCO2/year (IPCC EF diesel)
           document.getElementById('A-formula').innerHTML =
@@ -1712,22 +2005,28 @@
       return BE_pump;
     }
 
+    function getP() {
+      const hcfs = +v('port-hcfs') || 0;
+      const schools = +v('port-schools') || 0;
+      const hhs = +v('port-hhs') || 0;
+      const hcfBeds = +v('hcf-beds') || 0, hcfOpd = +v('hcf-opd') || 0, hcfStaff = +v('hcf-staff') || 0;
+      const hcfPop = hcfBeds + Math.round(hcfOpd * 0.3) + hcfStaff;
+      const schPupils = +v('sch-pupils') || 0, schStaff = +v('sch-staff') || 0;
+      const schPop = schPupils + schStaff;
+      const commPopPerSystem = +v('A-comm-pop') || 0;
+      return { hcfs, schools, hhs, hcfPop, schPop, commPopPerSystem };
+    }
+
     function calcB() {
       state.fuelSavings.B = 0;
 
-      const hcfs = +v('port-hcfs');
-      const schools = +v('port-schools');
+      const p = getP();
       const hcfWater = document.getElementById('chk-hcf-water').checked;
       const schWater = document.getElementById('chk-sch-water').checked;
-      const hcfBeds = +v('hcf-beds'), hcfOpd = +v('hcf-opd'), hcfStaff = +v('hcf-staff');
-      const hcfPop = hcfBeds + Math.round(hcfOpd * 0.3) + hcfStaff;
-      const schPupils = +v('sch-pupils'), schStaff = +v('sch-staff');
-      const schPop = schPupils + schStaff;
-      const commPopPerSystem = +v('A-comm-pop');
 
-      const totalCommPop = (hcfs > 0 && hcfWater ? hcfs * commPopPerSystem : 0) + (schools > 0 && schWater ? schools * commPopPerSystem : 0);
-      const hcfInstituPop = hcfs > 0 && hcfWater ? hcfs * hcfPop : 0;
-      const schInstituPop = schools > 0 && schWater ? schools * schPop : 0;
+      const totalCommPop = (p.hcfs > 0 && hcfWater ? p.hcfs * p.commPopPerSystem : 0) + (p.schools > 0 && schWater ? p.schools * p.commPopPerSystem : 0);
+      const hcfInstituPop = p.hcfs > 0 && hcfWater ? p.hcfs * p.hcfPop : 0;
+      const schInstituPop = p.schools > 0 && schWater ? p.schools * p.schPop : 0;
       const totalPop = hcfInstituPop + schInstituPop + totalCommPop;
 
       document.getElementById('B-total-pop').textContent = Math.round(totalPop).toLocaleString();
@@ -1744,7 +2043,7 @@
       if (totalPop > 0 && boilVol > 0 && state.defaults && state.defaults.fuels) {
         // Energy to boil 1L of water from 20C to 100C + 5 min boiling (roughly 0.1 kWh or 0.36 MJ)
         // Specific heat of water: 4.184 kJ/kgC. 80C diff = 334.7 kJ. Latent heat/evaporation losses = ~0.36 MJ total per L.
-        const energyPerL_MJ = 0.36;
+        const energyPerL_MJ = +v('B-energy-Mj-L') || 0.36;
         const totalEnergyRea_MJ_yr = totalPop * boilVol * 365 * energyPerL_MJ;
 
         const fuelDef = state.defaults.fuels[boilFuel];
@@ -1775,8 +2074,8 @@
     function calcC() {
       state.fuelSavings.C = 0;
       // Also update institution pop regardless of toggle
-      const popInst = (+v('hcf-beds') + +v('hcf-opd') + +v('hcf-staff')) * +v('port-hcfs') +
-        (+v('sch-pupils') + +v('sch-staff')) * +v('port-schools');
+      const p = getP();
+      const popInst = (p.hcfPop * p.hcfs) + (p.schPop * p.schools);
       document.getElementById('C-total-pop').textContent = Math.round(popInst).toLocaleString();
 
       if (!document.getElementById('tog-C').checked) return 0;
@@ -1830,17 +2129,18 @@
       const dMCF_hh = Math.max(0, mcfB_hh - mcfI_hh);
       const ch4_hh = U_hh * BOD * 365 * Bo * dMCF_hh;
 
-      const er = (ch4_inst + ch4_hh) * 28 / 1000;  // tCO2e/year (GWP AR5)
+      const gwp = +v('gwp-ch4') || 28;
+      const er = (ch4_inst + ch4_hh) * gwp / 1000;  // tCO2e/year
       document.getElementById('D-formula').innerHTML =
-        `Inst: ${U_inst}p · HH: ${U_hh}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF <span class="info" title="ΔMCF = MCF_baseline - MCF_improved. It represents the reduced fraction of methane potential realized.">i</span> × GWP28 = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+        `Inst: ${U_inst}p · HH: ${U_hh}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF <span class="info" title="ΔMCF = MCF_baseline - MCF_improved. It represents the reduced fraction of methane potential realized.">i</span> × GWP${gwp} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
       return er;
     }
 
 
     function calcF() {
       state.fuelSavings.F = 0;
-      const popInst = (+v('hcf-beds') + +v('hcf-opd') + +v('hcf-staff')) * +v('port-hcfs') +
-        (+v('sch-pupils') + +v('sch-staff')) * +v('port-schools');
+      const p = getP();
+      const popInst = (p.hcfPop * p.hcfs) + (p.schPop * p.schools);
       const popEl = document.getElementById('F-total-pop');
       if (popEl) popEl.textContent = Math.round(popInst).toLocaleString();
 
@@ -1970,31 +2270,141 @@
         }
       }
     }
+    // ─── VALIDATION ENGINE ─────────────────────────────────────────────────
+    function runValidation() {
+      let messages = [];
+
+      // 1. Sanity Checks (Basic Math/Physics bounds)
+      const sanityChecks = [
+        { id: 'A-etapump', min: 0.1, max: 1.0, name: 'Pump Efficiency' },
+        { id: 'B-boil-eta', min: 0.05, max: 0.8, name: 'Boiling Stove Efficiency' },
+        { id: 'E-base-stove', min: 0.05, max: 0.4, name: 'Baseline Stove Efficiency' },
+        { id: 'E-imp-stove', min: 0.15, max: 0.8, name: 'Improved Stove Efficiency' },
+        { id: 'C-days', min: 1, max: 365, name: 'Institution Cooking Days/yr' },
+        { id: 'hcf-days', min: 1, max: 365, name: 'HCF Active Days/yr' },
+        { id: 'sch-days', min: 1, max: 365, name: 'School Active Days/yr' }
+      ];
+
+      sanityChecks.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (el && el.offsetParent !== null) { // Only validate if active/visible
+          const val = +el.value;
+          if (val < c.min || val > c.max) {
+            messages.push({ level: 'WARN', text: `${c.name} (${val}) is outside nominal range (${c.min}-${c.max}).` });
+          }
+        }
+      });
+
+      // 2. Double Counting overlaps
+      const modE = document.getElementById('tog-E').checked ? +v('E-stoves') : 0;
+      const modG = document.getElementById('tog-G').checked ? +v('G-count') : 0;
+      const modD_hh = document.getElementById('tog-D').checked ? +v('D-pop-hh') : 0;
+
+      if (modE > 0 && modG > 0) {
+        messages.push({ level: 'FAIL', text: 'Double counting risk: Households are included in both Module E (ICS) and Module G (Induction). Split them or disable one.' });
+      }
+
+      if (modD_hh > 0 && (modE > 0 || modG > 0)) {
+        messages.push({ level: 'WARN', text: 'Overlap Possible: Same households may be reached by both Sanitation and Cooking interventions. Double check totals.' });
+      }
+
+      return messages;
+    }
+
+    function updateProvenancePanel() {
+      const tbody = document.getElementById('provenance-tbody');
+      if (!tbody) return;
+      if (!state.defaults) {
+        tbody.innerHTML = '<tr><td colspan="3">Data loading...</td></tr>';
+        return;
+      }
+
+      const pv = document.getElementById('prov-version');
+      if (pv) pv.textContent = state.defaults.version || 'Unknown';
+      const ps = document.getElementById('prov-source');
+      if (ps) ps.textContent = (state.defaults.metadata && state.defaults.metadata.source) ? state.defaults.metadata.source : 'Unknown';
+
+      const co = getLDC();
+      if (!co) return;
+
+      let rowsHtml = '';
+      const mkRow = (metric, val, source, isOverride = false) => {
+        let badge = isOverride ? `<span style="background:#fef08a;color:#854d0e;padding:2px 6px;border-radius:4px;font-size:9px;">Override</span>` : `<span style="background:#e0f2fe;color:#0369a1;padding:2px 6px;border-radius:4px;font-size:9px;">Default</span>`;
+        if (source === 'Calculated' || source === 'Input') badge = `<span style="background:#f3f4f6;color:#374151;padding:2px 6px;border-radius:4px;font-size:9px;">${source}</span>`;
+        return `<tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:6px 4px;">${metric}</td>
+          <td style="padding:6px 4px;font-weight:600;">${val}</td>
+          <td style="padding:6px 4px;">${badge}</td>
+        </tr>`;
+      };
+
+      // 1. Global / Country levels
+      rowsHtml += mkRow('fNRB (Fraction Non-Renewable Biomass)', co.fNRB, 'Default');
+
+      const eFnrbInput = v('E-fnrb');
+      if (document.getElementById('tog-E').checked && +eFnrbInput !== co.fNRB) {
+        rowsHtml += mkRow('fNRB (User Override for Module E)', eFnrbInput, '', true);
+      }
+
+      rowsHtml += mkRow('Grid Emission Factor (kgCO₂/kWh)', co.gEF, 'Default');
+
+      // 2. Active Module Fuel Constants
+      const activeFuels = new Set();
+      if (document.getElementById('tog-B').checked) activeFuels.add(v('B-fuel'));
+      if (document.getElementById('tog-C').checked) activeFuels.add(v('C-fuel'));
+      if (document.getElementById('tog-E').checked) activeFuels.add(v('E-fuel'));
+      if (document.getElementById('tog-G').checked) activeFuels.add(v('G-fuel'));
+
+      activeFuels.forEach(f => {
+        const fDef = state.defaults.fuels[f];
+        if (fDef) {
+          rowsHtml += mkRow(`${fDef.label} EF (CO₂ mass)`, `${fDef.efCO2_kg_kg} kg/kg`, 'Default');
+          rowsHtml += mkRow(`${fDef.label} EF (Non-CO₂)`, `${fDef.efNC_kg_kg} kg/kg`, 'Default');
+          if (fDef.prodRatio) rowsHtml += mkRow(`${fDef.label} prodRatio`, fDef.prodRatio, 'Default');
+        }
+      });
+
+      // 3. Sanitation constants
+      if (document.getElementById('tog-D').checked) {
+        rowsHtml += mkRow('Sanitation MCF (Baseline: Inst)', MCF[v('D-baseline-inst')] || 0, 'Default');
+        rowsHtml += mkRow('Sanitation MCF (Improved: Inst)', MCF[v('D-improved-inst')] || 0, 'Default');
+        rowsHtml += mkRow('Sanitation MCF (Baseline: HH)', MCF[v('D-baseline-hh')] || 0, 'Default');
+        rowsHtml += mkRow('Sanitation MCF (Improved: HH)', MCF[v('D-improved-hh')] || 0, 'Default');
+      }
+
+      tbody.innerHTML = rowsHtml;
+    }
 
     function recalc() {
-      // Formulas and pop counts are now evaluated conditionally based on enabled state.
-      // Or if they need unconditional population updates, we rely on the specific `calc` methods being called conditionally.
-      // Wait, calc modules ALSO update population spans. Let's call them unconditionally for side-effects, then zero the result later, OR only conditionally call.
-      // The instruction specifically asked to "compute each module result conditionally".
-      // But calcC, calcB, etc. update UI spans. It's safe to just let the lower conditionally computed block do it.
+      updateProvenancePanel();
 
-      // Validation: Double counting overlap check
-      const moduleEval = document.getElementById('tog-E').checked ? +v('E-stoves') : 0;
-      const moduleGval = document.getElementById('tog-G').checked ? +v('G-count') : 0;
-
-      let validationFailed = false;
+      // Validation Engine
+      const messages = runValidation();
+      const validationFailed = messages.some(m => m.level === 'FAIL');
       const alertBox = document.getElementById('validation-alert');
-      // Block calculation strictly if both HH modules have active input > 0
-      if (moduleEval > 0 && moduleGval > 0 && document.getElementById('tog-E').checked && document.getElementById('tog-G').checked) {
-        alertBox.innerHTML = `<strong>⚠️ Double counting risk:</strong> Households cannot be included in both Module E (ICS) and Module G (HH induction). Split households between modules or set one module to zero.`;
-        alertBox.style.display = 'block';
-        validationFailed = true;
 
-        // Highlight zeroed population due to double-counting block
-        document.getElementById('E-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
-        document.getElementById('G-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
+      if (messages.length > 0) {
+        let text = '';
+        if (validationFailed) {
+          text = '<strong>⚠️ VALIDATION FAIL (Calculations Blocked)</strong><ul style="margin-top:6px;padding-left:16px;">';
+          alertBox.style.background = '#fee2e2'; alertBox.style.borderColor = '#ef4444'; alertBox.style.color = '#991b1b';
+        } else {
+          text = '<strong>🔔 VALIDATION WARNING (Check your assumptions)</strong><ul style="margin-top:6px;padding-left:16px;">';
+          alertBox.style.background = '#fef3c7'; alertBox.style.borderColor = '#f59e0b'; alertBox.style.color = '#92400e';
+        }
+        messages.forEach(m => {
+          text += `<li><strong style="font-size:10px;background:rgba(0,0,0,0.1);padding:2px 4px;border-radius:3px;">${m.level}</strong> ${m.text}</li>`;
+        });
+        text += '</ul>';
+        alertBox.innerHTML = text;
+        alertBox.style.display = 'block';
       } else {
         alertBox.style.display = 'none';
+      }
+
+      if (validationFailed) {
+        if (document.getElementById('E-total-pop')) document.getElementById('E-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
+        if (document.getElementById('G-total-pop')) document.getElementById('G-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
       }
 
       // 1) Read module enabled/disabled states
@@ -2008,14 +2418,14 @@
         G: document.getElementById('tog-G').checked
       };
 
-      // 2) Compute each module result conditionally
-      const resA = enabled.A ? calcA() : 0;
-      const resB = enabled.B ? calcB() : 0;
-      const resC = enabled.C ? calcC() : 0;
-      const resD = enabled.D ? calcD() : 0;
-      const resE = enabled.E ? calcE() : 0;
-      const resF = enabled.F ? calcF() : 0;
-      const resG = enabled.G ? calcG() : 0;
+      // 2) Compute each module result (side-effect: updates population displays)
+      const resA = calcA();
+      const resB = calcB();
+      const resC = calcC();
+      const resD = calcD();
+      const resE = calcE();
+      const resF = calcF();
+      const resG = calcG();
 
       state.results.A = (validationFailed || !enabled.A) ? 0 : resA;
       state.results.B = (validationFailed || !enabled.B) ? 0 : resB;
@@ -2275,6 +2685,11 @@
       document.getElementById('body-' + m).classList.toggle('open');
     }
     function exportCSV() {
+      const messages = runValidation();
+      if (messages.some(m => m.level === 'FAIL')) {
+        alert("Cannot export: Validation FAIL detected. Please fix highlighted inputs.");
+        return;
+      }
       const co = getLDC();
       if (!co) {
         alert("Defaults not loaded yet. Please wait.");
@@ -2303,6 +2718,8 @@
 
       const rows = [
         ['CO2 Savings Calculator - Gold Standard Methodology', '', ''],
+        ['Scenario Export Timestamp', new Date().toISOString(), ''],
+        ['Scenario ID', 'Local Export', ''],
         ['Country', co.name, ''],
         ['Project Currency Year', v('creditYear'), ''],
         ['Project Lifetime (Years)', lt, ''],
@@ -2327,14 +2744,18 @@
         ['Pumping Head', v('A-head'), 'm'],
         ['Pump Efficiency', v('A-etapump'), ''],
         ['Baseline System', v('A-baseline'), ''],
+        ['Diesel Engine η (if diesel)', v('A-etadiesel'), ''],
+        ['Motor Efficiency η (if grid)', v('A-etamotor'), ''],
         ['Community Size (Per Water System)', v('A-comm-pop'), 'persons'],
         ['Total Wash/Water Population Served (Module A)', totalPopServedA, 'persons'],
+        ['Diesel LHV', v('A-diesel-hc'), 'kWh/L'],
         ['', '', ''],
         ['MODULE B: AVOIDED BOILING', 'Value', 'Unit'],
         ['Avoided Boiling population served', t('B-total-pop'), 'persons'],
         ['Avoided Boiling - Baseline Fuel', v('B-fuel'), ''],
         ['Avoided Boiling - Drinking Water Vol', v('B-boil-vol'), 'L/person/day'],
         ['Avoided Boiling - Stove Efficiency', v('B-boil-eta'), ''],
+        ['Energy to Boil 1L Water', v('B-energy-Mj-L'), 'MJ/L'],
         ['', '', ''],
         ['MODULE C: INSTITUTIONAL INDUCTION COOKING', 'Value', 'Unit'],
         ['Baseline Fuel Type', v('C-fuel'), ''],
@@ -2352,6 +2773,7 @@
         ['Household Improved System', v('D-improved-hh'), ''],
         ['BOD Load', v('D-bod'), 'g/person/day'],
         ['Max CH4 potential (Bo)', v('D-bo'), 'kg CH4/kg BOD'],
+        ['GWP CH4 (AR5)', v('gwp-ch4'), ''],
         ['', '', ''],
         ['MODULE E: IMPROVED HH COOKSTOVES', 'Value', 'Unit'],
         ['Number of Stoves/HH units', v('E-stoves'), 'stoves'],
@@ -2359,7 +2781,7 @@
         ['Baseline Fuel Consumption', v('E-baseline-fc'), 'kg/HH/day'],
         ['Baseline Stove Efficiency', v('E-base-stove'), ''],
         ['Improved Stove Efficiency', v('E-imp-stove'), ''],
-        ['fNRB applied', v('E-fnrb'), ''],
+        ['fNRB applied', v('E-fnrb') + (Math.abs(+v('E-fnrb') - co.fNRB) > 0.001 ? " (Override)" : ""), ''],
         ['Stacking Discount', v('E-stack'), ''],
         ['', '', ''],
         ['MODULE F: INSTITUTIONAL SOLAR LIGHTING', 'Value', 'Unit'],
@@ -2448,8 +2870,32 @@
       try {
         const res = await fetch('defaults.json');
         state.defaults = await res.json();
+        if (!state.defaults || !state.defaults.fuels || !state.defaults.countries || Object.keys(state.defaults.countries).length === 0) {
+          throw new Error("Missing structural fields in defaults.json");
+        }
       } catch (e) {
-        console.error("Failed to load defaults.json. Falling back to internal data.");
+        console.error("Failed to load defaults.json. Falling back to internal data. Error:", e);
+        const banner = document.createElement('div');
+        banner.className = "estimator-banner";
+        banner.style.background = "#fff3cd";
+        banner.style.color = "#856404";
+        banner.innerHTML = "⚠️ <strong>Offline/Fallback Mode Active:</strong> Using limited embedded defaults (MWI + Core Fuels).";
+        document.body.insertBefore(banner, document.body.firstChild);
+
+        state.defaults = {
+          version: "1.0.0-fallback",
+          metadata: { source: "Embedded Fallback", last_updated: "2024-05-10" },
+          fuels: {
+            "wood": { ncv_Mj_kg: 15, efCO2_kg_kg: 1.742, efNC_kg_kg: 0.135, eta: 0.10, label: "Firewood", price_usd: 0.05 },
+            "charcoal": { ncv_Mj_kg: 29.5, efCO2_kg_kg: 2.638, efNC_kg_kg: 0.150, eta: 0.22, label: "Charcoal", prodRatio: 6, price_usd: 0.20 },
+            "lpg": { ncv_Mj_kg: 47.3, efCO2_kg_kg: 2.983, efNC_kg_kg: 0.008, eta: 0.55, label: "LPG", price_usd: 1.00 },
+            "kerosene": { ncv_Mj_kg: 43.8, efCO2_kg_kg: 3.172, efNC_kg_kg: 0.010, eta: 0.45, label: "Kerosene", price_usd: 0.80 },
+            "diesel": { ncv_Mj_kg: 43.0, efCO2_kg_kg: 2.68, efNC_kg_kg: 0.01, eta: 0.30, label: "Diesel", price_usd: 1.10 }
+          },
+          countries: {
+            "MWI": { name: "Malawi", r: "Africa", fNRB: 0.87, gEF: 0.08, fuel: "charcoal" }
+          }
+        };
       }
 
       if (state.defaults) {
@@ -2463,6 +2909,25 @@
         });
       }
 
+      // Button Listeners
+      const btnSave = document.getElementById('btn-save');
+      if (btnSave) btnSave.addEventListener('click', () => saveToLocalStorage(true));
+
+      const btnLoad = document.getElementById('btn-load');
+      if (btnLoad) btnLoad.addEventListener('click', loadFromLocalStorage);
+
+      const btnReset = document.getElementById('btn-reset');
+      if (btnReset) btnReset.addEventListener('click', resetScenario);
+
+      const btnExport = document.getElementById('btn-export-scenario');
+      if (btnExport) btnExport.addEventListener('click', exportScenarioJSON);
+
+      const btnShare = document.getElementById('btn-share-link');
+      if (btnShare) btnShare.addEventListener('click', generateShareLink);
+
+      const btnImport = document.getElementById('btn-import-scenario');
+      if (btnImport) btnImport.addEventListener('change', importScenarioJSON);
+
       // Diesel/grid field toggle explicitly handled
       const aBaseline = document.getElementById('A-baseline');
       if (aBaseline) {
@@ -2473,11 +2938,69 @@
         });
       }
 
-      onCountryChange();
-      onTypeParamChange(true);
+      // Attempt to load from share link first, otherwise fall back to local storage
+      let sessionLoaded = false;
+      try {
+        sessionLoaded = await loadShareLink();
+      } catch (e) {
+        console.warn(e);
+      }
+
+      if (!sessionLoaded) {
+        sessionLoaded = loadFromLocalStorage();
+      }
+
+      if (!sessionLoaded) {
+        onCountryChange();
+        onTypeParamChange(true);
+      } else {
+        recalc(); // enforce derived states
+      }
       window.scrollTo(0, 0);
     });
 
+    // ─── SELF-TEST SUITE ─────────────────────────────────────────────
+    window.runSelfTests = function () {
+      console.log("Starting CO2 Calculator Self-Tests...");
+      const backup = serializeState();
+      let passed = 0, failed = 0;
+
+      function assert(name, condition, details) {
+        if (condition) {
+          console.log(`✅ PASS: ${name}`);
+          passed++;
+        } else {
+          console.error(`❌ FAIL: ${name} - ${details}`);
+          failed++;
+        }
+      }
+
+      try {
+        document.querySelectorAll('input[id^="tog-"]').forEach(t => t.checked = false);
+        recalc();
+        const tot = Object.values(state.results).reduce((a, b) => a + b, 0);
+        assert("All Modules Disabled -> 0 tCO2e", Math.abs(tot) < 0.01, `Actual: ${tot}`);
+
+        if (state.defaults && state.defaults.countries['MWI']) {
+          document.querySelectorAll('input[id^="tog-"]').forEach(t => t.checked = true);
+          const sel = document.getElementById('country');
+          if (sel) {
+            sel.value = 'MWI';
+            onCountryChange();
+            recalc();
+            assert("MWI fNRB = 0.87", Math.abs(state.defaults.countries['MWI'].fNRB - 0.87) < 0.01, `Actual: ${state.defaults.countries['MWI'].fNRB}`);
+          }
+        }
+      } catch (e) {
+        console.error("Test execution aborted:", e);
+        failed++;
+      } finally {
+        applyState(backup);
+        recalc();
+        console.log(`Tests Complete. Passed: ${passed}, Failed: ${failed}`);
+      }
+      return failed === 0;
+    };
   </script>
 </body>
 
