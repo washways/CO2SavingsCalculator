@@ -32,6 +32,7 @@
       --surface: #ffffff;
       --card: #ffffff;
       --border: #e2e8f0;
+      --primary: #2563eb;
       --accent: #00bfa5;
       --accent2: #1cabe2;
       --warn: #f59e0b;
@@ -359,24 +360,29 @@
       flex-shrink: 0
     }
 
-    .mod-A .module-icon {
+    .mod-water .module-icon {
+      background: rgba(59, 130, 246, 0.15);
+      color: #3b82f6
+    }
+
+    .mod-boil .module-icon {
+      background: rgba(14, 165, 233, 0.15);
+      color: #0ea5e9
+    }
+
+    .mod-cook .module-icon {
       background: rgba(245, 158, 11, 0.15);
       color: #f59e0b
     }
 
-    .mod-B .module-icon {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444
-    }
-
-    .mod-C .module-icon {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981
-    }
-
-    .mod-D .module-icon {
+    .mod-san .module-icon {
       background: rgba(139, 92, 246, 0.15);
       color: #8b5cf6
+    }
+
+    .mod-light .module-icon {
+      background: rgba(234, 179, 8, 0.15);
+      color: #eab308
     }
 
     .module-title {
@@ -1174,7 +1180,7 @@
       <div class="section-title" style="margin-top:8px">⚡ Emission Reduction Modules</div>
 
       <!-- MODULE A: SOLAR WATER PUMPING -->
-      <div class="module-card mod-A" id="card-A">
+      <div class="module-card mod-water" id="card-A">
         <div class="module-header" onclick="toggleBody('A')">
           <div class="module-icon">⚡</div>
           <div class="module-title">
@@ -1228,7 +1234,7 @@
       </div>
 
       <!-- MODULE B: AVOIDED BOILING -->
-      <div class="module-card mod-A" id="card-B">
+      <div class="module-card mod-boil" id="card-B">
         <div class="module-header" onclick="toggleBody('B')">
           <div class="module-icon" style="background:rgba(239, 68, 68, 0.15); color:#ef4444">♨️</div>
           <div class="module-title">
@@ -1270,7 +1276,7 @@
       </div>
 
       <!-- MODULE C: INSTITUTIONAL INDUCTION COOKING -->
-      <div class="module-card mod-C" id="card-C">
+      <div class="module-card mod-cook" id="card-C">
         <div class="module-header" onclick="toggleBody('C')">
           <div class="module-icon">🍳</div>
           <div class="module-title">
@@ -1324,7 +1330,7 @@
       </div>
 
       <!-- MODULE C: SANITATION (MERGED) -->
-      <div class="module-card mod-C" id="card-D">
+      <div class="module-card mod-san" id="card-D">
         <div class="module-header" onclick="toggleBody('D')">
           <div class="module-icon">🚽</div>
           <div class="module-title">
@@ -1401,7 +1407,7 @@
       </div>
 
       <!-- MODULE D: IMPROVED HH COOKSTOVES -->
-      <div class="module-card mod-D" id="card-E">
+      <div class="module-card mod-cook" id="card-E">
         <div class="module-header" onclick="toggleBody('E')">
           <div class="module-icon">🔥</div>
           <div class="module-title">
@@ -1465,7 +1471,7 @@
 
 
       <!-- MODULE E: INSTITUTIONAL SOLAR LIGHTING -->
-      <div class="module-card mod-A" id="card-F">
+      <div class="module-card mod-light" id="card-F">
         <div class="module-header" onclick="toggleBody('F')">
           <div class="module-icon" style="background:rgba(250,204,21,0.15); color:#eab308">💡</div>
           <div class="module-title">
@@ -1500,7 +1506,7 @@
       </div>
 
       <!-- MODULE F: HH INDUCTION COOKING + SOLAR -->
-      <div class="module-card mod-B" id="card-G">
+      <div class="module-card mod-cook" id="card-G">
         <div class="module-header" onclick="toggleBody('G')">
           <div class="module-icon" style="background:rgba(236,72,153,0.15); color:#db2777">☀️</div>
           <div class="module-title">
@@ -2019,18 +2025,6 @@
 
     function calcB() {
       state.fuelSavings.B = 0;
-
-      const p = getP();
-      const hcfWater = document.getElementById('chk-hcf-water').checked;
-      const schWater = document.getElementById('chk-sch-water').checked;
-
-      const totalCommPop = (p.hcfs > 0 && hcfWater ? p.hcfs * p.commPopPerSystem : 0) + (p.schools > 0 && schWater ? p.schools * p.commPopPerSystem : 0);
-      const hcfInstituPop = p.hcfs > 0 && hcfWater ? p.hcfs * p.hcfPop : 0;
-      const schInstituPop = p.schools > 0 && schWater ? p.schools * p.schPop : 0;
-      const totalPop = hcfInstituPop + schInstituPop + totalCommPop;
-
-      document.getElementById('B-total-pop').textContent = Math.round(totalPop).toLocaleString();
-
       if (!document.getElementById('tog-B').checked) return 0;
       let BE_boil = 0;
 
@@ -2039,6 +2033,15 @@
       const boilEta = +v('B-boil-eta');
       const co = getLDC();
       const fNRB = co ? co.fNRB : 0.81;
+
+      // Derive totalPop from portfolio counts + water checkboxes
+      const p = getP();
+      const hcfWater = document.getElementById('chk-hcf-water').checked;
+      const schWater = document.getElementById('chk-sch-water').checked;
+      const totalCommPop = (p.hcfs > 0 && hcfWater ? p.hcfs * p.commPopPerSystem : 0) + (p.schools > 0 && schWater ? p.schools * p.commPopPerSystem : 0);
+      const hcfInstituPop = p.hcfs > 0 && hcfWater ? p.hcfs * p.hcfPop : 0;
+      const schInstituPop = p.schools > 0 && schWater ? p.schools * p.schPop : 0;
+      const totalPop = hcfInstituPop + schInstituPop + totalCommPop;
 
       if (totalPop > 0 && boilVol > 0 && state.defaults && state.defaults.fuels) {
         // Energy to boil 1L of water from 20C to 100C + 5 min boiling (roughly 0.1 kWh or 0.36 MJ)
@@ -2073,11 +2076,6 @@
 
     function calcC() {
       state.fuelSavings.C = 0;
-      // Also update institution pop regardless of toggle
-      const p = getP();
-      const popInst = (p.hcfPop * p.hcfs) + (p.schPop * p.schools);
-      document.getElementById('C-total-pop').textContent = Math.round(popInst).toLocaleString();
-
       if (!document.getElementById('tog-C').checked) return 0;
       const fuelType = v('C-fuel');
       const fc_day = +v('C-fuelkg');   // kg/day
@@ -2112,9 +2110,6 @@
     function calcD() {
       const U_inst = +v('D-pop-inst');
       const U_hh = +v('D-pop-hh');
-      const popEl = document.getElementById('D-total-pop');
-      if (popEl) popEl.textContent = Math.round(U_inst + U_hh).toLocaleString();
-
       if (!document.getElementById('tog-D').checked) return 0;
       const BOD = +v('D-bod') / 1000; // kg/person/day
       const Bo = +v('D-bo');
@@ -2139,11 +2134,6 @@
 
     function calcF() {
       state.fuelSavings.F = 0;
-      const p = getP();
-      const popInst = (p.hcfPop * p.hcfs) + (p.schPop * p.schools);
-      const popEl = document.getElementById('F-total-pop');
-      if (popEl) popEl.textContent = Math.round(popInst).toLocaleString();
-
       if (!document.getElementById('tog-F').checked) return 0;
       const count = +v('F-count');
       const ef = +v('F-ef');
@@ -2168,11 +2158,6 @@
     function calcG() {
       state.fuelSavings.G = 0;
       const count = +v('G-count');
-      const hhSize = +v('hh-size');
-      const popF = count * hhSize;
-      const popEl = document.getElementById('G-total-pop');
-      if (popEl) popEl.textContent = Math.round(popF).toLocaleString();
-
       if (!document.getElementById('tog-G').checked) return 0;
       const fcDay = +v('G-fc');
       const fuelT = v('G-fuel');
@@ -2197,11 +2182,6 @@
     function calcE() {
       state.fuelSavings.E = 0;
       const N = +v('E-stoves');
-      const hhSize = +v('hh-size');
-      const popD = N * hhSize;
-      const popEl = document.getElementById('E-total-pop');
-      if (popEl) popEl.textContent = Math.round(popD).toLocaleString();
-
       if (!document.getElementById('tog-E').checked) return 0;
       const fcDay = +v('E-baseline-fc');
       const etaB = +v('E-base-stove');
@@ -2403,8 +2383,10 @@
       }
 
       if (validationFailed) {
-        if (document.getElementById('E-total-pop')) document.getElementById('E-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
-        if (document.getElementById('G-total-pop')) document.getElementById('G-total-pop').innerHTML = `<span style="color:var(--red)">0 (Blocked - Overlap)</span>`;
+        ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(m => {
+          const el = document.getElementById(m + '-total-pop');
+          if (el) el.innerHTML = `<span style="color:var(--red)">0 (Blocked)</span>`;
+        });
       }
 
       // 1) Read module enabled/disabled states
@@ -2531,7 +2513,7 @@
       document.getElementById('impact-people').innerHTML = validationFailed ? "0" : Math.round(totalPopReached).toLocaleString() + overlapWarning;
     }
 
-    function onCountryChange() {
+    function onCountryChange(autoPopulate = true) {
       const iso = v('country');
       state.country = iso;
       const co = getLDC();
@@ -2541,19 +2523,22 @@
       document.getElementById('badge-region').textContent = co.r;
       const fDef = state.defaults.fuels[co.fuel];
       document.getElementById('badge-fuel').textContent = fDef ? fDef.label : co.fuel;
+      
       // Auto-set fuel selects
-      document.getElementById('C-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
-      document.getElementById('E-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
-      document.getElementById('E-fnrb').value = co.fNRB.toFixed(2);
+      if (autoPopulate) {
+          document.getElementById('C-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
+          document.getElementById('E-fuel').value = co.fuel === 'charcoal' ? 'charcoal' : 'wood';
+          document.getElementById('E-fnrb').value = co.fNRB.toFixed(2);
 
-      // Auto-set local fuel prices from defaults
-      if (state.defaults && state.defaults.fuels) {
-        ['wood', 'charcoal', 'lpg', 'kerosene', 'diesel'].forEach(f => {
-          const input = document.getElementById('price-' + f);
-          if (input && state.defaults.fuels[f] && state.defaults.fuels[f].price_usd !== undefined) {
-            input.value = state.defaults.fuels[f].price_usd.toFixed(2);
+          // Auto-set local fuel prices from defaults
+          if (state.defaults && state.defaults.fuels) {
+            ['wood', 'charcoal', 'lpg', 'kerosene', 'diesel'].forEach(f => {
+              const input = document.getElementById('price-' + f);
+              if (input && state.defaults.fuels[f] && state.defaults.fuels[f].price_usd !== undefined) {
+                input.value = state.defaults.fuels[f].price_usd.toFixed(2);
+              }
+            });
           }
-        });
       }
 
       recalc();
@@ -2569,11 +2554,8 @@
         document.getElementById('chk-hh-cook').checked = false;
       }
 
-      const hcfs = +v('port-hcfs');
-      const schools = +v('port-schools');
-      const hhs = +v('port-hhs');
+      const p = getP();
 
-      // Flags
       const hcfWater = document.getElementById('chk-hcf-water').checked;
       const hcfSan = document.getElementById('chk-hcf-san').checked;
       const hcfCook = document.getElementById('chk-hcf-cook').checked;
@@ -2588,94 +2570,92 @@
       const hhInd = document.getElementById('chk-hh-ind').checked;
       const hhSan = document.getElementById('chk-hh-san').checked;
 
-      const hcfBeds = +v('hcf-beds'), hcfOpd = +v('hcf-opd'), hcfStaff = +v('hcf-staff'), hcfDays = +v('hcf-days') || 365;
-      const hcfPop = hcfBeds + Math.round(hcfOpd * 0.3) + hcfStaff;
-      const hcfWaterPerDay = (hcfBeds * 75 + hcfOpd * 5) / 1000;
-
-      const schPupils = +v('sch-pupils'), schStaff = +v('sch-staff'), schDays = +v('sch-days') || 200, schMeals = +v('sch-meals');
-      const schPop = schPupils + schStaff;
-      const schWaterPerDay = (schPop * 3) / 1000;
-      const schFuelKgPerDay = schMeals * 0.10;
-
       const hhCountTotal = +v('hh-count');
       const hhSize = +v('hh-size');
       const hhPop = hhCountTotal * hhSize;
 
-      // Assumed 100% penetration for the active checkbox
       const stoveRatio = hhCook ? 1.0 : 0;
       const indRatio = hhInd ? 1.0 : 0;
 
-      // Module E: Cookstoves
-      const dHouseholds = Math.round(hhs * hhCountTotal * stoveRatio * (1 - indRatio));
-      // Only forcibly override individual module inputs if changes come from the top portfolio fields
-      if (force || (document.activeElement && document.activeElement.id.startsWith('chk-hh'))) {
+      const isPort = force || (document.activeElement && (document.activeElement.id.startsWith('chk-') || document.activeElement.id.startsWith('port-') || document.activeElement.id.startsWith('hh-') || document.activeElement.id.startsWith('sch-') || document.activeElement.id.startsWith('hcf-')));
+
+      // Portfolio Overrides (Hidden / Calculated inputs)
+      if (isPort || !v('E-stoves')) {
+        const dHouseholds = Math.round(p.hhs * hhCountTotal * stoveRatio * (1 - indRatio));
         document.getElementById('E-stoves').value = dHouseholds;
-      } else if (!document.getElementById('E-stoves').value) {
-        document.getElementById('E-stoves').value = dHouseholds; // init
       }
-
-      // Module G: HH Induction
-      const fHouseholds = Math.round(hhs * hhCountTotal * indRatio);
-      if (force || (document.activeElement && document.activeElement.id.startsWith('chk-hh'))) {
+      if (isPort || !v('G-count')) {
+        const fHouseholds = Math.round(p.hhs * hhCountTotal * indRatio);
         document.getElementById('G-count').value = fHouseholds;
-      } else if (!document.getElementById('G-count').value) {
-        document.getElementById('G-count').value = fHouseholds; // init
+      }
+      if (isPort || !v('D-pop-inst')) {
+        document.getElementById('D-pop-inst').value = (p.hcfs > 0 && hcfSan ? p.hcfs * p.hcfPop : 0) + (p.schools > 0 && schSan ? p.schools * p.schPop : 0);
+      }
+      if (isPort || !v('D-pop-hh')) {
+        document.getElementById('D-pop-hh').value = (p.hhs > 0 && hhSan ? p.hhs * hhPop : 0);
+      }
+      if (isPort || !v('F-count')) {
+        document.getElementById('F-count').value = (p.hcfs > 0 && hcfLight ? p.hcfs : 0) + (p.schools > 0 && schLight ? p.schools : 0);
       }
 
-      // Community expansion for water (configurable pop per installation)
-      const commPopPerSystem = +v('A-comm-pop');
-      const totalCommPop = (hcfs > 0 && hcfWater ? hcfs * commPopPerSystem : 0) + (schools > 0 && schWater ? schools * commPopPerSystem : 0);
+      // Auto-population sets: A, B, C, D, E, F, G total populations
 
-      // Calculate Total Population Served for Module A
-      const hcfInstituPop = hcfs > 0 && hcfWater ? hcfs * hcfPop : 0;
-      const schInstituPop = schools > 0 && schWater ? schools * schPop : 0;
-      const totalPopServedA = hcfInstituPop + schInstituPop + totalCommPop;
+      // Module A
+      const hcfInstituPopA = p.hcfs > 0 && hcfWater ? p.hcfs * p.hcfPop : 0;
+      const schInstituPopA = p.schools > 0 && schWater ? p.schools * p.schPop : 0;
+      const totalCommPopA = (p.hcfs > 0 && hcfWater ? p.hcfs * p.commPopPerSystem : 0) + (p.schools > 0 && schWater ? p.schools * p.commPopPerSystem : 0);
+      const popA = hcfInstituPopA + schInstituPopA + totalCommPopA;
+      document.getElementById('A-total-pop').textContent = Math.round(popA).toLocaleString();
 
-      document.getElementById('A-total-pop').textContent = Math.round(totalPopServedA).toLocaleString();
+      // Module B
+      document.getElementById('B-total-pop').textContent = Math.round(popA).toLocaleString();
 
-      // Assume 20L per person per day for the community
-      const commWaterPerDay = (commPopPerSystem * 20) / 1000;
+      // Module C (Always institutions whether toggled or not)
+      const popC = (p.hcfPop * p.hcfs) + (p.schPop * p.schools);
+      document.getElementById('C-total-pop').textContent = Math.round(popC).toLocaleString();
 
-      // If not triggered by portfolio, just let it recalculate
-      if (force || (document.activeElement && (document.activeElement.id.startsWith('chk-') || document.activeElement.id.startsWith('port-')))) {
-        // Module A: Water
-        const hcfWaterTotal = hcfs > 0 && hcfWater ? (hcfs * hcfWaterPerDay * hcfDays) + (hcfs * commWaterPerDay * 365) : 0;
-        const schWaterTotal = schools > 0 && schWater ? (schools * schWaterPerDay * schDays) + (schools * commWaterPerDay * 365) : 0;
+      // Module D
+      const uInstD = +v('D-pop-inst');
+      const uHhD = +v('D-pop-hh');
+      if (document.getElementById('D-total-pop')) document.getElementById('D-total-pop').textContent = Math.round(uInstD + uHhD).toLocaleString();
+
+      // Module E
+      const eStoves = +v('E-stoves');
+      if (document.getElementById('E-total-pop')) document.getElementById('E-total-pop').textContent = Math.round(eStoves * hhSize).toLocaleString();
+
+      // Module F
+      const fHcfPop = (p.hcfs > 0 && hcfLight) ? p.hcfs * p.hcfPop : 0;
+      const fSchPop = (p.schools > 0 && schLight) ? p.schools * p.schPop : 0;
+      if (document.getElementById('F-total-pop')) document.getElementById('F-total-pop').textContent = Math.round(fHcfPop + fSchPop).toLocaleString();
+
+      // Module G
+      const gCount = +v('G-count');
+      if (document.getElementById('G-total-pop')) document.getElementById('G-total-pop').textContent = Math.round(gCount * hhSize).toLocaleString();
+
+
+      // Calculations for Demands (C-fuelkg, A-demand)
+      if (isPort || !v('A-demand')) {
+        const commWaterPerDay = (p.commPopPerSystem * 20) / 1000;
+        const hcfWaterPerDay = (v('hcf-beds') * 75 + v('hcf-opd') * 5) / 1000;
+        const schWaterPerDay = (p.schPop * 3) / 1000;
+
+        const hcfDays = +v('hcf-days') || 365;
+        const schDays = +v('sch-days') || 200;
+
+        const hcfWaterTotal = p.hcfs > 0 && hcfWater ? (p.hcfs * hcfWaterPerDay * hcfDays) + (p.hcfs * commWaterPerDay * 365) : 0;
+        const schWaterTotal = p.schools > 0 && schWater ? (p.schools * schWaterPerDay * schDays) + (p.schools * commWaterPerDay * 365) : 0;
         const totalWaterAnnual = hcfWaterTotal + schWaterTotal;
         document.getElementById('A-demand').value = totalWaterAnnual > 0 ? (totalWaterAnnual / 365).toFixed(2) : 0;
-
-        // Module C: Cooking
-        const hcfFuelPerDay = hcfPop * 0.15;
-        const totalFuelAnnual = (hcfs > 0 && hcfCook ? hcfs * hcfFuelPerDay * hcfDays : 0) + (schools > 0 && schCook ? schools * schFuelKgPerDay * schDays : 0);
-        document.getElementById('C-fuelkg').value = totalFuelAnnual > 0 ? (totalFuelAnnual / 365).toFixed(1) : 0;
-      } else if (!document.getElementById('A-demand').value) {
-        // Initialization if empty
-        const hcfWaterTotal = hcfs > 0 && hcfWater ? (hcfs * hcfWaterPerDay * hcfDays) + (hcfs * commWaterPerDay * 365) : 0;
-        const schWaterTotal = schools > 0 && schWater ? (schools * schWaterPerDay * schDays) + (schools * commWaterPerDay * 365) : 0;
-        const totalWaterAnnual = hcfWaterTotal + schWaterTotal;
-        document.getElementById('A-demand').value = totalWaterAnnual > 0 ? (totalWaterAnnual / 365).toFixed(2) : 0;
-
-        const hcfFuelPerDay = hcfPop * 0.15;
-        const totalFuelAnnual = (hcfs > 0 && hcfCook ? hcfs * hcfFuelPerDay * hcfDays : 0) + (schools > 0 && schCook ? schools * schFuelKgPerDay * schDays : 0);
-        document.getElementById('C-fuelkg').value = totalFuelAnnual > 0 ? (totalFuelAnnual / 365).toFixed(1) : 0;
       }
 
-      // Module D: Sanitation
-      const instPop = (hcfs > 0 && hcfSan ? hcfs * hcfPop : 0) + (schools > 0 && schSan ? schools * schPop : 0);
-      const hhSanPop = (hhs > 0 && hhSan ? hhs * hhPop : 0);
-      if (force || (document.activeElement && (document.activeElement.id.startsWith('chk-') || document.activeElement.id.startsWith('port-')))) {
-        document.getElementById('D-pop-inst').value = instPop;
-        document.getElementById('D-pop-hh').value = hhSanPop;
-      } else if (!document.getElementById('D-pop-inst').value) {
-        document.getElementById('D-pop-inst').value = instPop;
-        document.getElementById('D-pop-hh').value = hhSanPop;
-      }
+      if (isPort || !v('C-fuelkg')) {
+        const hcfDays = +v('hcf-days') || 365;
+        const schDays = +v('sch-days') || 200;
+        const hcfFuelPerDay = p.hcfPop * 0.15;
+        const schFuelKgPerDay = v('sch-meals') * 0.10;
 
-      // Module F: Lighting
-      if (force || (document.activeElement && (document.activeElement.id.startsWith('chk-') || document.activeElement.id.startsWith('port-')))) {
-        document.getElementById('F-count').value = (hcfs > 0 && hcfLight ? hcfs : 0) + (schools > 0 && schLight ? schools : 0);
-      } else if (!document.getElementById('F-count').value) {
-        document.getElementById('F-count').value = (hcfs > 0 && hcfLight ? hcfs : 0) + (schools > 0 && schLight ? schools : 0);
+        const totalFuelAnnual = (p.hcfs > 0 && hcfCook ? p.hcfs * hcfFuelPerDay * hcfDays : 0) + (p.schools > 0 && schCook ? p.schools * schFuelKgPerDay * schDays : 0);
+        document.getElementById('C-fuelkg').value = totalFuelAnnual > 0 ? (totalFuelAnnual / 365).toFixed(1) : 0;
       }
 
       recalc();
@@ -2848,7 +2828,7 @@
       const toggles = document.querySelectorAll('input[id^="tog-"]');
       toggles.forEach(tog => {
         tog.addEventListener('change', () => {
-          recalc();
+          onTypeParamChange(false);
         });
       });
 
@@ -2856,13 +2836,10 @@
       const inputs = document.querySelectorAll('input:not([id^="tog-"]), select');
       inputs.forEach(el => {
         el.addEventListener('change', () => {
-          if (el.id && (el.id.startsWith('hh-') || el.id.startsWith('sch-') || el.id.startsWith('hcf-') || el.id.startsWith('port-') || el.id.startsWith('chk-') || el.id === 'A-comm-pop')) {
-            onTypeParamChange(false);
-          } else if (el.id === 'country') {
-            onCountryChange();
-          } else {
-            recalc();
+          if (el.id === 'country') {
+            onCountryChange(true);
           }
+          onTypeParamChange(false);
         });
       });
 
@@ -2914,7 +2891,12 @@
       if (btnSave) btnSave.addEventListener('click', () => saveToLocalStorage(true));
 
       const btnLoad = document.getElementById('btn-load');
-      if (btnLoad) btnLoad.addEventListener('click', loadFromLocalStorage);
+      if (btnLoad) btnLoad.addEventListener('click', () => {
+         if (loadFromLocalStorage()) {
+             onCountryChange(false);
+             onTypeParamChange(false);
+         }
+      });
 
       const btnReset = document.getElementById('btn-reset');
       if (btnReset) btnReset.addEventListener('click', resetScenario);
@@ -2941,20 +2923,21 @@
       // Attempt to load from share link first, otherwise fall back to local storage
       let sessionLoaded = false;
       try {
-        sessionLoaded = await loadShareLink();
+         sessionLoaded = await loadShareLink();
       } catch (e) {
-        console.warn(e);
+         console.warn(e);
       }
-
+      
       if (!sessionLoaded) {
-        sessionLoaded = loadFromLocalStorage();
+          sessionLoaded = loadFromLocalStorage();
       }
-
+      
       if (!sessionLoaded) {
-        onCountryChange();
+        onCountryChange(true);
         onTypeParamChange(true);
       } else {
-        recalc(); // enforce derived states
+        onCountryChange(false);
+        onTypeParamChange(false);
       }
       window.scrollTo(0, 0);
     });
