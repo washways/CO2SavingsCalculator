@@ -1,0 +1,22 @@
+# Development reference (local only)
+CLAUDE.md
+
+# IDE & OS
+.vscode/
+.DS_Store
+*.swp
+*.swo
+*.swn
+*~
+.env
+.env.local
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build artifacts (if added in future)
+dist/
+build/
+*.min.js

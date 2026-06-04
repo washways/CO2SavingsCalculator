@@ -2799,12 +2799,16 @@
       // 2. All inputs/selects that affect calculations
       const inputs = document.querySelectorAll('input:not([id^="tog-"]), select');
       inputs.forEach(el => {
-        el.addEventListener('change', () => {
+        const handleChange = () => {
           if (el.id === 'country') {
             onCountryChange(true);
           }
           onTypeParamChange(false);
-        });
+        };
+        el.addEventListener('change', handleChange);
+        if (el.type === 'number' || el.type === 'text' || el.type === '') {
+          el.addEventListener('input', handleChange);
+        }
       });
 
       // 3. Load defaults
