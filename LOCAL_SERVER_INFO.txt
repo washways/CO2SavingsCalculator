@@ -1,0 +1,63 @@
+================================================================================
+CO2 SAVINGS CALCULATOR v1.1.0 - LOCAL SERVER
+================================================================================
+
+✅ SERVER STATUS: RUNNING
+
+📍 ACCESS URL:
+   http://localhost:8081
+
+🔧 SERVER DETAILS:
+   - Type: Python HTTP Server (http.server module)
+   - Port: 8081
+   - Root Directory: C:\Users\jrobertson\repositories\CO2SavingsCalculator\
+   - Process ID: 14052
+
+📝 WHAT TO TEST:
+
+   1. CRITICAL FIXES (must verify):
+      ✓ Module D MCF: openwater should be 0.10 (not 0.30)
+      ✓ Module D Formula: should show × 365 in formula box
+      ✓ Charcoal fNRB: non-CO2 combustion should scale by fNRB
+      ✓ Module C formula: should show "(fossil fuel, fNRB not applicable)" for LPG/kerosene
+      ✓ Module A diesel EF: should read from defaults.fuels.diesel
+
+   2. NEW FEATURES (verify functionality):
+      ✓ Module D HH Sanitation: Should have "Functionality Factor" and "Usage Factor" inputs
+      ✓ Module B/C warning: Overlap warning should appear if both active on same institution
+      ✓ Module G PE=0: Blue info box explaining solar assumption
+      ✓ Module F guidance: Tooltip with kerosene vs diesel EF examples
+
+   3. EVIDENCE QUALITY (spot-check):
+      ✓ Tooltips cite sources (IPCC, Gold Standard, etc.)
+      ✓ Version badge visible at top: "v1.1.0 · Updated 2026-06-04"
+      ✓ Clicking version badge links to CHANGELOG
+
+📋 DETAILED TEST GUIDE:
+   See: TEST_CALCULATIONS.md (11 test cases with step-by-step instructions)
+
+🐛 IF YOU FIND ISSUES:
+   1. Check browser console (F12 → Console tab) for JavaScript errors
+   2. Document the test case and expected vs. actual result
+   3. Note which module/calculation was affected
+   4. Screenshot if helpful
+
+✨ KNOWN GOOD TEST CASE:
+   Module D HH Sanitation with Malawi baseline:
+   - 100 households, Unimproved pit → VIP latrine
+   - Functionality: 0.8, Usage: 0.95
+   - Expected ER: ~0.64–0.80 tCO₂e/yr (with F and U factors applied)
+
+📖 BROWSER REQUIREMENTS:
+   - Any modern browser (Chrome, Firefox, Edge, Safari)
+   - JavaScript enabled
+   - No plugins or extensions needed
+
+⚠️ CONSOLE CHECK:
+   Open DevTools (F12 → Console tab)
+   Expected: No red error messages
+   OK: Info/warning messages about calculations
+
+================================================================================
+READY TO TEST - Visit http://localhost:8081 in your browser
+================================================================================

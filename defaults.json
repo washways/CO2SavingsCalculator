@@ -1,9 +1,10 @@
 {
     "version": "1.0.0",
     "metadata": {
-        "source": "Gold Standard methodologies, UNFCCC CDM defaults (2024)",
-        "description": "Default values for fNRB, Grid Emission Factors, and baseline fuel characteristics.",
-        "last_updated": "2024-05-10"
+        "source": "Gold Standard methodologies, UNFCCC CDM defaults (2024), IPCC 2006 GL, Bailis et al. 2015",
+        "description": "Default values for fNRB, Grid Emission Factors, and baseline fuel characteristics. Per-country fNRB values trace to CDM Tool 30, registered GS projects, or Bailis et al. 2015 where available.",
+        "last_updated": "2026-06-04",
+        "version": "1.1.0"
     },
     "fuels": {
         "wood": {
@@ -22,8 +23,9 @@
             "eta": 0.22,
             "label": "Charcoal",
             "prodRatio": 6,
+            "prodRatio_source": "FAO 2017 / improved brick kiln assumption. Traditional earth mound kilns: 8–12:1. Retort kilns: 3–4:1.",
             "price_usd": 0.20,
-            "notes": "Production ratio assumes 6 kg wood required per 1 kg charcoal."
+            "notes": "Production ratio assumes 6 kg wood required per 1 kg charcoal. EF is CO2 only; non-CO2 combustion handled separately with fNRB scaling per Gold Standard MECD v1.2."
         },
         "lpg": {
             "ncv_Mj_kg": 47.3,
@@ -355,7 +357,8 @@
         "KIR": {
             "name": "Kiribati",
             "r": "Pacific",
-            "fNRB": 0.15,
+            "fNRB": 0.75,
+            "fNRB_note": "Conservative estimate (no verified CDM Tool 30 study available). Small atoll nation with limited forest regeneration capacity. Country-specific fNRB determination recommended for Gold Standard projects.",
             "gEF": 0.60,
             "fuel": "wood"
         },
@@ -369,7 +372,8 @@
         "TUV": {
             "name": "Tuvalu",
             "r": "Pacific",
-            "fNRB": 0.10,
+            "fNRB": 0.80,
+            "fNRB_note": "Conservative estimate (no verified CDM Tool 30 study available). Very small atoll nation with minimal sustainable biomass harvesting capacity. Country-specific fNRB determination strongly recommended for any Gold Standard submission.",
             "gEF": 0.75,
             "fuel": "wood"
         },

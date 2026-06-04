@@ -902,6 +902,9 @@
       </div>
     </div>
     <div class="header-right">
+      <a href="https://github.com/washways/CO2SavingsCalculator/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer" class="badge" style="background:#fef08a; color:#854d0e; border-color:#fcd34d; display:flex; align-items:center; gap:4px; font-size:11px;">
+        <span>📝</span> v1.1.0 · Updated 2026-06-04 ↗
+      </a>
       <a href="https://github.com/washways/CO2SavingsCalculator#readme" target="_blank" rel="noopener noreferrer" class="badge" style="background:#fff; color:var(--text); border-color:var(--border); display:flex; align-items:center; gap:4px; font-size:11px;">
         <span>📖</span> Documentation ↗
       </a>
@@ -1095,9 +1098,9 @@
           <h4 class="assump-head">Water, Boiling &amp; Sanitation</h4>
           <div id="params-Water" class="proj-grid">
             <div class="field"><label>Community Size (per sys)</label><input type="number" id="A-comm-pop" value="3000" min="0" step="100"></div>
-            <div class="field"><label>Energy to boil 1L (MJ) <span class="info" title="Approx. specific heat 20°C to 100°C + latent heat of 5 min boiling">i</span></label><input type="number" id="B-energy-Mj-L" value="0.36" min="0.1" step="0.01"></div>
-            <div class="field"><label>GWP CH₄ (AR5) <span class="info" title="Global Warming Potential of Methane">i</span></label><input type="number" id="gwp-ch4" value="28" min="20" step="1"></div>
-            <div class="field"><label>Diesel LHV (kWh/L) <span class="info" title="Diesel Lower Heating Value equivalent">i</span></label><input type="number" id="A-diesel-hc" value="10.0" min="8" step="0.1"></div>
+            <div class="field"><label>Energy to boil 1L (MJ) <span class="info" title="Useful heat to raise 1L from ~20°C to 100°C ≈ 0.335 MJ (Cp × ΔT = 4.184 kJ/kg°C × 80°C), plus boiling/evaporation losses ≈ 0.36 MJ/L total. Per Gold Standard Safe Water Supply Methodology 443 v1.0.">i</span></label><input type="number" id="B-energy-Mj-L" value="0.36" min="0.1" step="0.01"></div>
+            <div class="field"><label>GWP CH₄ <span class="info" title="AR5 GWP₁₀₀: fossil CH₄=28; biogenic CH₄ (e.g., wastewater)=34 per IPCC Table 8.7. Sanitation methane is biogenic in origin. Gold Standard accepts 28 for consistency with CDM. Adjust per your registry requirements. AR6 value is 27.9.">i</span></label><input type="number" id="gwp-ch4" value="28" min="20" step="1"></div>
+            <div class="field"><label>Diesel LHV (kWh/L) <span class="info" title="Net lower heating value for diesel: IPCC 2006 uses ~43 MJ/kg at density 0.84 kg/L ≈ 10.0 kWh/L. Some sources cite 11.83 kWh/L (higher density or gross calorific value). Default 10.0 matches IPCC NCV basis.">i</span></label><input type="number" id="A-diesel-hc" value="10.0" min="8" step="0.1"></div>
           </div>
         </details>
       </div>
@@ -1175,8 +1178,8 @@
           </div>
           <div class="module-grid">
             <div class="field"><label>Pump Efficiency η <span class="info" title="Hydraulic pump efficiency (0.5–0.75 typical)">i</span></label><input type="number" id="A-etapump" value="0.60" min="0.1" max="1" step="0.05"></div>
-            <div class="field" id="A-diesel-field"><label>Diesel Engine η <span class="info" title="Overall diesel genset thermal efficiency">i</span></label><input type="number" id="A-etadiesel" value="0.30" min="0.1" max="0.5" step="0.01"></div>
-            <div class="field" id="A-grid-field" style="display:none"><label>Motor Efficiency η</label><input type="number" id="A-etamotor" value="0.90" min="0.5" max="1" step="0.01"></div>
+            <div class="field" id="A-diesel-field"><label>Diesel Engine η <span class="info" title="Overall thermal efficiency of diesel genset: 25–35% typical for small portable sets (IPCC 2006 / IEA). Large industrial gensets can reach 40%+. Default 0.30 is conservative for typical field deployments.">i</span></label><input type="number" id="A-etadiesel" value="0.30" min="0.1" max="0.5" step="0.01"></div>
+            <div class="field" id="A-grid-field" style="display:none"><label>Motor Efficiency η <span class="info" title="Typical electric motor efficiency: 0.85–0.95 depending on size and type. IEC standard IE2 class motors are ~0.90. Default 0.90.">i</span></label><input type="number" id="A-etamotor" value="0.90" min="0.5" max="1" step="0.01"></div>
           </div>
           <div class="formula-box" id="A-formula">ER = BE · <b>0 tCO₂e</b> (solar PE = 0)</div>
           <div class="result-inline"><span class="rv" id="A-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1209,7 +1212,7 @@
                 <option value="charcoal">Charcoal</option>
               </select>
             </div>
-            <div class="field"><label>Baseline Stove η</label><input type="number" id="B-boil-eta" value="0.10" min="0.05" step="0.01" max="1"></div>
+            <div class="field"><label>Baseline Stove η <span class="info" title="Thermal efficiency of open-fire / 3-stone baseline stove: 8–15% typical (Gold Standard TPDDTEC / WHO). Default 10% is conservative for worst-case biomass fuel use. Adjust for improved baseline stoves.">i</span></label><input type="number" id="B-boil-eta" value="0.10" min="0.05" step="0.01" max="1"></div>
           </div>
           <div class="formula-box" id="B-formula">Avoided Boiling = <b>0 tCO₂e/yr</b></div>
           <div class="result-inline"><span class="rv" id="B-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1277,8 +1280,7 @@
           <div class="module-result"><span id="result-D">0</span><br><span class="unit">tCO₂e/yr</span></div>
         </div>
         <div class="module-body open" id="body-D">
-          <div class="method-tag"><a href="https://www.goldstandard.org/project-developers/standard-documents" target="_blank" style="color:inherit;text-decoration:none;">📋 IPCC 2006 Waste Ch.6 · Gold Standard
-              Integrated SDG Sanitation ↗</a></div>
+          <div class="method-tag"><a href="https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol5.html" target="_blank" style="color:inherit;text-decoration:none;">📋 IPCC 2006 Vol. 5 Ch. 6 (Wastewater) · Gold Standard SDG Sanitation (In-Development) ↗</a></div>
           <div style="margin: 0 0 16px 0; background: #eef2f5; padding: 12px; border-radius: 6px;">
             <strong>Total Population Served (Institutional + Household): </strong><span id="D-total-pop" style="font-weight: bold; color: var(--primary);">0</span> persons
           </div>
@@ -1324,14 +1326,25 @@
                 <option value="sewer">Sewer to aerobic WWTP (MCF 0.0)</option>
               </select>
             </div>
+            <div class="field"><label>Functionality Factor (0–1) <span class="info" title="HH sanitation only. Accounts for whether the improved system is actually functional, not flooded, not full/collapsed, and used as intended. Level 1 desk estimate: use 0.8–1.0 for verified systems. Level 2 programme MRV: adjust based on functionality survey (flooded=-0.3, collapsed=-0.2, overflowing=-0.1). Default 1.0 assumes fully functional.">i</span></label><input type="number" id="D-functionality-hh" value="1.0" min="0" max="1" step="0.1"></div>
+            <div class="field"><label>Usage Factor (0–1) <span class="info" title="HH sanitation only. Reflects verified use of the improved system by all household members. Level 1: assume 1.0 if system is present. Level 2: based on spot checks and observation (shared facilities may have lower usage). Apply 0.7–0.95 if use is conditional or seasonal.">i</span></label><input type="number" id="D-usage-hh" value="1.0" min="0" max="1" step="0.1"></div>
           </div>
           <div class="module-grid">
-            <div class="field"><label>BOD Load (g/person/day) <span class="info" title="IPCC default: 40 g BOD/person/day">i</span></label><input type="number" id="D-bod" value="40" min="10" max="80" step="5"></div>
-            <div class="field"><label>Bo — Max CH₄ potential <span class="info" title="IPCC default: 0.6 kg CH4/kg BOD">i</span></label><input type="number" id="D-bo" value="0.6" min="0.1" max="0.8" step="0.05"></div>
+            <div class="field"><label>BOD Load (g/person/day) <span class="info" title="IPCC 2006 Ch.6 Table 6.1: range 30–60 g/p/day. Default 40 is global average. Cool climates: use lower; high-protein diets: use higher.">i</span></label><input type="number" id="D-bod" value="40" min="10" max="80" step="5"></div>
+            <div class="field"><label>Bo — Max CH₄ potential <span class="info" title="IPCC 2006 Ch.6 Table 6.2: typical range 0.25–0.50 kg CH₄/kg BOD depending on wastewater pathway. Default 0.60 is used for domestic wastewater systems. See IPCC Tier 1 methodology for specific system type.">i</span></label><input type="number" id="D-bo" value="0.6" min="0.1" max="0.8" step="0.05"></div>
           </div>
-          <div class="formula-box" id="D-formula">ER = U × BOD × Bo × (MCF_base – MCF_imp) × GWP₂₈ / 1000</div>
+          <div class="formula-box" id="D-formula">ER = U × BOD × 365 × Bo × (MCF_base – MCF_imp) × GWP₂₈ / 1000</div>
           <div class="result-inline"><span class="rv" id="D-detail">0</span><span class="ru">tCO₂e / year saved</span>
           </div>
+          <details style="margin-top:12px; font-size:11px; color:var(--muted);">
+            <summary style="cursor:pointer; font-weight:600; color:var(--text);">📋 Evidence Levels & Conservative Crediting (click to expand)</summary>
+            <div style="margin-top:8px; padding:8px; background:var(--bg); border-left:3px solid var(--accent2); line-height:1.5;">
+              <strong>Level 1: Desk-based estimate</strong> — Use household/facility counts + IPCC defaults. F=1.0, U=1.0. Suitable for programme screening.<br>
+              <strong>Level 2: Programme MRV</strong> — Add verification surveys, photos, GPS, functionality checks. Adjust F for flood risk (-0.3 flooded, -0.2 collapsed). Suitable for carbon finance with auditor sign-off.<br>
+              <strong>Level 3: Locally calibrated</strong> — Measure flux / use locally measured emission factors. Refine MCF values for your context.<br><br>
+              <strong>Conservative rules:</strong> Do NOT credit systems that are flooded, collapsed, overflowing, unused, or where sludge is dumped untreated. Do NOT assume all "improved" latrines reduce methane (dry systems yes; wet pits may increase CH₄). Apply F &lt; 1.0 where functionality is uncertain. Keep estimate low, central, high range.
+            </div>
+          </details>
         </div>
       </div>
 
@@ -1414,7 +1427,7 @@
                 <option value="diesel">Diesel Gen-set</option>
               </select>
             </div>
-            <div class="field"><label>Baseline Emissions/Facility (tCO₂e/yr)</label><input type="number" id="F-ef" value="2.5" min="0.1" step="0.1"></div>
+            <div class="field"><label>Baseline Emissions/Facility (tCO₂e/yr) <span class="info" title="Kerosene lamps: ~0.3–0.5 tCO₂e/yr/facility (3–5 lamps × 4 hrs/day × 0.04 L/hr ≈ 175 L/yr × 2.5 kgCO₂/L). Diesel genset: 1.6–4 tCO₂e/yr depending on hours operated (5 kWh/day ÷ 3 kWh/L ÷ 0.835 kg/L × 2.68 kgCO₂/kg ≈ 1.6 tCO₂/yr base). Default 2.5 is conservative for diesel; adjust for your facility size and operating hours. See AMS-III.AR for monitored baselines.">i</span></label><input type="number" id="F-ef" value="2.5" min="0.1" step="0.1"></div>
           </div>
           <div class="formula-box" id="F-formula">ER = Facilities × ER_baseline</div>
           <div class="result-inline"><span class="rv" id="F-detail">0</span><span class="ru">tCO₂e / year saved</span>
@@ -1450,6 +1463,9 @@
             <div class="field"><label>Baseline Fuel per HH (kg/day)</label><input type="number" id="G-fc" value="4.0" min="0.5" step="0.5"></div>
           </div>
           <div class="formula-box" id="G-formula">ER = HHs × FC × NCV × EF × fNRB (Solar PE=0)</div>
+          <div style="background:#f0f9ff;padding:10px;border-left:4px solid #0284c7;margin:10px 0;border-radius:4px;font-size:12px;">
+            <strong>Assumption:</strong> <span class="info" title="Project Emissions (PE) are assumed zero because the induction cooker is powered entirely by a dedicated on-site solar PV system. If the system uses partial grid electricity, diesel backup, or battery backup, you must subtract PE separately. Solar-only systems with no backup qualify for PE=0.">i</span> Project Emissions = 0 (solar PV powers all electricity). If partial grid or diesel backup is used, this calculator understates the true emission reduction.
+          </div>
           <div class="result-inline"><span class="rv" id="G-detail">0</span><span class="ru">tCO₂e / year saved</span>
           </div>
           <p class="info-text" style="font-size:11px;color:var(--muted);margin-top:12px;border-top:1px solid var(--border);padding-top:8px;">
@@ -1609,9 +1625,10 @@
     // ─── DATA ──────────────────────────────────────────────────────────────
 
 
-    // Sanitation MCF values (IPCC 2006, Table 6.3)
+    // Sanitation MCF values (IPCC 2006 Vol. 5 Ch. 6, Table 6.3)
+    // openwater: 0.10 for untreated wastewater to rivers/sea/lakes (IPCC default, not 0.30)
     const MCF = {
-      openwater: 0.30, opendry: 0.05, sharedpit: 0.50, septic: 0.50,
+      openwater: 0.10, opendry: 0.05, sharedpit: 0.50, septic: 0.50,
       vip: 0.05, ecosan: 0.01, biogas: 0.10, sewer: 0.00
     };
 
@@ -1865,9 +1882,9 @@
           // Both CO2 and NC are subject to fNRB for woody biomass
           ER = massT * (fuelDef.efCO2_kg_kg + fuelDef.efNC_kg_kg) * fNRB;
         } else if (fuelType === 'charcoal') {
-          // Charcoal combustion: Apply to biogenic portion only if method dictates.
-          // Constraint: Charcoal CO2 is net-zero (not counted); only non-CO2 is counted.
-          const combER = massT * fuelDef.efNC_kg_kg;
+          // Charcoal combustion: non-CO2 (CH4, N2O) are scaled by fNRB per Gold Standard MECD/TPDDTEC.
+          // Charcoal CO2 is net-zero (biogenic); only non-CO2 is counted and subject to fNRB.
+          const combER = massT * fuelDef.efNC_kg_kg * fNRB;
 
           // Upstream Wood Production: mass * prodRatio * wood EFs
           const woodDef = state.defaults.fuels.wood;
@@ -1903,9 +1920,13 @@
           const etaD = +v('A-etadiesel');
           const LHV = +v('A-diesel-hc') || 10.0;
           const dieselL = shaftKwh / (etaD * LHV) * days; // L/year
-          BE_pump = dieselL * 2.68 / 1000; // tCO2/year (IPCC EF diesel)
+          // Read diesel EF from defaults (kgCO2/kg), convert to kgCO2/L using density 0.835 kg/L
+          const dieselDensity = 0.835; // kg/L
+          const dieselEF_per_kg = (state.defaults && state.defaults.fuels.diesel) ? state.defaults.fuels.diesel.efCO2_kg_kg : 2.68;
+          const dieselEF_per_L = dieselEF_per_kg * dieselDensity; // kgCO2/L
+          BE_pump = dieselL * dieselEF_per_L / 1000; // tCO2/year
           document.getElementById('A-formula').innerHTML =
-            `Pump Displacement: Diesel <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> <span class="info" title="Diesel (L/day) = (Volume(m³/day) × Head(m) × 9.81 / 3600) / Pump_η / (Engine_η × 10 kWh/L)">i</span> × ${days} days × 2.68 kgCO₂/L = <b>${BE_pump.toFixed(1)} tCO₂e/yr</b>`;
+            `Pump Displacement: Diesel <b>${(shaftKwh / (etaD * LHV)).toFixed(1)} L/day</b> <span class="info" title="Diesel (L/day) = (Volume(m³/day) × Head(m) × 9.81 / 3600) / Pump_η / (Engine_η × LHV kWh/L)">i</span> × ${days} days × ${dieselEF_per_L.toFixed(2)} kgCO₂/L = <b>${BE_pump.toFixed(1)} tCO₂e/yr</b>`;
 
           // Fuel Savings (Pump)
           state.fuelSavings.A += dieselL * (+v('price-diesel'));
@@ -1914,6 +1935,7 @@
           const kwhYr = shaftKwh / etaM * days;
           const co = getLDC();
           BE_pump = kwhYr * co.gEF / 1000;
+          const LHV_display = (+v('A-diesel-hc') || 10.0);
           document.getElementById('A-formula').innerHTML =
             `Pump Displacement: Grid <b>${kwhYr.toFixed(0)} kWh/yr</b> × ${co.gEF} kgCO₂/kWh = <b>${BE_pump.toFixed(1)} tCO₂e/yr</b>`;
         }
@@ -2010,8 +2032,12 @@
         document.getElementById('C-grid-fields').style.display = 'none';
       }
       const er = Math.max(0, BE - PE);
+      const isFossilFuel = (fuelType === 'lpg' || fuelType === 'kerosene');
+      const fNRBtext = isFossilFuel ?
+        `<span class="info" title="Fossil fuels (LPG, kerosene) are 100% non-renewable. fNRB scaling not applied; EF already represents full additionality per IPCC guidelines.">i</span> (fossil fuel, fNRB not applicable)` :
+        `× fNRB`;
       document.getElementById('C-formula').innerHTML =
-        `BE = ${fc_t.toFixed(2)} t/yr <span class="info" title="Baseline Fuel (t/yr) = Daily_Consumption × Days_per_Year / 1000">i</span> × (EF<sub>CO2</sub>+EF<sub>NC</sub>) × fNRB = <b>${BE.toFixed(2)} tCO₂e/yr</b> <br> PE = <b>${PE.toFixed(2)}</b> <span class="info" title="Project Emissions (PE) = Annual_Electricity_Use × Grid_Emission_Factor">i</span> → ER = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+        `BE = ${fc_t.toFixed(2)} t/yr <span class="info" title="Baseline Fuel (t/yr) = Daily_Consumption × Days_per_Year / 1000">i</span> × (EF<sub>CO2</sub>+EF<sub>NC</sub>) ${fNRBtext} = <b>${BE.toFixed(2)} tCO₂e/yr</b> <br> PE = <b>${PE.toFixed(2)}</b> <span class="info" title="Project Emissions (PE) = Annual_Electricity_Use × Grid_Emission_Factor">i</span> → ER = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
 
       // Fuel Savings: total kg of displaced fuel * price per kg
       const fuelPrice = +v('price-' + fuelType) || 0;
@@ -2027,20 +2053,26 @@
       const BOD = +v('D-bod') / 1000; // kg/person/day
       const Bo = +v('D-bo');
 
+      // Institutional sanitation (no F/U factors)
       const mcfB_inst = MCF[v('D-baseline-inst')];
       const mcfI_inst = MCF[v('D-improved-inst')];
       const dMCF_inst = Math.max(0, mcfB_inst - mcfI_inst);
       const ch4_inst = U_inst * BOD * 365 * Bo * dMCF_inst;
 
+      // Household sanitation with functionality (F) and usage (U) factors per Gold Standard SDG Sanitation
       const mcfB_hh = MCF[v('D-baseline-hh')];
       const mcfI_hh = MCF[v('D-improved-hh')];
       const dMCF_hh = Math.max(0, mcfB_hh - mcfI_hh);
-      const ch4_hh = U_hh * BOD * 365 * Bo * dMCF_hh;
+      const F_hh = +v('D-functionality-hh') || 1.0;  // Functionality factor (0-1): system is functional, not flooded/full
+      const U_hh_factor = +v('D-usage-hh') || 1.0;   // Usage factor (0-1): verified use by household
+      const ch4_hh = U_hh * BOD * 365 * Bo * dMCF_hh * F_hh * U_hh_factor;
 
       const gwp = +v('gwp-ch4') || 28;
       const er = (ch4_inst + ch4_hh) * gwp / 1000;  // tCO2e/year
+      const F_display = F_hh !== 1.0 ? ` × F${F_hh.toFixed(2)}` : '';
+      const U_display = U_hh_factor !== 1.0 ? ` × U${U_hh_factor.toFixed(2)}` : '';
       document.getElementById('D-formula').innerHTML =
-        `Inst: ${U_inst}p · HH: ${U_hh}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF <span class="info" title="ΔMCF = MCF_baseline - MCF_improved. It represents the reduced fraction of methane potential realized.">i</span> × GWP${gwp} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
+        `Inst: ${U_inst}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF | HH: ${U_hh}p × ${(BOD * 1000).toFixed(0)}g × 365 × ${Bo} Bo × ΔMCF${F_display}${U_display} <span class="info" title="HH factors: F=functionality (0–1, accounting for flood risk, structural failure), U=usage (0–1, verified use). Per Gold Standard SDG Sanitation for conservative Level 1–2 estimates.">i</span> × GWP${gwp} = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
       return er;
     }
 
@@ -2053,15 +2085,21 @@
       const er = count * ef;
       document.getElementById('F-formula').innerHTML = `${count} facilities × ${ef} tCO₂e/yr <span class="info" title="Baseline Emission Factor varies by replaced system (e.g. 2.5 tCO₂e/yr/facility for Kerosene)">i</span> = <b>${er.toFixed(2)} tCO₂e/yr</b>`;
 
-      // Fuel Savings estimation
-      // Kerosene EF: ~2.5 kgCO2/L. Diesel EF: ~2.68 kgCO2/L.
-      // To estimate L from tCO2e, divide by EF.
+      // Fuel Savings estimation: back-calculate fuel from tCO2e ER
       const baseline = v('F-baseline');
       if (baseline === 'kerosene') {
-        const litersKero = (er * 1000) / 2.5;
+        // Kerosene: derive EF from defaults (kgCO2/kg) × density (0.80 kg/L)
+        const keroDensity = 0.80; // kg/L
+        const keroEF_per_kg = (state.defaults && state.defaults.fuels.kerosene) ? state.defaults.fuels.kerosene.efCO2_kg_kg : 3.172;
+        const keroEF_per_L = keroEF_per_kg * keroDensity; // kgCO2/L
+        const litersKero = (er * 1000) / keroEF_per_L;
         state.fuelSavings.F = litersKero * (+v('price-kerosene'));
       } else if (baseline === 'diesel') {
-        const litersDiesel = (er * 1000) / 2.68;
+        // Diesel: derive EF from defaults (kgCO2/kg) × density (0.835 kg/L)
+        const dieselDensity = 0.835; // kg/L
+        const dieselEF_per_kg = (state.defaults && state.defaults.fuels.diesel) ? state.defaults.fuels.diesel.efCO2_kg_kg : 2.68;
+        const dieselEF_per_L = dieselEF_per_kg * dieselDensity; // kgCO2/L
+        const litersDiesel = (er * 1000) / dieselEF_per_L;
         state.fuelSavings.F = litersDiesel * (+v('price-diesel'));
       }
 
@@ -2189,9 +2227,22 @@
       });
 
       // 2. Double Counting overlaps
+      const modB_enabled = document.getElementById('tog-B').checked;
+      const modC_enabled = document.getElementById('tog-C').checked;
       const modE = document.getElementById('tog-E').checked ? +v('E-stoves') : 0;
       const modG = document.getElementById('tog-G').checked ? +v('G-count') : 0;
       const modD_hh = document.getElementById('tog-D').checked ? +v('D-pop-hh') : 0;
+
+      // Check for Module B + C institutional overlap
+      if (modB_enabled && modC_enabled) {
+        const hcfWater = document.getElementById('chk-hcf-water').checked;
+        const hcfCook = document.getElementById('chk-hcf-cook').checked;
+        const schWater = document.getElementById('chk-sch-water').checked;
+        const schCook = document.getElementById('chk-sch-cook').checked;
+        if ((hcfWater && hcfCook) || (schWater && schCook)) {
+          messages.push({ level: 'WARN', text: 'Overlap Possible: The same institutional population is counted in both Module B (Avoided Boiling) and Module C (Institutional Cooking). Verify these represent distinct fuel uses (e.g., cooking vs. water heating), or disable one module.' });
+        }
+      }
 
       if (modE > 0 && modG > 0) {
         messages.push({ level: 'FAIL', text: 'Double counting risk: Households are included in both Module E (ICS) and Module G (Induction). Split them or disable one.' });
